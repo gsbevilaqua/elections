@@ -2,6 +2,11 @@
 # Edit at https://www.gitignore.io/?templates=django,reactnative
 
 node_modules
+.babelrc
+Pipfile
+package-lock.json
+package.json
+webpack.config.js
 
 ### Django ###
 *.log
