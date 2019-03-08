@@ -54,8 +54,8 @@ export default class Results extends Component {
         }
 
         return (
-            <div>
-                <h1>RESULTS</h1>
+            <div style={{textAlign: "center"}}>
+                <h1 style={{fontSize: "4.5rem", padding: "2rem", background: "#826dc3", margin: "0"}}>RESULTS</h1>
                 <Trs didRun={this.props.location.state.two_rounds} res={this.state.trs} />
                 <Irv didRun={this.props.location.state.irv} res={this.state.irv} />
             </div>

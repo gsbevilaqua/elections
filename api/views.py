@@ -17,9 +17,11 @@ def get_results(request):
 
     if(two_rounds):
         trs = TwoRoundSystem(int(n_voters), len(candidates), candidates)
+        trs.reset()
         status1 = trs.simulate()
     if(irv):
         irv = InstantRunoffVoting(int(n_voters), len(candidates), candidates)
+        irv.reset()
         status2 = irv.simulate()
 
     return JsonResponse({

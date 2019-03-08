@@ -3,6 +3,15 @@ from api.Elections import Elections
 
 class TwoRoundSystem(Elections):
 
+	def reset(self):
+		self.winner = -1
+		self.second_place = -1
+		self.candidates = dict()
+		self.voters = []
+		self.votes = dict()
+		self.sorted_voters = []
+		self.sorted_candidates = []	
+
 	def first_round(self):
 		self.sort_candidates()
 		print("\nFIRST ROUND:")

@@ -6,6 +6,17 @@ class InstantRunoffVoting(Elections):
 	excluded = set()
 	rounds = []
 
+	def reset(self):
+		self.excluded = set()
+		self.rounds = []
+		self.winner = -1
+		self.second_place = -1
+		self.candidates = dict()
+		self.voters = []
+		self.votes = dict()
+		self.sorted_voters = []
+		self.sorted_candidates = []		
+
 	def count_votes(self, _round):
 		self.rounds.append(self.sorted_candidates[_round:])
 		if(self.sorted_candidates[self.N_CANDIDATES - 1][1]/self.N_VOTERS == 0.5):
@@ -47,6 +58,8 @@ class InstantRunoffVoting(Elections):
 		now = time.time()
 		print('sorting: ' + str(round(now - start_time, 2)) + ' seg' )
 
+		mean = 0
+
 		self.sort_candidates()
 		for _round in range(self.N_CANDIDATES - 1):
 			result = self.count_votes(_round)
@@ -59,6 +72,12 @@ class InstantRunoffVoting(Elections):
 				print("eliminate last_place")
 			else:
 				print("TIE!")
+				mean = self.calculate_mean(winner = self.sorted_candidates[self.N_CANDIDATES - 1][self.CANDIDATE_INDEX])
+				print("MEAN: ", mean)
 				break
+
+		for r in self.rounds:
+			for i in range(len(r)):
+				r[i] = ["Candidate " + str(r[i][0]), r[i][1]]
 
 		return self.rounds, mean
