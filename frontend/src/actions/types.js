@@ -4,3 +4,4 @@ export const SET_NUMBER_VOTERS = "SET_NUMBER_VOTERS";
 export const ADD_CANDIDATE = "ADD_CANDIDATE";
 export const DELETE_CANDIDATE = "DELETE_CANDIDATE";
 export const SET_FAME = "SET_FAME";
+export const RESET = "RESET";

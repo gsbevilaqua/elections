@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
-import { setTwoRounds, setIrv, setNVoters, addCandidate, deleteCandidate, setFame } from "../actions/elections.js";
+import { setTwoRounds, setIrv, setNVoters, addCandidate, deleteCandidate, setFame, fullReset } from "../actions/elections.js";
 
 import Candidate from './Candidate';
 
@@ -18,6 +18,10 @@ export class Dashboard extends Component {
         irv: PropTypes.bool.isRequired,
         n_voters: PropTypes.number.isRequired,
         candidates: PropTypes.array.isRequired,
+    }
+
+    componentDidMount() {
+        this.props.fullReset();
     }
 
     onBlurNVoters = (e) => this.props.setNVoters(e.target.value);
@@ -73,4 +77,4 @@ const mapStateToProps = state => ({
     candidates: state.electionsReducer.candidates
 });
 
-export default connect(mapStateToProps, {setTwoRounds, setIrv, setNVoters, addCandidate, deleteCandidate, setFame})(Dashboard);
+export default connect(mapStateToProps, {setTwoRounds, setIrv, setNVoters, addCandidate, deleteCandidate, setFame, fullReset})(Dashboard);

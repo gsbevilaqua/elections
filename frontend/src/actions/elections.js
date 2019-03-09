@@ -1,4 +1,4 @@
-import { SET_TWO_ROUNDS, SET_IRV, SET_NUMBER_VOTERS, ADD_CANDIDATE, DELETE_CANDIDATE, SET_FAME } from './types';
+import { SET_TWO_ROUNDS, SET_IRV, SET_NUMBER_VOTERS, ADD_CANDIDATE, DELETE_CANDIDATE, SET_FAME, RESET } from './types';
 
 export const setTwoRounds = (val) => dispatch => {
     dispatch({
@@ -38,4 +38,8 @@ export const setFame = (index, fame) => dispatch => {
         type: SET_FAME,
         payload: [index, fame]
     });
+}
+
+export const fullReset = () => dispatch => {
+    dispatch({type: RESET});
 }

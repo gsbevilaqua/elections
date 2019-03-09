@@ -1,4 +1,4 @@
-import { SET_TWO_ROUNDS, SET_IRV, SET_NUMBER_VOTERS, ADD_CANDIDATE, DELETE_CANDIDATE, SET_FAME } from '../actions/types.js'
+import { SET_TWO_ROUNDS, SET_IRV, SET_NUMBER_VOTERS, ADD_CANDIDATE, DELETE_CANDIDATE, SET_FAME, RESET } from '../actions/types.js'
 
 const initial_state = {
     two_rounds: false,
@@ -39,7 +39,14 @@ export default function(state = initial_state, action) {
             return{
                 ...state,
                 candidates: [...state.candidates.slice(0, action.payload[0]), action.payload[1], ...state.candidates.slice(action.payload[0] + 1)]
-            }                        
+            }
+        case RESET:
+            return{
+                two_rounds: false,
+                irv: false,
+                n_voters: 1000,
+                candidates: []
+            }                       
         default:
             return state;
     }
