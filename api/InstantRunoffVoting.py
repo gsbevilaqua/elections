@@ -76,8 +76,14 @@ class InstantRunoffVoting(Elections):
 				print("MEAN: ", mean)
 				break
 
-		for r in self.rounds:
-			for i in range(len(r)):
-				r[i] = ["Candidate " + str(r[i][0]), r[i][1]]
+		rout = []
 
-		return self.rounds, mean
+		for r in self.rounds:
+			_round = [[], []]
+			for i in range(len(r)):
+				_round[0].append("Candidate " + str(r[i][0]))
+				_round[1].append(r[i][1])
+			rout.append(_round)
+				
+
+		return rout, mean

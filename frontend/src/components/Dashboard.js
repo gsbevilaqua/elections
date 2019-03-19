@@ -28,7 +28,7 @@ export class Dashboard extends Component {
 
     render() {
         return (
-            <div className="container" style={{display: 'grid'}}>
+            <div className="container" style={{display: 'grid', backgroundColor: '#e8e8e8', padding: '4rem'}}>
                 <br></br>
                 <div style={{textAlign:'center'}}>
                     <h1 style={{padding:'1rem'}}> ELECTION SYSTEM </h1>

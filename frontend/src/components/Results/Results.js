@@ -57,8 +57,8 @@ export default class Results extends Component {
         return (
             <div style={{textAlign: "center"}}>
                 <h1 style={{fontSize: "4.5rem", padding: "2rem", background: "#826dc3", margin: "0"}}>RESULTS</h1>
-                <Irv didRun={this.props.location.state.irv} res={this.state.irv} />
                 <Trs didRun={this.props.location.state.two_rounds} res={this.state.trs} />
+                <Irv didRun={this.props.location.state.irv} res={this.state.irv} />
                 <Link to="/">
                     <button type="button" className="btn btn-info btn-lg" style={{width:'100%'}}>  Back </button>
                 </Link>

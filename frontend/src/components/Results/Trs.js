@@ -1,96 +1,107 @@
 import React, { Component } from 'react'
-import c3 from 'c3';
+import Chart from 'react-apexcharts'
 
 export default class Trs extends Component {
   constructor(props){
     super(props);
-  }
-
-  componentDidMount(){
-    if(this.props.didRun){
-      //console.log(this.props.res[0]);
-      this.chart = c3.generate({
-        bindto: "#pie1",
-        data: {
-          columns: this.props.res[0],
-          type : 'pie'
+    this.state = {
+      options: {
+        plotOptions: {
+          radialBar: {
+            startAngle: -135,
+            endAngle: 135,
+            dataLabels: {
+              name: {
+                fontSize: '16px',
+                color: undefined,
+                offsetY: 120
+              },
+              value: {
+                offsetY: 76,
+                fontSize: '22px',
+                color: undefined,
+                formatter: function (val) {
+                  return val + "%";
+                }
+              }
+            }
+          }
         },
-        size: {
-          width:300, 
-          height:300
-        }
-      });
-      this.chart = c3.generate({
-        bindto: "#bar1",
-        data: {
-            columns: this.props.res[0],
-            type: 'bar'
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'dark',
+            shadeIntensity: 0.15,
+            inverseColors: false,
+            opacityFrom: 1,
+            opacityTo: 1,
+            stops: [0, 50, 65, 91]
+          },
         },
-        bar: {
-            width: 100 // this makes bar width 100px
+        stroke: {
+          dashArray: 4
         },
-        size: {
-          width:800
-        }
-      });
-      this.chart = c3.generate({
-        bindto: "#pie2",
-        data: {
-          columns: this.props.res[2],
-          type : 'pie'
-        },
-        size: {
-          width:300, 
-          height:300
-        }
-      });
-      this.chart = c3.generate({
-        bindto: "#bar2",
-        data: {
-            columns: this.props.res[2],
-            type: 'bar'
-        },
-        bar: {
-            width: 100 // this makes bar width 100px
-        },
-        size: {
-          width: 800
-        }
-      });
+        labels: ['Satisfaction Rate']
+      },
+      series: [67],
     }
   }
-  
+
   render() {
     if(this.props.didRun){
-        return (
-        <div>
-            <h1 style={{color: "aliceblue", fontSize: "2.5rem", padding: "1rem", background: "black"}}> T R S </h1>
-            <div>
-              <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
-                <div>
-                  <div id="pie1"></div>
-                </div>
-                <div>
-                  <div id="bar1"></div>
-                </div>
+      return (
+        <div style={{backgroundColor: "#343e59"}}>
+          <h1 style={{color: "aliceblue", fontSize: "2.5rem", padding: "1rem", background: "black"}}> T R S </h1>
+          <div style={{padding:'4rem'}}>
+            <div style={{display: "grid", gridTemplateColumns: "33% 33% 33%", padding:"3rem"}}>
+              <div style={{margin: "auto", paddingTop: "5rem", paddingLeft: "6rem", paddingRight: "4rem", backgroundColor: "#2B2D3E"}}>
+                <Chart options={{labels: this.props.res[0][0], theme: {palette: 'palette5'}, legend:{fontSize: '14px', labels:{colors: '#ffffff'}}}}
+                      series={this.props.res[0][1]}
+                      type="pie"
+                      width="380"
+                />
               </div>
-              <div className="container">
-                <h2>MEAN: {this.props.res[1]}</h2>
+              <div style={{backgroundColor: "#FFFFFF", margin: "auto", padding: "3rem", paddingRight: "6rem", paddingLeft: "6rem"}}>
+                <Chart options={this.state.options} 
+                      series={[((this.props.res[1] + 10)/2)*10]} 
+                      type="radialBar" 
+                      height="350"
+                />
               </div>
-              <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
-                <div>
-                  <div id="pie2"></div>
-                </div>
-                <div>
-                  <div id="bar2"></div>
-                </div>
-              </div>
-              <div>
-                <h2>MEAN: {this.props.res[1]}</h2>
+              <div style={{margin: "auto", paddingTop: "6rem", paddingLeft: "6rem", paddingRight: "4rem", paddingBottom: "3rem", backgroundColor: "#2B2D3E"}}>
+                <Chart options={{ chart: { id: "basic-bar" }, xaxis: { categories: this.props.res[0][0], labels:{style:{colors: '#ffffff', fontSize: '14px'}}}, yaxis:{labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme: {palette: 'palette6'} }}
+                      series={[{ name: "series-1", data: this.props.res[0][1] }]}
+                      type="bar"
+                      width="500"
+                />
               </div>
             </div>
+            <div style={{display: "grid", gridTemplateColumns: "33% 33% 33%", padding:"3rem"}}>
+              <div style={{margin: "auto", paddingTop: "5rem", paddingLeft: "6rem", paddingRight: "4rem", backgroundColor: "#2B2D3E"}}>
+                <Chart options={{labels: this.props.res[2][0], theme: {palette: 'palette6'}, legend:{fontSize: '14px', labels:{colors: '#ffffff'}}}}
+                      series={this.props.res[2][1]}
+                      type="pie"
+                      width="380"
+                />
+              </div>
+              <div style={{backgroundColor: "#FFFFFF", margin: "auto", padding: "3rem", paddingRight: "6rem", paddingLeft: "6rem"}}>
+                <Chart options={this.state.options} 
+                      series={[((this.props.res[3] + 10)/2)*10]} 
+                      type="radialBar" 
+                      height="350"
+                />
+              </div>
+              <div style={{margin: "auto", paddingTop: "6rem", paddingLeft: "6rem", paddingRight: "4rem", paddingBottom: "3rem", backgroundColor: "#2B2D3E"}}>
+                <Chart options={{ chart: { id: "basic-bar" }, xaxis: { categories: this.props.res[2][0], labels:{style:{colors: '#ffffff', fontSize: '14px'}}}, yaxis:{labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme: {palette: 'palette6'} }}
+                      series={[{ name: "series-1", data: this.props.res[2][1] }]}
+                      type="bar"
+                      width="500"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        )
+      )
     }
     return null;
   }
