@@ -1,23 +1,21 @@
-import time
 from api.Elections import Elections
 
-class TwoRoundSystem(Elections):
+class TwoRoundSystem:
 
-	def reset(self):
-		self.winner = -1
-		self.second_place = -1
-		self.candidates = dict()
-		self.voters = []
-		self.votes = dict()
-		self.sorted_voters = []
-		self.sorted_candidates = []	
+	elec = None
+	sorted_candidates = []
+	winner = -1 # INDEX OF WINNER CANDIDATE OF THE ELECTION
+	second_place = -1 # INDEX OF SECOND PLACE CANDIDATE OF THE ELECTION
+
+	def __init__(self, elec):
+		self.elec = elec
+		self.sorted_candidates = elec.sort_candidates(self.elec.candidates)
 
 	def first_round(self):
-		self.sort_candidates()
 		print("\nFIRST ROUND:")
 		for candidate in self.sorted_candidates:
-			percentage = str(candidate[self.NUMBER_OF_VOTES]/self.N_VOTERS)
-			print("candidate " + str(candidate[self.CANDIDATE_INDEX]) + ": " + str(candidate[self.NUMBER_OF_VOTES]) + " votes - " + percentage + "%")
+			percentage = str(candidate[self.elec.NUMBER_OF_VOTES]/self.elec.N_VOTERS)
+			print("candidate " + str(candidate[self.elec.CANDIDATE_INDEX]) + ": " + str(candidate[self.elec.NUMBER_OF_VOTES]) + " votes - " + percentage + "%")
 		mean = self.calculate_mean()
 		print("MEAN: ", mean)
 		return self.sorted_candidates, mean
@@ -28,15 +26,15 @@ class TwoRoundSystem(Elections):
 		first_voters = []
 		second_voters = []
 
-		for candidate in self.votes:
+		for candidate in self.elec.votes:
 			if candidate != self.winner and candidate != self.second_place:
-				for voter_index in self.votes[candidate]:
-					for index2, candidate in enumerate(reversed(self.sorted_voters[voter_index])):
-						if candidate[self.CANDIDATE_INDEX] == self.winner:
+				for voter_index in self.elec.votes[candidate]:
+					for index2, candidate in enumerate(reversed(self.elec.sorted_voters[voter_index])):
+						if candidate[self.elec.CANDIDATE_INDEX] == self.winner:
 							n_votes_candidate1 += 1
 							first_voters.append(voter_index)
 							break
-						elif candidate[self.CANDIDATE_INDEX] == self.second_place:
+						elif candidate[self.elec.CANDIDATE_INDEX] == self.second_place:
 							n_votes_candidate2 += 1
 							second_voters.append(voter_index)
 							break
@@ -57,12 +55,12 @@ class TwoRoundSystem(Elections):
 
 
 	def count_votes_second_round(self, cand1, cand2):
-		cand1_votes = self.sorted_candidates[-1][self.CANDIDATE_RANK] + cand1
-		cand2_votes = self.sorted_candidates[-2][self.CANDIDATE_RANK] + cand2
-		self.winner = (self.sorted_candidates[-1][self.CANDIDATE_INDEX], cand1_votes) if (cand1_votes > cand2_votes) else (self.sorted_candidates[-2][self.CANDIDATE_INDEX], cand2_votes)
-		self.second_place = (self.sorted_candidates[-2][self.CANDIDATE_INDEX], cand2_votes) if (cand1_votes > cand2_votes) else (self.sorted_candidates[-1][self.CANDIDATE_INDEX], cand1_votes)
+		cand1_votes = self.sorted_candidates[-1][self.elec.CANDIDATE_RANK] + cand1
+		cand2_votes = self.sorted_candidates[-2][self.elec.CANDIDATE_RANK] + cand2
+		self.winner = (self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX], cand1_votes) if (cand1_votes > cand2_votes) else (self.sorted_candidates[-2][self.elec.CANDIDATE_INDEX], cand2_votes)
+		self.second_place = (self.sorted_candidates[-2][self.elec.CANDIDATE_INDEX], cand2_votes) if (cand1_votes > cand2_votes) else (self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX], cand1_votes)
 		print("Winner: " + str(self.winner[0]) + " with " + str(self.winner[1]) + " votes")
-		print("Second place: " + str(self.second_place[self.CANDIDATE_INDEX]) + " with " + str(self.second_place[self.CANDIDATE_RANK]) + " votes")
+		print("Second place: " + str(self.second_place[self.elec.CANDIDATE_INDEX]) + " with " + str(self.second_place[self.elec.CANDIDATE_RANK]) + " votes")
 
 		if(cand1_votes >= cand2_votes):
 			return 1, cand1_votes, cand2_votes
@@ -71,19 +69,19 @@ class TwoRoundSystem(Elections):
 
 	# CALCULATES MEAN AND MEAN2 FOR FIRST ROUND - MEAN IS (SUM OF WINNER RATINGS FROM VOTERS WHO VOTED FOR THE WINNER)/NUMBER OF VOTERS / MEAN2 IS (SUM OF WINNER RATINGS)/NUMBER OF VOTERS
 	def calculate_mean(self, second_round_share = False, second_place_is_the_winner_actually = False):
-		self.winner = self.sorted_candidates[self.N_CANDIDATES - 1][self.CANDIDATE_INDEX]
-		self.second_place = self.sorted_candidates[self.N_CANDIDATES - 2][self.CANDIDATE_INDEX]
+		self.winner = self.sorted_candidates[self.elec.N_CANDIDATES - 1][self.elec.CANDIDATE_INDEX]
+		self.second_place = self.sorted_candidates[self.elec.N_CANDIDATES - 2][self.elec.CANDIDATE_INDEX]
 		s = 0
 
 		if(second_place_is_the_winner_actually == False):
-			for voter in self.sorted_voters:
-				if(voter[self.N_CANDIDATES - 1][self.CANDIDATE_INDEX] == self.winner):
-					s += voter[self.N_CANDIDATES - 1][self.CANDIDATE_RANK]
-			mean = s/self.N_VOTERS
+			for voter in self.elec.sorted_voters:
+				if(voter[self.elec.N_CANDIDATES - 1][self.elec.CANDIDATE_INDEX] == self.winner):
+					s += voter[self.elec.N_CANDIDATES - 1][self.elec.CANDIDATE_RANK]
+			mean = s/self.elec.N_VOTERS
 		else:
-			for voter in self.sorted_voters:
-				if(voter[self.N_CANDIDATES - 1][self.CANDIDATE_INDEX] == self.second_place):
-					s += voter[self.N_CANDIDATES - 1][self.CANDIDATE_RANK]
+			for voter in self.elec.sorted_voters:
+				if(voter[self.elec.N_CANDIDATES - 1][self.elec.CANDIDATE_INDEX] == self.second_place):
+					s += voter[self.elec.N_CANDIDATES - 1][self.elec.CANDIDATE_RANK]
 
 		if(second_round_share):
 			return s
@@ -94,22 +92,11 @@ class TwoRoundSystem(Elections):
 	def calculate_second_mean(self, second_round_winner_voters, first_round_voters, winner):
 		s = first_round_voters
 		for voter in second_round_winner_voters:
-			s += self.voters[voter][winner]
-		return s/self.N_VOTERS
+			s += self.elec.voters[voter][winner]
+		return s/self.elec.N_VOTERS
 
 	def simulate(self):
 		print("TWO-ROUND SYSTEM")
-
-		start_time = time.time()
-		self.create_candidates()
-		now = time.time()
-		print('candidates creation: ' + str(round(now - start_time, 2)) + ' seg' )
-		self.create_voters()
-		now = time.time()
-		print('voters creation: ' + str(round(now - start_time, 2)) + ' seg' )
-		self.sort_ranks()
-		now = time.time()
-		print('sorting: ' + str(round(now - start_time, 2)) + ' seg' )
 
 		fc, fm = self.first_round()
 		sc, sm = self.second_round()

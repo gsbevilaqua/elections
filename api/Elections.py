@@ -1,5 +1,6 @@
 import random
 from random import randint, shuffle
+import time
 import operator
 
 class Elections:
@@ -8,8 +9,6 @@ class Elections:
 	CANDIDATE_INDEX = 0
 	CANDIDATE_RANK = NUMBER_OF_VOTES = 1
 
-	winner = -1 # INDEX OF WINNER CANDIDATE OF THE ELECTION
-	second_place = -1 # INDEX OF SECOND PLACE CANDIDATE OF THE ELECTION
 	candidates = dict() # DICTIONARY OF KEY -> INDEX OF CANDIDATE, VALUE -> NUMBER OF VOTES
 	voters = []	# LIST OF DICTIONAIRIES WICH HOLDS KEY -> INDEX CANDIDATE, VALUE -> RATING OF THE VOTER FOR THE CANDIDATE
 	votes = dict()
@@ -23,10 +22,36 @@ class Elections:
 	polarizer = [(-10,3), (-9,6), (-8,9), (-7,12), (-6,13), (-5,14), (-4,15), (-3,16), (-2,17), (-1,18), (0,19), (1,20), (2,21), (3,22), (4,23), (5,24), (6,25), (7,28), (8,31), (9,34), (10,37)] # HIGH CHANCE OF WORST RATINGS AND BEST RATINGS
 	more_polarizer = [(-10,5), (-9,10), (-8,15), (-7,20), (-6,21), (-5,22), (-4,23), (-3,24), (-2,25), (-1,26), (0,27), (1,28), (2,29), (3,30), (4,31), (5,32), (6,33), (7,38), (8,43), (9,48), (10,53)] # HIGHER CHANCE OF WORST RATINGS AND BEST RATINGS
 
+	excluded = set()
+	rounds = []
+
 	def __init__(self, n_voters, n_candidates, bias_vector):
 		self.N_VOTERS = n_voters # NUMBER OF VOTERS
 		self.N_CANDIDATES = n_candidates # NUMBER OF CANDIDATES
 		self.BIAS_VECTOR = bias_vector # VECTOR OF HELP VALUES FROM 0 TO 4 FOR CANDIDATES - 0 (WORST CHANCE FOR GETTING GOOD RATING) , 4 (BEST CHANCE FOR GETTING GOOD RATINGS)
+
+	def initialize(self):
+		start_time = time.time()
+		self.create_candidates()
+		now = time.time()
+		print('candidates creation: ' + str(round(now - start_time, 2)) + ' seg' )
+		self.create_voters()
+		now = time.time()
+		print('voters creation: ' + str(round(now - start_time, 2)) + ' seg' )
+		self.sort_ranks()
+		now = time.time()
+		print('sorting: ' + str(round(now - start_time, 2)) + ' seg' )
+
+	def reset(self):
+		self.excluded = set()
+		self.rounds = []
+		self.winner = -1
+		self.second_place = -1
+		self.candidates = dict()
+		self.voters = []
+		self.votes = dict()
+		self.sorted_voters = []
+		self.sorted_candidates = []	
 
 	def sortear(self, values_and_accumulated_frequencie, accumulated_value):
 	    x = randint(0, accumulated_value-1)
@@ -95,5 +120,5 @@ class Elections:
 						self.votes[self.sorted_voters[voter_index][-1][self.CANDIDATE_INDEX]].append(voter_index)
 						break
 
-	def sort_candidates(self):
-			self.sorted_candidates = sorted(self.candidates.items(), key=operator.itemgetter(1))
+	def sort_candidates(self, candidates):
+			return sorted(candidates.items(), key=operator.itemgetter(1))

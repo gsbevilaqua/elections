@@ -1,84 +1,68 @@
-import time
 from api.Elections import Elections
 
-class InstantRunoffVoting(Elections):
+class InstantRunoffVoting(Elections):	
 
-	excluded = set()
-	rounds = []
+	elec = None
+	candidates = dict()
+	sorted_candidates = []
+	votes = []
 
-	def reset(self):
-		self.excluded = set()
-		self.rounds = []
-		self.winner = -1
-		self.second_place = -1
-		self.candidates = dict()
-		self.voters = []
-		self.votes = dict()
-		self.sorted_voters = []
-		self.sorted_candidates = []		
+	def __init__(self, elec):
+		self.elec = elec
+		self.candidates = elec.candidates
+		self.votes = elec.votes
 
 	def count_votes(self, _round):
-		self.rounds.append(self.sorted_candidates[_round:])
-		if(self.sorted_candidates[self.N_CANDIDATES - 1][1]/self.N_VOTERS == 0.5):
+		self.elec.rounds.append(self.sorted_candidates[_round:])
+		if(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS == 0.5):
 			return 2
-		elif(self.sorted_candidates[self.N_CANDIDATES - 1][1]/self.N_VOTERS > 0.5):
+		elif(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS > 0.5):
 			return 1
 		else:
-			self.excluded.add(self.sorted_candidates[_round][self.CANDIDATE_INDEX])
-			for voter_index in self.votes[self.sorted_candidates[_round][self.CANDIDATE_INDEX]]:
+			self.elec.excluded.add(self.sorted_candidates[_round][self.elec.CANDIDATE_INDEX])
+			for voter_index in self.votes[self.sorted_candidates[_round][self.elec.CANDIDATE_INDEX]]:
 				available = []
-				for candidate in reversed(self.sorted_voters[voter_index]):
-					if candidate[self.CANDIDATE_INDEX] not in self.excluded:
-						self.candidates[candidate[self.CANDIDATE_INDEX]] += 1
-						self.votes[candidate[self.CANDIDATE_INDEX]].append(voter_index)
+				for candidate in reversed(self.elec.sorted_voters[voter_index]):
+					if candidate[self.elec.CANDIDATE_INDEX] not in self.elec.excluded:
+						self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += 1
+						self.votes[candidate[self.elec.CANDIDATE_INDEX]].append(voter_index)
 						break
 					else:
 						continue
 					
-			self.sort_candidates()
+			self.sorted_candidates = self.elec.sort_candidates(self.candidates)
 			return 0
 
 	def calculate_mean(self, winner):
 		s = 0
 		for voter_index in self.votes[winner]:
-			s += self.voters[voter_index][winner]
-		return s/self.N_VOTERS
+			s += self.elec.voters[voter_index][winner]
+		return s/self.elec.N_VOTERS
 
 	def simulate(self):
 		print("INSTANT RUNOFF VOTING")
 
-		start_time = time.time()
-		self.create_candidates()
-		now = time.time()
-		print('candidates creation: ' + str(round(now - start_time, 2)) + ' seg' )
-		self.create_voters()
-		now = time.time()
-		print('voters creation: ' + str(round(now - start_time, 2)) + ' seg' )
-		self.sort_ranks()
-		now = time.time()
-		print('sorting: ' + str(round(now - start_time, 2)) + ' seg' )
-
 		mean = 0
 
-		self.sort_candidates()
-		for _round in range(self.N_CANDIDATES - 1):
+		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
+		for _round in range(self.elec.N_CANDIDATES - 1):
 			result = self.count_votes(_round)
 			if(result == 1):
 				print("first_place wins")
-				mean = self.calculate_mean(winner = self.sorted_candidates[self.N_CANDIDATES - 1][self.CANDIDATE_INDEX])
+				mean = self.calculate_mean(winner = self.sorted_candidates[self.elec.N_CANDIDATES - 1][self.elec.CANDIDATE_INDEX])
 				print("MEAN: ", mean)
 				break
 			elif(result == 0):
 				print("eliminate last_place")
 			else:
 				print("TIE!")
-				mean = self.calculate_mean(winner = self.sorted_candidates[self.N_CANDIDATES - 1][self.CANDIDATE_INDEX])
+				mean = self.calculate_mean(winner = self.sorted_candidates[self.elec.N_CANDIDATES - 1][self.elec.CANDIDATE_INDEX])
 				print("MEAN: ", mean)
 				break
 
 		rout = []
 
-		for r in self.rounds:
+		for r in self.elec.rounds:
 			_round = [[], []]
 			for i in range(len(r)):
 				_round[0].append("Candidate " + str(r[i][0]))
