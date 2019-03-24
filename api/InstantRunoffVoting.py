@@ -1,4 +1,5 @@
 from api.Elections import Elections
+#from Elections import Elections
 
 class InstantRunoffVoting(Elections):	
 
@@ -21,16 +22,19 @@ class InstantRunoffVoting(Elections):
 		else:
 			self.elec.excluded.add(self.sorted_candidates[_round][self.elec.CANDIDATE_INDEX])
 			for voter_index in self.votes[self.sorted_candidates[_round][self.elec.CANDIDATE_INDEX]]:
-				available = []
+				#print(self.elec.sorted_voters[voter_index])
 				for candidate in reversed(self.elec.sorted_voters[voter_index]):
 					if candidate[self.elec.CANDIDATE_INDEX] not in self.elec.excluded:
+						#print(candidate[self.elec.CANDIDATE_INDEX])
 						self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += 1
 						self.votes[candidate[self.elec.CANDIDATE_INDEX]].append(voter_index)
+						#print(self.candidates)
 						break
 					else:
 						continue
 					
 			self.sorted_candidates = self.elec.sort_candidates(self.candidates)
+			print(self.sorted_candidates)
 			return 0
 
 	def calculate_mean(self, winner):
@@ -45,6 +49,7 @@ class InstantRunoffVoting(Elections):
 		mean = 0
 
 		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
+		print(self.sorted_candidates)
 		for _round in range(self.elec.N_CANDIDATES - 1):
 			result = self.count_votes(_round)
 			if(result == 1):

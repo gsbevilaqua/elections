@@ -16,7 +16,7 @@ def get_results(request):
     status1 = "null"
     status2 = "null"
 
-    elec = Elections(int(n_voters), len(candidates), candidates)
+    elec = Elections(int(n_voters), candidates)
     elec.reset()
     elec.initialize()
 

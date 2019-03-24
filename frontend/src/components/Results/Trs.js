@@ -47,6 +47,10 @@ export default class Trs extends Component {
     }
   }
 
+  componentDidMount(){
+    console.log(this.props.res)
+  }
+
   render() {
     if(this.props.didRun){
       return (
@@ -63,7 +67,7 @@ export default class Trs extends Component {
               </div>
               <div style={{backgroundColor: "#FFFFFF", margin: "auto", padding: "3rem", paddingRight: "6rem", paddingLeft: "6rem"}}>
                 <Chart options={this.state.options} 
-                      series={[((this.props.res[1] + 10)/2)*10]} 
+                      series={[(((this.props.res[1] + 10)/2)*10).toFixed(2)]} 
                       type="radialBar" 
                       height="350"
                 />
@@ -86,7 +90,7 @@ export default class Trs extends Component {
               </div>
               <div style={{backgroundColor: "#FFFFFF", margin: "auto", padding: "3rem", paddingRight: "6rem", paddingLeft: "6rem"}}>
                 <Chart options={this.state.options} 
-                      series={[((this.props.res[3] + 10)/2)*10]} 
+                      series={[(((this.props.res[3] + 10)/2)*10).toFixed(2)]} 
                       type="radialBar" 
                       height="350"
                 />

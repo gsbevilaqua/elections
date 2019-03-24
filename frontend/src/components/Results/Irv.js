@@ -4,6 +4,51 @@ import Chart from 'react-apexcharts'
 export default class Irv extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      options: {
+        plotOptions: {
+          radialBar: {
+            startAngle: -135,
+            endAngle: 135,
+            dataLabels: {
+              name: {
+                fontSize: '16px',
+                color: undefined,
+                offsetY: 120
+              },
+              value: {
+                offsetY: 76,
+                fontSize: '22px',
+                color: undefined,
+                formatter: function (val) {
+                  return val + "%";
+                }
+              }
+            }
+          }
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'dark',
+            shadeIntensity: 0.15,
+            inverseColors: false,
+            opacityFrom: 1,
+            opacityTo: 1,
+            stops: [0, 50, 65, 91]
+          },
+        },
+        stroke: {
+          dashArray: 4
+        },
+        labels: ['Satisfaction Rate']
+      },
+      series: [67],
+    }
+  }
+
+  componentDidMount(){
+    console.log(this.props.res);
   }
 
   render() {
@@ -29,6 +74,13 @@ export default class Irv extends Component {
                     />
                   </div>
                 </div>)) }
+                <div style={{backgroundColor: "#FFFFFF", margin: "auto", padding: "3rem", paddingRight: "6rem", paddingLeft: "6rem"}}>
+                  <Chart options={this.state.options} 
+                        series={[(((this.props.res[1] + 10)/2)*10).toFixed(2)]} 
+                        type="radialBar" 
+                        height="350"
+                  />
+                </div>
             </div>
         </div>
       )
