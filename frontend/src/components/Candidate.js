@@ -25,6 +25,12 @@ export class Candidate extends Component {
                     <label className="btn btn-secondary btn-sm">
                         <input onBlur={this.props.setFame.bind(this, this.props.index, 1)} type="radio" name="fame" id="hated" autoComplete="off"/> Hated
                     </label>
+                    <label className="btn btn-danger btn-sm">
+                        <input onBlur={this.props.setFame.bind(this, this.props.index, -1)} type="radio" name="fame" id="polarizer" autoComplete="off"/> Polarizer
+                    </label>
+                    <label className="btn btn-danger btn-sm" style={{backgroundColor:"#9a3734"}}>
+                        <input onBlur={this.props.setFame.bind(this, this.props.index, -2)} type="radio" name="fame" id="most-polarizer" autoComplete="off"/> Most Polarizer
+                    </label>
                 </div>
                 <div style={{margin: '0 auto'}}>
                     <button onClick={this.props.deleteCandidate.bind(this, this.props.index)} className="btn btn-primary btn-sm"><i className="fas fa-trash-alt fa-2x"></i></button>
