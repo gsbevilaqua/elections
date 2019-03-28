@@ -47,15 +47,11 @@ export default class Irv extends Component {
     }
   }
 
-  componentDidMount(){
-    console.log(this.props.res);
-  }
-
   render() {
     if(this.props.didRun){
       return (
         <div style={{backgroundColor: "#343e59"}}>
-            <h1 style={{color: "aliceblue", fontSize: "2.5rem", padding: "1rem", background: "black"}}> I R V </h1>
+            <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", background: "black"}}> I R V </h1>
             <div style={{padding:"4rem"}}>
               { this.props.res[0].map((_, index) => 
                 (<div key={index} style={{display: "grid", gridTemplateColumns: "50% 50%", padding: "3rem"}}>

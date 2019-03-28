@@ -50,7 +50,7 @@ class InstantRunoffVoting(Elections):
 
 		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
 		print(self.sorted_candidates)
-		for _round in range(self.elec.N_CANDIDATES - 1):
+		for _round in range(self.elec.N_CANDIDATES - self.elec.N_VACANCIES):
 			result = self.count_votes(_round)
 			if(result == 1):
 				print("first_place wins")

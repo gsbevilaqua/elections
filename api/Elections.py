@@ -6,7 +6,6 @@ from collections import defaultdict
 
 class Elections:
 
-	N_VACANCIES = 1 # NUMBER OF VACANCIES (NOT IMPLEMENTED YET)
 	CANDIDATE_INDEX = 0
 	CANDIDATE_RANK = NUMBER_OF_VOTES = 1
 
@@ -26,11 +25,11 @@ class Elections:
 	excluded = set()
 	rounds = []
 
-	def __init__(self, n_voters, bias_vector):
-		print(random.random())
+	def __init__(self, n_voters, bias_vector, n_vacancies):
 		self.N_VOTERS = n_voters # NUMBER OF VOTERS
 		self.N_CANDIDATES = len(bias_vector) # NUMBER OF CANDIDATES
 		self.BIAS_VECTOR = bias_vector # VECTOR OF HELP VALUES FROM 0 TO 4 FOR CANDIDATES - 0 (WORST CHANCE FOR GETTING GOOD RATING) , 4 (BEST CHANCE FOR GETTING GOOD RATINGS)
+		self.N_VACANCIES = n_vacancies
 
 	def initialize(self):
 		start_time = time.time()
@@ -66,12 +65,16 @@ class Elections:
 
 	# CREATES DICT OF CANDIDATES => (KEY: INDEX OF CANDIDATE, VALUE: NUMBER OF VOTES)
 	def create_candidates(self):
+		start_time = time.time()
 		for i in range(self.N_CANDIDATES):
 			self.candidates[i] = 0
 			self.votes[i] = []
+		now = time.time()
+		print('candidates creation: ' + str(round(now - start_time, 2)) + ' seg' )
 
 	# CREATES LIST OF VOTERS (LIST OF DICTS) => [(KEY: INDEX OF CANDIDATE, VALUE: RATING), (), ...]
 	def create_voters(self):
+		start_time = time.time()
 		for voter in range(self.N_VOTERS):
 			candidates_rank = dict()
 			for candidate in reversed(range(self.N_CANDIDATES)):
@@ -90,9 +93,12 @@ class Elections:
 				else:
 					candidates_rank[candidate] = self.sortear(self.neutral)
 			self.voters.append(candidates_rank)
+		now = time.time()
+		print('voters creation: ' + str(round(now - start_time, 2)) + ' seg' )
 
 	# SORT EACH VOTER'S CANDIDATE'S RANKING
 	def sort_ranks(self):
+		start_time = time.time()
 		for voter in self.voters:
 			self.sorted_voters.append(sorted(voter.items(), key=operator.itemgetter(1)))
 
@@ -118,6 +124,9 @@ class Elections:
 			self.sorted_voters.append(new_voter)
 			self.candidates[new_voter[-1][0]] += 1
 			self.votes[new_voter[-1][0]].append(voter_index)
+
+		now = time.time()
+		print('sorting: ' + str(round(now - start_time, 2)) + ' seg' )
 
 	def sort_candidates(self, candidates):
 			return sorted(candidates.items(), key=operator.itemgetter(1))

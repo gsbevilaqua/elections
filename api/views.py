@@ -7,18 +7,46 @@ from api.TwoRoundSystem import TwoRoundSystem
 from api.InstantRunoffVoting import InstantRunoffVoting
 from api.Elections import Elections
 
+elec = None
+
+def create_candidates(request):
+    global elec
+    n_voters = json.loads(request.body.decode('utf-8')).get('n_voters')
+    n_vacancies = json.loads(request.body.decode('utf-8')).get('n_vacancies')
+    candidates = json.loads(request.body.decode('utf-8')).get('candidates')
+
+    print("dbshafdhadsa::::::::::: ", n_vacancies)
+
+    elec = Elections(int(n_voters), candidates, n_vacancies)
+    elec.reset()
+    elec.create_candidates()
+
+    return JsonResponse({
+        'status': True
+    })
+
+
+def create_voters(request):
+    global elec
+    elec.create_voters()
+    return JsonResponse({
+        'status': True
+    })
+
+def sort_ranks(request):
+    global elec
+    elec.sort_ranks()
+    return JsonResponse({
+        'status': True
+    })
+
 def get_results(request):
+    global elec
     two_rounds = json.loads(request.body.decode('utf-8')).get('two_rounds')
     irv = json.loads(request.body.decode('utf-8')).get('irv')
-    n_voters = json.loads(request.body.decode('utf-8')).get('n_voters')
-    candidates = json.loads(request.body.decode('utf-8')).get('candidates')
 
     status1 = "null"
     status2 = "null"
-
-    elec = Elections(int(n_voters), candidates)
-    elec.reset()
-    elec.initialize()
 
     if(two_rounds):
         trs = TwoRoundSystem(elec)

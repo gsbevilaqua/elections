@@ -100,20 +100,19 @@ class TwoRoundSystem:
 		print("TWO-ROUND SYSTEM")
 
 		fc, fm = self.first_round()
-		sc, sm = self.second_round()
-
 		fcout = [[], []]
-		scout = [[], []]
-
-		print("sc: ", sc)
-
 		for element in fc:
 			fcout[0].append("Candidate " + str(element[0]))
 			fcout[1].append(element[1])
-		for key, votes in sc.items():
-			scout[0].append("Candidate " + str(key))
-			scout[1].append(votes)
 
-		print("scout:", scout)
+		second_round = False
+		sm = None
+		scout = [[], []]
+		if(not self.elec.N_VACANCIES > 1):
+			second_round = True
+			sc, sm = self.second_round()
+			for key, votes in sc.items():
+				scout[0].append("Candidate " + str(key))
+				scout[1].append(votes)
 
-		return fcout, fm, scout, sm
+		return fcout, fm, scout, sm, second_round
