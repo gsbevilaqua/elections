@@ -14,7 +14,8 @@ class Elections:
 	votes = dict()
 	sorted_voters = [] # LIST OF VOTERS, EACH VOTER BEING A LIST OF TUPLES -> (INDEX OF CANDIDATE, RATING) IN ORDER FROM LOWER RANKED CANDIDATE TO HIGHEST RANKED
 	sorted_candidates = [] # LIST OF CANDIDATES IN ORDER FROM LEAST VOTED TO MOST VOTED
-	neutral = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000] # EQUAL CHANCE TO EACH RATING - NEUTRAL
+	uniform = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000] # EQUAL CHANCE TO EACH RATING - UNIFORM
+	neutral = [10, 20, 30, 40, 50, 60, 70, 80, 110, 140, 870, 900, 930, 940, 950, 960, 970, 980, 990, 1000] # HIGHER CHANCE FOR RATES CLOSE TO 0 - NEUTRAL
 	liked = [20, 50, 80, 110, 140, 180, 220, 260, 300, 340, 390, 440, 490, 540, 590, 640, 690, 750, 820, 900, 1000] # HIGH CHANCE OF GOOD RATING
 	disliked = [100, 180, 250, 310, 360, 410, 460, 510, 560, 610, 660, 700, 740, 780, 820, 860, 890, 920, 950, 980, 1000] # LOW CHANCE OF GOOD RATING
 	loved = [25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 325, 375, 425, 475, 525, 600, 675, 775, 875, 1000] # HIGHEST CHANCE OF GOOD RATING
@@ -25,11 +26,12 @@ class Elections:
 	excluded = set()
 	rounds = []
 
-	def __init__(self, n_voters, bias_vector, n_vacancies):
+	def __init__(self, n_voters, bias_vector, n_vacancies, candidates_names = []):
 		self.N_VOTERS = n_voters # NUMBER OF VOTERS
 		self.N_CANDIDATES = len(bias_vector) # NUMBER OF CANDIDATES
 		self.BIAS_VECTOR = bias_vector # VECTOR OF HELP VALUES FROM 0 TO 4 FOR CANDIDATES - 0 (WORST CHANCE FOR GETTING GOOD RATING) , 4 (BEST CHANCE FOR GETTING GOOD RATINGS)
 		self.N_VACANCIES = n_vacancies
+		self.candidates_names = candidates_names
 
 	def initialize(self):
 		start_time = time.time()

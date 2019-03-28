@@ -47,12 +47,12 @@ export default function(state = initial_state, action) {
             return{
                 ...state,
                 candidates: [...state.candidates.slice(0, action.payload), ...state.candidates.slice(action.payload + 1)],
-                candidates_names: [...state.candidates.slice(0, action.payload), ...state.candidates.slice(action.payload + 1)]
+                candidates_names: [...state.candidates_names.slice(0, action.payload), ...state.candidates_names.slice(action.payload + 1)]
             }
         case SET_NAME:
             return{
                 ...state,
-                candidates_names: [...state.candidates.slice(0, action.payload[0]), action.payload[1], ...state.candidates.slice(action.payload[0] + 1)]
+                candidates_names: [...state.candidates_names.slice(0, action.payload[0]), action.payload[1], ...state.candidates_names.slice(action.payload[0] + 1)]
             }
         case SET_FAME:
             return{

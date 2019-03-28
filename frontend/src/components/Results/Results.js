@@ -18,7 +18,7 @@ export default class Results extends Component {
 
         return (
             <div style={{textAlign: "center"}}>
-                <h1 style={{fontSize: "6rem", padding: "2rem", background: "#826dc3", margin: "0", fontFamily: "Bungee, cursive"}}>RESULTS</h1>
+                <h1 style={{fontSize: "5rem", padding: "2rem", background: "#826dc3", margin: "0", letterSpacing: "2rem"}}>RESULTS</h1>
                 <Trs didRun={this.props.location.state.trs_run} res={this.props.location.state.trs} />
                 <Irv didRun={this.props.location.state.irv_run} res={this.props.location.state.irv} />
                 <Link to="/">

@@ -59,7 +59,7 @@ export class Dashboard extends Component {
     handleAjaxRequest = (payload) => {
         const csrfToken = Cookies.get('csrftoken');
 
-        const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, n_vacancies: payload.n_vacancies }
+        const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, candidates_names: payload.candidates_names, n_vacancies: payload.n_vacancies }
         const get_results_payload = { two_rounds: payload.two_rounds, irv: payload.irv }
 
         this.setState({ progress_bar: true, progress_bar_msg: "Creating Candidates..." });
@@ -121,7 +121,7 @@ export class Dashboard extends Component {
                 {this.renderRedirect()}
                 <br></br>
                 <div style={{textAlign:'center'}}>
-                    <h1 style={{padding:'1rem', fontFamily: "Bungee, cursive", fontSize: "3rem"}}> ELECTION SYSTEM </h1>
+                    <h1 style={{padding:'1rem', fontSize: "3rem"}}> ELECTION SYSTEM </h1>
                     <br></br>
                     <div style={{textAlign:'center'}} className="btn-group btn-group-toggle" data-toggle="buttons">
                         <button style={{margin:'1rem'}} onClick={this.props.setTwoRounds.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="The two-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate.">2 Round System</button>
@@ -137,12 +137,12 @@ export class Dashboard extends Component {
                 <br></br><br></br><br></br>
                 <div>
                     <div style={{display: "grid", gridTemplateColumns:"30% 20%"}}>
-                        <h1 style={{padding:'1rem', margin: "auto", fontFamily: "Bungee, cursive"}}> CANDIDATES </h1>
+                        <h1 style={{padding:'1rem', margin: "auto"}}> CANDIDATES </h1>
                         <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
                     </div>
                     <div className="candidates" style={{margin: '0 auto'}}>
                         {this.props.candidates.map((candidate, index) => (
-                            <Candidate key={index} index={index} fame={candidate} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} setName={this.props.setName.bind(this)} setFame={this.props.setFame.bind(this)} deleteCandidate={this.props.deleteCandidate.bind(this)}/>
+                            <Candidate key={index} index={index} fame={candidate} name={this.props.candidates_names[index]} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} setName={this.props.setName.bind(this)} setFame={this.props.setFame.bind(this)} deleteCandidate={this.props.deleteCandidate.bind(this)}/>
                         ))}
                         <div style={{padding:'2rem', textAlign: 'center'}}>
                             <button onClick={this.props.addCandidate.bind(this, 0, "Candidate " + this.props.candidates.length)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>

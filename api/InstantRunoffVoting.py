@@ -70,7 +70,7 @@ class InstantRunoffVoting(Elections):
 		for r in self.elec.rounds:
 			_round = [[], []]
 			for i in range(len(r)):
-				_round[0].append("Candidate " + str(r[i][0]))
+				_round[0].append(self.elec.candidates_names[r[i][0]])
 				_round[1].append(r[i][1])
 			rout.append(_round)
 				

@@ -14,10 +14,9 @@ def create_candidates(request):
     n_voters = json.loads(request.body.decode('utf-8')).get('n_voters')
     n_vacancies = json.loads(request.body.decode('utf-8')).get('n_vacancies')
     candidates = json.loads(request.body.decode('utf-8')).get('candidates')
+    candidates_names = json.loads(request.body.decode('utf-8')).get('candidates_names')
 
-    print("dbshafdhadsa::::::::::: ", n_vacancies)
-
-    elec = Elections(int(n_voters), candidates, n_vacancies)
+    elec = Elections(int(n_voters), candidates, n_vacancies, candidates_names)
     elec.reset()
     elec.create_candidates()
 

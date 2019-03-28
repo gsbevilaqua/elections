@@ -102,7 +102,7 @@ class TwoRoundSystem:
 		fc, fm = self.first_round()
 		fcout = [[], []]
 		for element in fc:
-			fcout[0].append("Candidate " + str(element[0]))
+			fcout[0].append(self.elec.candidates_names[int(element[0])])
 			fcout[1].append(element[1])
 
 		second_round = False
@@ -112,7 +112,7 @@ class TwoRoundSystem:
 			second_round = True
 			sc, sm = self.second_round()
 			for key, votes in sc.items():
-				scout[0].append("Candidate " + str(key))
+				scout[0].append(self.elec.candidates_names[int(key)])
 				scout[1].append(votes)
 
 		return fcout, fm, scout, sm, second_round

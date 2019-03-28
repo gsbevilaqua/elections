@@ -27,6 +27,10 @@ export const setNCandidates = (val) => dispatch => {
 }
 
 export const setNVoters = (val) => dispatch => {
+    if(val == '' || val == null){
+        val = 1000;
+    }
+
     dispatch({
         type: SET_NUMBER_VOTERS, 
         payload: parseInt(val)
@@ -34,6 +38,10 @@ export const setNVoters = (val) => dispatch => {
 }
 
 export const setNVacancies = (val) => dispatch => {
+    if(val == '' || val == null){
+        val = 1;
+    }
+
     dispatch({
         type: SET_NUMBER_VACANCIES, 
         payload: parseInt(val)

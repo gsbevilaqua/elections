@@ -8,7 +8,7 @@ export class Candidate extends Component {
         return (
             <div className="card text-white bg-primary mb-3">
                 <div className="card-header" style={{backgroundColor:this.props.color, color:this.props.fontcolor}}>
-                    <input onBlur={this.onBlurSetName} className="form-control" style={{backgroundColor:this.props.color, color:this.props.fontcolor, fontSize: "1.2rem"}} placeholder={"Candidate " + this.props.index} />
+                    <input onChange={this.onBlurSetName} className="form-control" style={{backgroundColor:this.props.color, color:this.props.fontcolor, fontSize: "1.2rem"}} value={this.props.name} placeholder={"Candidate " + this.props.index} />
                 </div>
                 <div className="card-body" style={{backgroundColor:this.props.color, display: 'grid', gridTemplateColumns: '20% 70% 10%'}}>
                     <div style={{margin: '0 auto'}}>
