@@ -5,7 +5,7 @@ from InstantRunoffVoting import InstantRunoffVoting
 two_rounds = True
 instant_runoff = True
 
-elec = Elections(1000000, [0,0,0,0])
+elec = Elections(100000, [0,0,0,0])
 elec.reset()
 elec.initialize()
 

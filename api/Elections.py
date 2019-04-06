@@ -19,8 +19,8 @@ class Elections:
 	liked = [20, 50, 80, 110, 140, 180, 220, 260, 300, 340, 390, 440, 490, 540, 590, 640, 690, 750, 820, 900, 1000] # HIGH CHANCE OF GOOD RATING
 	disliked = [100, 180, 250, 310, 360, 410, 460, 510, 560, 610, 660, 700, 740, 780, 820, 860, 890, 920, 950, 980, 1000] # LOW CHANCE OF GOOD RATING
 	loved = [25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 325, 375, 425, 475, 525, 600, 675, 775, 875, 1000] # HIGHEST CHANCE OF GOOD RATING
-	hated = [125, 225, 325, 400, 475, 425, 575, 625, 675, 725, 750, 775, 800, 825, 850, 875, 900, 925, 950, 975, 1000] # LOWEST CHANCE OF GOOD RATING
-	polarizer = [100, 190, 270, 340, 400, 416, 432, 448, 464, 480, 500, 516, 532, 548, 564, 580, 640, 730, 810, 900, 1000] # HIGH CHANCE OF WORST RATINGS AND BEST RATINGS
+	hated = [125, 225, 325, 400, 475, 525, 575, 625, 675, 725, 750, 775, 800, 825, 850, 875, 900, 925, 950, 975, 1000] # LOWEST CHANCE OF GOOD RATING
+	polarizer = [100, 190, 280, 350, 410, 426, 442, 458, 474, 490, 510, 526, 542, 558, 574, 590, 650, 720, 810, 900, 1000] # HIGH CHANCE OF WORST RATINGS AND BEST RATINGS
 	more_polarizer = [150, 250, 350, 400, 450, 460, 470, 480, 490, 500, 500, 510, 520, 530, 540, 550, 600, 650, 750, 850, 1000] # HIGHER CHANCE OF WORST RATINGS AND BEST RATINGS
 
 	excluded = set()
@@ -70,7 +70,7 @@ class Elections:
 		start_time = time.time()
 		for i in range(self.N_CANDIDATES):
 			self.candidates[i] = 0
-			self.votes[i] = []
+			self.votes[i] = set()
 		now = time.time()
 		print('candidates creation: ' + str(round(now - start_time, 2)) + ' seg' )
 
@@ -125,10 +125,22 @@ class Elections:
 					new_voter.append((candidate_indexes[0], rating))
 			self.sorted_voters.append(new_voter)
 			self.candidates[new_voter[-1][0]] += 1
-			self.votes[new_voter[-1][0]].append(voter_index)
+			self.votes[new_voter[-1][0]].add(voter_index)
 
 		now = time.time()
 		print('sorting: ' + str(round(now - start_time, 2)) + ' seg' )
 
 	def sort_candidates(self, candidates):
 			return sorted(candidates.items(), key=operator.itemgetter(1))
+
+	def calculate_mean(self, winner):
+		rating_sum = 0
+		c = 0
+		for voter in self.voters:
+			c += 1
+			rating_sum += voter[winner]
+		print(":::rating sum: ", rating_sum)
+		print(":::N Voters: ", self.N_VOTERS)
+		print(":::Count: ", c)
+		print(":::Winner: ", winner)
+		return rating_sum/self.N_VOTERS

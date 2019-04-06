@@ -134,7 +134,9 @@ export class Dashboard extends Component {
                     <input onBlur={this.onBlurNVoters} className="form-control" placeholder="Enter a number" />
                     <small className="form-text text-muted"></small>
                 </div>
-                <br></br><br></br><br></br>
+                <br></br><br></br>
+                <div className="line-break" style={{height:"0.15rem", width:"100%", backgroundColor:"rgba(128, 128, 128, 0.40)"}}></div>
+                <br></br><br></br>
                 <div>
                     <div style={{display: "grid", gridTemplateColumns:"30% 20%"}}>
                         <h1 style={{padding:'1rem', margin: "auto"}}> CANDIDATES </h1>
