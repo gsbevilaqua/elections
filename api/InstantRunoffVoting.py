@@ -13,7 +13,7 @@ class InstantRunoffVoting(Elections):
 		self.candidates = elec.candidates.copy()
 		self.votes = elec.votes.copy()
 
-	def count_votes(self, _round):
+	def _count_votes(self, _round):
 		self.elec.rounds.append(self.sorted_candidates[_round:])
 		if(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS == 0.5):
 			return 2
@@ -42,7 +42,7 @@ class InstantRunoffVoting(Elections):
 		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
 		print(self.sorted_candidates)
 		for _round in range(self.elec.N_CANDIDATES - self.elec.N_VACANCIES):
-			result = self.count_votes(_round)
+			result = self._count_votes(_round)
 			if(result == 1):
 				print("first_place wins")
 				#e = [lambda x: len(x) for x in self.votes]

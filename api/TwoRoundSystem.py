@@ -18,7 +18,7 @@ class TwoRoundSystem:
 		self.winner = self.sorted_candidates[-1][elec.CANDIDATE_INDEX]
 		self.second_place = self.sorted_candidates[-2][elec.CANDIDATE_INDEX]
 
-	def first_round(self):
+	def _first_round(self):
 		print("\nFIRST ROUND:")
 		for candidate in self.sorted_candidates:
 			percentage = str(candidate[self.elec.NUMBER_OF_VOTES]/self.elec.N_VOTERS)
@@ -27,7 +27,7 @@ class TwoRoundSystem:
 		print("MEAN: ", mean)
 		return self.sorted_candidates, mean
 	
-	def second_round(self):
+	def _second_round(self):
 
 		for candidate in self.votes:
 			if candidate != self.winner and candidate != self.second_place:
@@ -53,7 +53,7 @@ class TwoRoundSystem:
 	def simulate(self):
 		print("TWO-ROUND SYSTEM")
 
-		fc, fm = self.first_round()
+		fc, fm = self._first_round()
 		fcout = [[], []]
 		for element in fc:
 			fcout[0].append(self.elec.candidates_names[int(element[0])])
@@ -65,7 +65,7 @@ class TwoRoundSystem:
 		elected = fcout[0][-self.elec.N_VACANCIES:]
 		if(not self.elec.N_VACANCIES > 1):
 			second_round = True
-			sc, sm = self.second_round()
+			sc, sm = self._second_round()
 			for key, votes in sc.items():
 				scout[0].append(self.elec.candidates_names[int(key)])
 				scout[1].append(votes)
