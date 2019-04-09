@@ -49,14 +49,14 @@ class InstantRunoffVoting(Elections):
 				#print(":::e: ", e)
 				for e in self.votes:
 					print(len(self.votes[e]))
-				mean = self.elec.calculate_mean(winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
+				mean, satisfaction_rate = self.elec.calculate_mean(winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
 				print("MEAN: ", mean)
 				break
 			elif(result == 0):
 				print("eliminate last_place")
 			else:
 				print("TIE!")
-				mean = self.elec.calculate_mean(winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
+				mean, satisfaction_rate = self.elec.calculate_mean(winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
 				print("MEAN: ", mean)
 				break
 
@@ -71,4 +71,4 @@ class InstantRunoffVoting(Elections):
 
 		elected = rout[-1][0][-self.elec.N_VACANCIES:]
 
-		return rout, mean, elected
+		return rout, mean, elected, satisfaction_rate

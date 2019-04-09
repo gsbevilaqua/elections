@@ -135,12 +135,15 @@ class Elections:
 
 	def calculate_mean(self, winner):
 		rating_sum = 0
-		c = 0
+		#c = 0
+		satisfied_population_count = 0
 		for voter in self.voters:
-			c += 1
+			#c += 1
 			rating_sum += voter[winner]
+			if voter[winner] > 0:
+				satisfied_population_count += 1
 		print(":::rating sum: ", rating_sum)
 		print(":::N Voters: ", self.N_VOTERS)
-		print(":::Count: ", c)
+		#print(":::Count: ", c)
 		print(":::Winner: ", winner)
-		return rating_sum/self.N_VOTERS
+		return rating_sum/self.N_VOTERS, satisfied_population_count/self.N_VOTERS

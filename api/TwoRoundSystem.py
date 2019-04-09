@@ -23,9 +23,9 @@ class TwoRoundSystem:
 		for candidate in self.sorted_candidates:
 			percentage = str(candidate[self.elec.NUMBER_OF_VOTES]/self.elec.N_VOTERS)
 			print("candidate " + str(candidate[self.elec.CANDIDATE_INDEX]) + ": " + str(candidate[self.elec.NUMBER_OF_VOTES]) + " votes - " + percentage + "%")
-		mean = self.elec.calculate_mean(winner=self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
+		mean, satisfaction_rate = self.elec.calculate_mean(winner=self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
 		print("MEAN: ", mean)
-		return self.sorted_candidates, mean
+		return self.sorted_candidates, mean, satisfaction_rate
 	
 	def _second_round(self):
 
@@ -46,14 +46,14 @@ class TwoRoundSystem:
 
 		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
 		print(self.sorted_candidates)
-		mean = self.elec.calculate_mean(winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
+		mean, satisfaction_rate = self.elec.calculate_mean(winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
 		print("MEAN: ", mean)
-		return {self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-1][self.elec.NUMBER_OF_VOTES], self.sorted_candidates[-2][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-2][self.elec.NUMBER_OF_VOTES]}, mean
+		return {self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-1][self.elec.NUMBER_OF_VOTES], self.sorted_candidates[-2][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-2][self.elec.NUMBER_OF_VOTES]}, mean, satisfaction_rate
 
 	def simulate(self):
 		print("TWO-ROUND SYSTEM")
 
-		fc, fm = self._first_round()
+		fc, fm, fsr = self._first_round()
 		fcout = [[], []]
 		for element in fc:
 			fcout[0].append(self.elec.candidates_names[int(element[0])])
@@ -65,7 +65,7 @@ class TwoRoundSystem:
 		elected = fcout[0][-self.elec.N_VACANCIES:]
 		if(not self.elec.N_VACANCIES > 1):
 			second_round = True
-			sc, sm = self._second_round()
+			sc, sm, ssr = self._second_round()
 			for key, votes in sc.items():
 				scout[0].append(self.elec.candidates_names[int(key)])
 				scout[1].append(votes)
@@ -76,4 +76,4 @@ class TwoRoundSystem:
 		print(scout)
 		print(elected)
 
-		return fcout, fm, scout, sm, second_round, elected
+		return fcout, fm, scout, sm, second_round, elected, fsr, ssr

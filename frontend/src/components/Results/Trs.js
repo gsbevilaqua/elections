@@ -4,6 +4,7 @@ import Chart from 'react-apexcharts'
 export default class Trs extends Component {
   constructor(props){
     super(props);
+    let mean = this.props.res[3]
     this.state = {
       points: this.props.didRun ? this.props.res[5].map((e) => ({
         x: e,
@@ -18,7 +19,54 @@ export default class Trs extends Component {
           text: 'Elected!',
         }
       })) : [],
-      options: {
+      options1: {
+        colors: ["#992f41"],
+        plotOptions: {
+          radialBar: {
+            startAngle: -90,
+            endAngle: 90,
+            track: {
+              background: '#333',
+              startAngle: -90,
+              endAngle: 90,
+            },
+            dataLabels: {
+              name: {
+                offsetY: -10,
+                color: "#fff",
+                fontSize: "13px"
+              },
+              value: {
+                fontSize: "30px",
+                color: "#fff",
+                show: true,
+                formatter: function (val) {
+                  if(mean > 0){
+                    return '+' + mean.toFixed(3)
+                  }
+                  else{
+                    return mean.toFixed(3)
+                  }
+                }
+              }
+            }
+          }
+        },
+        fill: {
+          type: "gradient",
+          gradient: {
+            shade: "dark",
+            type: "horizontal",
+            gradientToColors: ["#1fa83a"],
+            stops: [0, 100]
+          }
+        },
+        stroke: {
+          lineCap: "butt"
+        },
+        labels: ["Mean"]
+      },    
+      options2: {
         plotOptions: {
           radialBar: {
             startAngle: -135,
@@ -26,7 +74,7 @@ export default class Trs extends Component {
             hollow: {
               margin: 0,
               size: '70%',
-              background: '#fff',
+              background: "#293450",
               image: undefined,
               imageOffsetX: 0,
               imageOffsetY: 0,
@@ -57,13 +105,13 @@ export default class Trs extends Component {
               name: {
                 offsetY: -10,
                 show: true,
-                color: '#888',
+                color: "#fff",
                 fontSize: '17px'
               },
               value: {
-                color: '#111',
+                color: "#fff",
                 fontSize: '36px',
-                show: true,
+                show: true
               }
             }
           }
@@ -142,12 +190,21 @@ export default class Trs extends Component {
                     />
                   </div>
                 </div>
-                <div>
-                  <Chart options={this.state.options} 
-                        series={[(((this.props.res[3] + 10)/2)*10).toFixed(2)]} 
-                        type="radialBar" 
-                        height="350"
-                  />
+                <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                  <div>
+                    <Chart options={this.state.options1} 
+                          series={[((this.props.res[3] + 10)*5).toFixed(2)]} 
+                          type="radialBar"
+                          height="350"
+                    />
+                  </div>
+                  <div>
+                    <Chart options={this.state.options2} 
+                          series={[(this.props.res[7]*100).toFixed(2)]} 
+                          type="radialBar"
+                          height="350"
+                    />
+                  </div>
                 </div>
               </div>
             : '' }
