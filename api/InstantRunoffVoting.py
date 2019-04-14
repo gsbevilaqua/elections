@@ -1,3 +1,4 @@
+import copy
 from api.Elections import Elections
 #from Elections import Elections
 
@@ -6,15 +7,16 @@ class InstantRunoffVoting(Elections):
 	elec = None
 	candidates = dict()
 	sorted_candidates = []
-	votes = []
+	votes = dict()
 
 	def __init__(self, elec):
 		self.elec = elec
 		self.candidates = elec.candidates.copy()
-		self.votes = elec.votes.copy()
+		self.votes = copy.deepcopy(elec.votes)
 
 	def _count_votes(self, _round):
 		self.elec.rounds.append(self.sorted_candidates[_round:])
+		print(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS)
 		if(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS == 0.5):
 			return 2
 		elif(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS > 0.5):
@@ -38,6 +40,7 @@ class InstantRunoffVoting(Elections):
 		print("INSTANT RUNOFF VOTING")
 
 		mean = 0
+		satisfaction_rate = 0
 
 		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
 		print(self.sorted_candidates)

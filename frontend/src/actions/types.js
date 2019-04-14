@@ -8,3 +8,5 @@ export const DELETE_CANDIDATE = "DELETE_CANDIDATE";
 export const SET_NAME = "SET_NAME";
 export const SET_FAME = "SET_FAME";
 export const RESET = "RESET";
+export const SET_TACTICAL_PERC = "SET_TACTICAL_PERC";
+export const SET_MINORITY_PERC = "SET_MINORITY_PERC";

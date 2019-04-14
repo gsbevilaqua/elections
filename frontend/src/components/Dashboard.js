@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { setTwoRounds, setIrv, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset } from "../actions/elections.js";
+import { setTwoRounds, setIrv, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority } from "../actions/elections.js";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
 
@@ -26,7 +26,9 @@ export class Dashboard extends Component {
         n_voters: PropTypes.number.isRequired,
         n_vacancies: PropTypes.number.isRequired,
         candidates: PropTypes.array.isRequired,
-        candidates_names: PropTypes.array.isRequired
+        candidates_names: PropTypes.array.isRequired,
+        tactical_votes: PropTypes.array.isRequired,
+        minority_votes: PropTypes.array.isRequired,
     }
 
     componentDidMount() {
@@ -50,7 +52,9 @@ export class Dashboard extends Component {
             n_voters: this.props.n_voters,
             n_vacancies: this.props.n_vacancies,
             candidates: this.props.candidates,
-            candidates_names: this.props.candidates_names
+            candidates_names: this.props.candidates_names,
+            tactical_votes: this.props.tactical_votes,
+            minority_votes: this.props.minority_votes
         };
 
         this.handleAjaxRequest(payload);
@@ -59,7 +63,7 @@ export class Dashboard extends Component {
     handleAjaxRequest = (payload) => {
         const csrfToken = Cookies.get('csrftoken');
 
-        const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, candidates_names: payload.candidates_names, n_vacancies: payload.n_vacancies }
+        const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, candidates_names: payload.candidates_names, tactical_votes: payload.tactical_votes, minority_votes: payload.minority_votes, n_vacancies: payload.n_vacancies }
         const get_results_payload = { two_rounds: payload.two_rounds, irv: payload.irv }
 
         this.setState({ progress_bar: true, progress_bar_msg: "Creating Candidates..." });
@@ -138,16 +142,49 @@ export class Dashboard extends Component {
                 <div className="line-break" style={{height:"0.15rem", width:"100%", backgroundColor:"rgba(128, 128, 128, 0.40)"}}></div>
                 <br></br><br></br>
                 <div>
-                    <div style={{display: "grid", gridTemplateColumns:"30% 20%"}}>
+                    <div style={{display: "grid", gridTemplateColumns:"30% 20% 25% 25%"}}>
                         <h1 style={{padding:'1rem', margin: "auto"}}> CANDIDATES </h1>
                         <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
+                        {/* <div style={{marginBottom:"2rem"}} className="form-group">
+                            <label style={{marginLeft:"25%"}} for="tacticalVote">Tactical Votes Percentage</label>
+                            <select style={{width:"50%", marginLeft:"25%"}} className="form-control" id="tacticalVote">
+                                <option>0%</option>
+                                <option>10%</option>
+                                <option>20%</option>
+                                <option>30%</option>
+                                <option>40%</option>
+                                <option>50%</option>
+                                <option>60%</option>
+                                <option>70%</option>
+                                <option>80%</option>
+                                <option>90%</option>
+                                <option>100%</option>
+                            </select>
+                        </div>
+                        <div style={{marginBottom:"2rem"}} className="form-group">
+                            <label style={{marginLeft:"25%"}} for="minorityVote">Minority Votes Percentage</label>
+                            <select style={{width:"50%", marginLeft:"25%"}} className="form-control" id="minorityVote">
+                                <option>0%</option>
+                                <option>10%</option>
+                                <option>20%</option>
+                                <option>30%</option>
+                                <option>40%</option>
+                                <option>50%</option>
+                                <option>60%</option>
+                                <option>70%</option>
+                                <option>80%</option>
+                                <option>90%</option>
+                                <option>100%</option>
+                            </select>
+                        </div> */}
                     </div>
+
                     <div className="candidates" style={{margin: '0 auto'}}>
                         {this.props.candidates.map((candidate, index) => (
-                            <Candidate key={index} index={index} fame={candidate} name={this.props.candidates_names[index]} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} setName={this.props.setName.bind(this)} setFame={this.props.setFame.bind(this)} deleteCandidate={this.props.deleteCandidate.bind(this)}/>
+                            <Candidate key={index} index={index} fame={candidate} name={this.props.candidates_names[index]} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} setName={this.props.setName.bind(this)} setFame={this.props.setFame.bind(this)} deleteCandidate={this.props.deleteCandidate.bind(this)} setTactical={this.props.setTactical.bind(this)} setMinority={this.props.setMinority.bind(this)}/>
                         ))}
                         <div style={{padding:'2rem', textAlign: 'center'}}>
-                            <button onClick={this.props.addCandidate.bind(this, 0, "Candidate " + this.props.candidates.length)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
+                            <button onClick={this.props.addCandidate.bind(this, 0, "Candidate " + this.props.candidates.length, 0.0, 0.0)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
                             <h6 style={{padding: '1rem'}}> Add a candidate </h6>
                         </div>
                     </div>
@@ -182,7 +219,9 @@ const mapStateToProps = state => ({
     n_voters: state.electionsReducer.n_voters,
     n_vacancies: state.electionsReducer.n_vacancies,
     candidates: state.electionsReducer.candidates,
-    candidates_names: state.electionsReducer.candidates_names
+    candidates_names: state.electionsReducer.candidates_names,
+    tactical_votes: state.electionsReducer.tactical_votes,
+    minority_votes: state.electionsReducer.minority_votes
 });
 
-export default connect(mapStateToProps, {setTwoRounds, setIrv, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset})(Dashboard);
+export default connect(mapStateToProps, {setTwoRounds, setIrv, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority})(Dashboard);

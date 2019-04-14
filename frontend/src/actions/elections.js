@@ -1,4 +1,4 @@
-import { SET_TWO_ROUNDS, SET_IRV, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET } from './types';
+import { SET_TWO_ROUNDS, SET_IRV, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC } from './types';
 
 export const setTwoRounds = (val) => dispatch => {
     dispatch({
@@ -15,14 +15,18 @@ export const setIrv = (val) => dispatch => {
 export const setNCandidates = (val) => dispatch => {
     let candidates_array = [];
     let candidates_names_array = [];
+    let tactical_votes_array = [];
+    let minority_votes_array = [];
     for (let index = 0; index < val; index++) {
         candidates_array.push(0);
         candidates_names_array.push("Candidate " + index);
+        tactical_votes_array.push(0.0);
+        minority_votes_array.push(0.0);
     }
 
     dispatch({
         type: SET_NUMBER_CANDIDATES,
-        payload: { fames: candidates_array, names: candidates_names_array }
+        payload: { fames: candidates_array, names: candidates_names_array, tacts: tactical_votes_array, minos: minority_votes_array }
     });
 }
 
@@ -48,10 +52,10 @@ export const setNVacancies = (val) => dispatch => {
     });
 }
 
-export const addCandidate = (fame, name) => dispatch => {
+export const addCandidate = (fame, name, tact, mino) => dispatch => {
     dispatch({
         type: ADD_CANDIDATE, 
-        payload: { fame: fame, name: name }
+        payload: { fame: fame, name: name, tact: tact, mino: mino }
     });
 }
 
@@ -78,4 +82,20 @@ export const setFame = (index, fame) => dispatch => {
 
 export const fullReset = () => dispatch => {
     dispatch({type: RESET});
+}
+
+export const setTactical = (index, tact) => dispatch => {
+    let val = parseFloat(tact);
+    dispatch({
+        type: SET_TACTICAL_PERC,
+        payload: [index, val]
+    });
+}
+
+export const setMinority = (index, mino) => dispatch => {
+    let val = parseFloat(mino);
+    dispatch({
+        type: SET_MINORITY_PERC,
+        payload: [index, val]
+    });
 }

@@ -16,22 +16,26 @@ class Elections:
 	sorted_candidates = [] # LIST OF CANDIDATES IN ORDER FROM LEAST VOTED TO MOST VOTED
 	uniform = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0] # EQUAL CHANCE TO EACH RATING - UNIFORM
 	neutral = [0.0, 0.01, 0.02, 0.04, 0.06, 0.09, 0.12, 0.16, 0.23, 0.34, 0.66, 0.77, 0.84, 0.88, 0.91, 0.94, 0.96, 0.98, 0.99, 1.0, 1.0] # HIGHER CHANCE FOR RATES CLOSE TO 0 - NEUTRAL
-	liked = [0.0, 0.0, 0.01, 0.02, 0.03, 0.055, 0.8, 0.105, 0.13, 0.155, 0.18, 0.23, 0.28, 0.33, 0.39, 0.45, 0.54, 0.63, 0.745, 0.86, 1.0] # HIGH CHANCE OF GOOD RATING
+	liked = [0.0, 0.0, 0.01, 0.02, 0.03, 0.055, 0.08, 0.105, 0.13, 0.155, 0.18, 0.23, 0.28, 0.33, 0.39, 0.45, 0.54, 0.63, 0.745, 0.86, 1.0] # HIGH CHANCE OF GOOD RATING
 	disliked = [0.14, 0.255, 0.37, 0.46, 0.55, 0.61, 0.67, 0.72, 0.77, 0.82, 0.845, 0.87, 0.895, 0.92, 0.945, 0.97, 0.98, 0.99, 1.0, 1.0, 1.0] # LOW CHANCE OF GOOD RATING
 	loved = [0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.075, 0.125, 0.19, 0.255, 0.32, 0.4, 0.5, 0.6, 0.725, 0.85, 1.0] # HIGHEST CHANCE OF GOOD RATING
 	hated = [0.15, 0.275, 0.4, 0.5, 0.6, 0.68, 0.745, 0.81, 0.875, 0.925, 0.95, 0.96, 0.97, 0.98, 0.99, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0] # LOWEST CHANCE OF GOOD RATING
 	polarizer = [0.1, 0.19, 0.28, 0.35, 0.41, 0.436, 0.452, 0.468, 0.484, 0.5, 0.5, 0.516, 0.532, 0.548, 0.564, 0.59, 0.65, 0.72, 0.81, 0.9, 1.0] # HIGH CHANCE OF WORST RATINGS AND BEST RATINGS
 	more_polarizer = [0.15, 0.25, 0.35, 0.4, 0.45, 0.46, 0.47, 0.48, 0.49, 0.5, 0.5, 0.51, 0.52, 0.53, 0.54, 0.55, 0.6, 0.65, 0.75, 0.85, 1.0] # HIGHER CHANCE OF WORST RATINGS AND BEST RATINGS
 
+	leading_candidates = []
 	excluded = set()
 	rounds = []
 
-	def __init__(self, n_voters, bias_vector, n_vacancies, candidates_names = []):
+	def __init__(self, n_voters, bias_vector, n_vacancies,  tactical_votes, minority_votes, candidates_names = []):
 		self.N_VOTERS = n_voters # NUMBER OF VOTERS
 		self.N_CANDIDATES = len(bias_vector) # NUMBER OF CANDIDATES
 		self.BIAS_VECTOR = bias_vector # VECTOR OF HELP VALUES FROM 0 TO 4 FOR CANDIDATES - 0 (WORST CHANCE FOR GETTING GOOD RATING) , 4 (BEST CHANCE FOR GETTING GOOD RATINGS)
 		self.N_VACANCIES = n_vacancies
 		self.candidates_names = candidates_names
+		self.tactical_vote_percentages = tactical_votes
+		self.minority_vote_percentages = minority_votes
+		random.seed(4)
 
 	def initialize(self):
 		start_time = time.time()
@@ -55,6 +59,7 @@ class Elections:
 		self.votes = dict()
 		self.sorted_voters = []
 		self.sorted_candidates = []	
+		self.leading_candidates = []
 
 	def _sortear(self, dist):
 		res = -10
