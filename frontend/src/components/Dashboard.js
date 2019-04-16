@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { setTwoRounds, setIrv, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority } from "../actions/elections.js";
+import { setTwoRounds, setIrv, setSbs, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority } from "../actions/elections.js";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
 
@@ -16,13 +16,16 @@ export class Dashboard extends Component {
             redirect: false,
             progress_bar: false,
             progress_bar_width: "0%",
-            progress_bar_msg: ""
+            progress_bar_msg: "",
+            tactical_checked: false,
+            minority_checked: false
         }
     }
 
     static propTypes ={
         two_rounds: PropTypes.bool.isRequired,
         irv: PropTypes.bool.isRequired,
+        sbs: PropTypes.bool.isRequired,
         n_voters: PropTypes.number.isRequired,
         n_vacancies: PropTypes.number.isRequired,
         candidates: PropTypes.array.isRequired,
@@ -39,9 +42,12 @@ export class Dashboard extends Component {
     onBlurNCandidates = (e) => this.props.setNCandidates(e.target.value);
     onBlurNVacancies = (e) => this.props.setNVacancies(e.target.value);
 
+    toggleTacticalCheckbox = (e) => this.setState({[e.target.name]:e.target.checked});
+    toggleMinorityCheckbox = (e) => this.setState({[e.target.name]:e.target.checked});
+
     renderRedirect = () => {
         if (this.state.redirect) {
-          return <Redirect to={{ pathname: "/results", state: { go: true, trs_run: this.props.two_rounds, trs: this.state.trs, irv_run: this.props.irv, irv: this.state.irv } }}/>
+          return <Redirect to={{ pathname: "/results", state: { go: true, trs_run: this.props.two_rounds, trs: this.state.trs, irv_run: this.props.irv, irv: this.state.irv, sbs_run: this.props.sbs, sbs:this.state.sbs } }}/>
         }
     }
 
@@ -49,10 +55,13 @@ export class Dashboard extends Component {
         const payload = {
             two_rounds: this.props.two_rounds,
             irv: this.props.irv,
+            sbs: this.props.sbs,
             n_voters: this.props.n_voters,
             n_vacancies: this.props.n_vacancies,
             candidates: this.props.candidates,
             candidates_names: this.props.candidates_names,
+            tactical: this.state.tactical_checked,
+            minority: this.state.minority_checked,
             tactical_votes: this.props.tactical_votes,
             minority_votes: this.props.minority_votes
         };
@@ -63,8 +72,8 @@ export class Dashboard extends Component {
     handleAjaxRequest = (payload) => {
         const csrfToken = Cookies.get('csrftoken');
 
-        const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, candidates_names: payload.candidates_names, tactical_votes: payload.tactical_votes, minority_votes: payload.minority_votes, n_vacancies: payload.n_vacancies }
-        const get_results_payload = { two_rounds: payload.two_rounds, irv: payload.irv }
+        const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, candidates_names: payload.candidates_names, tactical: payload.tactical, minority: payload.minority, tactical_votes: payload.tactical_votes, minority_votes: payload.minority_votes, n_vacancies: payload.n_vacancies }
+        const get_results_payload = { two_rounds: payload.two_rounds, irv: payload.irv, sbs: payload.sbs }
 
         this.setState({ progress_bar: true, progress_bar_msg: "Creating Candidates..." });
 
@@ -100,7 +109,7 @@ export class Dashboard extends Component {
                     })
                     .then(response => {
                         this.setState({ progress_bar_width: "100%" });
-                        this.setState({ redirect: true, go: true, trs: response.data.status1, irv: response.data.status2 })
+                        this.setState({ redirect: true, go: true, trs: response.data.status1, irv: response.data.status2, sbs: response.data.status3 })
                     })
                     .catch(error => {
                         console.error(error);
@@ -129,7 +138,8 @@ export class Dashboard extends Component {
                     <br></br>
                     <div style={{textAlign:'center'}} className="btn-group btn-group-toggle" data-toggle="buttons">
                         <button style={{margin:'1rem'}} onClick={this.props.setTwoRounds.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="The two-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate.">2 Round System</button>
-                        <button style={{margin:'1rem'}} onClick={this.props.setIrv.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="right" title="" data-original-title="Instead of voting only for a single candidate, voters in IRV elections can rank the candidates in order of preference.">Instant-runoff Voting</button>
+                        <button style={{margin:'1rem'}} onClick={this.props.setSbs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters give scores to every candidate, the candidate(s) with the highest sum of scores wins.">Score Based System</button>
+                        <button style={{margin:'1rem'}} onClick={this.props.setIrv.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="right" title="" data-original-title="Instead of voting only for a single candidate, voters in IRV can rank the candidates in order of preference and each round the worst ranked candidate is eliminated.">Instant-runoff Voting</button>
                     </div>
                 </div>
                 <br></br><br></br>
@@ -145,6 +155,14 @@ export class Dashboard extends Component {
                     <div style={{display: "grid", gridTemplateColumns:"30% 20% 25% 25%"}}>
                         <h1 style={{padding:'1rem', margin: "auto"}}> CANDIDATES </h1>
                         <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
+                        <div style={{margin: "auto"}} className="custom-control custom-checkbox">
+                            <input type="checkbox" className="custom-control-input" id="tactical-check" name="tactical_checked" checked={this.state.tactical_checked} onChange={this.toggleTacticalCheckbox} />
+                            <label className="custom-control-label" htmlFor="tactical-check">Tactical Voting</label>
+                        </div>
+                        <div style={{margin: "auto"}} className="custom-control custom-checkbox">
+                            <input type="checkbox" className="custom-control-input" id="minority-check" name="minority_checked" checked={this.state.minority_checked} onChange={this.toggleMinorityCheckbox} />
+                            <label className="custom-control-label" htmlFor="minority-check">Minority Voting</label>
+                        </div>
                         {/* <div style={{marginBottom:"2rem"}} className="form-group">
                             <label style={{marginLeft:"25%"}} for="tacticalVote">Tactical Votes Percentage</label>
                             <select style={{width:"50%", marginLeft:"25%"}} className="form-control" id="tacticalVote">
@@ -181,7 +199,7 @@ export class Dashboard extends Component {
 
                     <div className="candidates" style={{margin: '0 auto'}}>
                         {this.props.candidates.map((candidate, index) => (
-                            <Candidate key={index} index={index} fame={candidate} name={this.props.candidates_names[index]} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} setName={this.props.setName.bind(this)} setFame={this.props.setFame.bind(this)} deleteCandidate={this.props.deleteCandidate.bind(this)} setTactical={this.props.setTactical.bind(this)} setMinority={this.props.setMinority.bind(this)}/>
+                            <Candidate key={index} index={index} fame={candidate} name={this.props.candidates_names[index]} tactical={this.state.tactical_checked} minority={this.state.minority_checked} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} setName={this.props.setName.bind(this)} setFame={this.props.setFame.bind(this)} deleteCandidate={this.props.deleteCandidate.bind(this)} setTactical={this.props.setTactical.bind(this)} setMinority={this.props.setMinority.bind(this)}/>
                         ))}
                         <div style={{padding:'2rem', textAlign: 'center'}}>
                             <button onClick={this.props.addCandidate.bind(this, 0, "Candidate " + this.props.candidates.length, 0.0, 0.0)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
@@ -216,6 +234,7 @@ export class Dashboard extends Component {
 const mapStateToProps = state => ({
     two_rounds: state.electionsReducer.two_rounds,
     irv: state.electionsReducer.irv,
+    sbs: state.electionsReducer.sbs,
     n_voters: state.electionsReducer.n_voters,
     n_vacancies: state.electionsReducer.n_vacancies,
     candidates: state.electionsReducer.candidates,
@@ -224,4 +243,4 @@ const mapStateToProps = state => ({
     minority_votes: state.electionsReducer.minority_votes
 });
 
-export default connect(mapStateToProps, {setTwoRounds, setIrv, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority})(Dashboard);
+export default connect(mapStateToProps, {setTwoRounds, setIrv, setSbs, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority})(Dashboard);

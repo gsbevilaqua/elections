@@ -28,9 +28,9 @@ class TwoRoundSystem:
 	def _first_round(self):
 		print("\nFIRST ROUND:")
 		self._set_leading_candidates()
-		if self.elec.N_CANDIDATES > 3:
+		if self.elec.N_CANDIDATES > 3 and self.elec.TACTICAL_VOTING:
 			self._count_tactical_votes()
-		if self.elec.N_VACANCIES > 1:
+		if self.elec.N_VACANCIES > 1 and self.elec.MINORITY_VOTING:
 			self._count_minority_votes()
 		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
 		self.winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX]
@@ -79,22 +79,20 @@ class TwoRoundSystem:
 	def _count_tactical_votes(self):
 		print("::::::::COUNTING TACTICAL VOTES...")
 		t_votes_changed = 0
-
 		for candidate in self.votes_copy:
 			if candidate not in self.leading_candidates:
 				for voter_index in self.votes_copy[candidate]:
-					# if random.random() < self.elec.TACTICAL_VOTE_PERCENTAGE:
-						for index, _candidate in enumerate(reversed(self.elec.sorted_voters[voter_index])):
-							if _candidate[self.elec.CANDIDATE_INDEX] in self.leading_candidates:
-								if _candidate[self.elec.CANDIDATE_RANK] >= 0:
-									if random.random() < self.elec.tactical_vote_percentages[_candidate[self.elec.CANDIDATE_INDEX]]:
-										t_votes_changed += 1
-										self.sorted_voters[voter_index][index], self.sorted_voters[voter_index][-1] = self.sorted_voters[voter_index][-1], self.sorted_voters[voter_index][index]
-										self.candidates[candidate] -= 1
-										self.candidates[_candidate[self.elec.CANDIDATE_INDEX]] += 1
-										self.votes[candidate].remove(voter_index)
-										self.votes[_candidate[self.elec.CANDIDATE_INDEX]].add(voter_index)
-										break
+					for index, _candidate in enumerate(reversed(self.elec.sorted_voters[voter_index])):
+						if _candidate[self.elec.CANDIDATE_INDEX] in self.leading_candidates:
+							if _candidate[self.elec.CANDIDATE_RANK] >= 0:
+								if random.random() < self.elec.tactical_vote_percentages[_candidate[self.elec.CANDIDATE_INDEX]]:
+									t_votes_changed += 1
+									self.sorted_voters[voter_index][index], self.sorted_voters[voter_index][-1] = self.sorted_voters[voter_index][-1], self.sorted_voters[voter_index][index]
+									self.candidates[candidate] -= 1
+									self.candidates[_candidate[self.elec.CANDIDATE_INDEX]] += 1
+									self.votes[candidate].remove(voter_index)
+									self.votes[_candidate[self.elec.CANDIDATE_INDEX]].add(voter_index)
+									break
 		
 		print(":::::T votes changed: ", t_votes_changed)
 							
@@ -105,24 +103,10 @@ class TwoRoundSystem:
 		for candidate in self.leading_candidates:
 			if self.leading_candidates.index(candidate) >= math.floor(self.elec.N_VACANCIES/2):
 				break
-			print("::::::lalalal::: ", candidate)
 			for voter_index in self.votes_copy[candidate]:
-				# if random.random() < self.elec.MINORITY_VOTE_PERCENTAGE:
-					for index, _candidate in enumerate(self.sorted_voters[voter_index]):
-						if _candidate[self.elec.CANDIDATE_INDEX] in self.leading_candidates:
-							if self.leading_candidates.index(_candidate[self.elec.CANDIDATE_INDEX]) >= math.floor(self.elec.N_VACANCIES/2):
-								if _candidate[self.elec.CANDIDATE_RANK] >= 0:
-									if random.random() < self.elec.minority_vote_percentages[_candidate[self.elec.CANDIDATE_INDEX]]:
-										m_votes_changed += 1
-										self.candidates[candidate] -= 1
-										self.candidates[_candidate[self.elec.CANDIDATE_INDEX]] += 1
-										self.votes[candidate].remove(voter_index)
-										self.votes[_candidate[self.elec.CANDIDATE_INDEX]].add(voter_index)
-										self.sorted_voters.append(self.sorted_voters[voter_index].pop(index))
-										break
-								else:
-									break
-						else:
+				for index, _candidate in enumerate(self.sorted_voters[voter_index]):
+					if _candidate[self.elec.CANDIDATE_INDEX] in self.leading_candidates:
+						if self.leading_candidates.index(_candidate[self.elec.CANDIDATE_INDEX]) >= math.floor(self.elec.N_VACANCIES/2):
 							if _candidate[self.elec.CANDIDATE_RANK] >= 0:
 								if random.random() < self.elec.minority_vote_percentages[_candidate[self.elec.CANDIDATE_INDEX]]:
 									m_votes_changed += 1
@@ -132,6 +116,18 @@ class TwoRoundSystem:
 									self.votes[_candidate[self.elec.CANDIDATE_INDEX]].add(voter_index)
 									self.sorted_voters.append(self.sorted_voters[voter_index].pop(index))
 									break
+							else:
+								break
+					else:
+						if _candidate[self.elec.CANDIDATE_RANK] >= 0:
+							if random.random() < self.elec.minority_vote_percentages[_candidate[self.elec.CANDIDATE_INDEX]]:
+								m_votes_changed += 1
+								self.candidates[candidate] -= 1
+								self.candidates[_candidate[self.elec.CANDIDATE_INDEX]] += 1
+								self.votes[candidate].remove(voter_index)
+								self.votes[_candidate[self.elec.CANDIDATE_INDEX]].add(voter_index)
+								self.sorted_voters.append(self.sorted_voters[voter_index].pop(index))
+								break
 			
 		print(":::::M votes changed: ", m_votes_changed)
 
@@ -141,8 +137,8 @@ class TwoRoundSystem:
 		fc, fm, fsr = self._first_round()
 		fcout = [[], []]
 		for element in fc:
-			fcout[0].append(self.elec.candidates_names[int(element[0])])
-			fcout[1].append(element[1])
+			fcout[0].append(self.elec.candidates_names[int(element[self.elec.CANDIDATE_INDEX])])
+			fcout[1].append(element[self.elec.NUMBER_OF_VOTES])
 
 		second_round = False
 		sm = None

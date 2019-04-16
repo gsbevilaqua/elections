@@ -7,7 +7,7 @@ from collections import defaultdict
 class Elections:
 
 	CANDIDATE_INDEX = 0
-	CANDIDATE_RANK = NUMBER_OF_VOTES = 1
+	CANDIDATE_RANK = NUMBER_OF_VOTES = CANDIDATE_SCORE = 1
 
 	candidates = dict() # DICTIONARY OF KEY -> INDEX OF CANDIDATE, VALUE -> NUMBER OF VOTES
 	voters = []	# LIST OF DICTIONAIRIES WICH HOLDS KEY -> INDEX CANDIDATE, VALUE -> RATING OF THE VOTER FOR THE CANDIDATE
@@ -27,12 +27,14 @@ class Elections:
 	excluded = set()
 	rounds = []
 
-	def __init__(self, n_voters, bias_vector, n_vacancies,  tactical_votes, minority_votes, candidates_names = []):
+	def __init__(self, n_voters, bias_vector, n_vacancies, tactical, minority, tactical_votes, minority_votes, candidates_names = []):
 		self.N_VOTERS = n_voters # NUMBER OF VOTERS
 		self.N_CANDIDATES = len(bias_vector) # NUMBER OF CANDIDATES
 		self.BIAS_VECTOR = bias_vector # VECTOR OF HELP VALUES FROM 0 TO 4 FOR CANDIDATES - 0 (WORST CHANCE FOR GETTING GOOD RATING) , 4 (BEST CHANCE FOR GETTING GOOD RATINGS)
 		self.N_VACANCIES = n_vacancies
 		self.candidates_names = candidates_names
+		self.TACTICAL_VOTING = tactical
+		self.MINORITY_VOTING = minority
 		self.tactical_vote_percentages = tactical_votes
 		self.minority_vote_percentages = minority_votes
 		random.seed(4)

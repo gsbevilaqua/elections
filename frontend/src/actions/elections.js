@@ -1,4 +1,4 @@
-import { SET_TWO_ROUNDS, SET_IRV, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC } from './types';
+import { SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC } from './types';
 
 export const setTwoRounds = (val) => dispatch => {
     dispatch({
@@ -9,6 +9,12 @@ export const setTwoRounds = (val) => dispatch => {
 export const setIrv = (val) => dispatch => {
     dispatch({
         type: SET_IRV
+    });
+}
+
+export const setSbs = (val) => dispatch => {
+    dispatch({
+        type: SET_SBS
     });
 }
 
