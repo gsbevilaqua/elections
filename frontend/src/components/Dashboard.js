@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { setTwoRounds, setIrv, setSbs, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority } from "../actions/elections.js";
+import { setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority } from "../actions/elections.js";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
 
@@ -23,9 +23,12 @@ export class Dashboard extends Component {
     }
 
     static propTypes ={
+        one_round: PropTypes.bool.isRequired,
         two_rounds: PropTypes.bool.isRequired,
         irv: PropTypes.bool.isRequired,
         sbs: PropTypes.bool.isRequired,
+        fsb: PropTypes.bool.isRequired,
+        mvc: PropTypes.bool.isRequired,
         n_voters: PropTypes.number.isRequired,
         n_vacancies: PropTypes.number.isRequired,
         candidates: PropTypes.array.isRequired,
@@ -47,15 +50,18 @@ export class Dashboard extends Component {
 
     renderRedirect = () => {
         if (this.state.redirect) {
-          return <Redirect to={{ pathname: "/results", state: { go: true, trs_run: this.props.two_rounds, trs: this.state.trs, irv_run: this.props.irv, irv: this.state.irv, sbs_run: this.props.sbs, sbs:this.state.sbs } }}/>
+          return <Redirect to={{ pathname: "/results", state: { go: true, ors_run: this.props.one_round, ors: this.state.ors, trs_run: this.props.two_rounds, trs: this.state.trs, irv_run: this.props.irv, irv: this.state.irv, sbs_run: this.props.sbs, sbs: this.state.sbs, fsb_run: this.props.fsb, fsb: this.state.fsb, mvc_run: this.props.mvc, mvc: this.state.mvc } }}/>
         }
     }
 
     handleSubmit = () => {
         const payload = {
+            one_round: this.props.one_round,
             two_rounds: this.props.two_rounds,
             irv: this.props.irv,
             sbs: this.props.sbs,
+            fsb: this.props.fsb,
+            mvc: this.props.mvc,
             n_voters: this.props.n_voters,
             n_vacancies: this.props.n_vacancies,
             candidates: this.props.candidates,
@@ -73,7 +79,7 @@ export class Dashboard extends Component {
         const csrfToken = Cookies.get('csrftoken');
 
         const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, candidates_names: payload.candidates_names, tactical: payload.tactical, minority: payload.minority, tactical_votes: payload.tactical_votes, minority_votes: payload.minority_votes, n_vacancies: payload.n_vacancies }
-        const get_results_payload = { two_rounds: payload.two_rounds, irv: payload.irv, sbs: payload.sbs }
+        const get_results_payload = { one_round: payload.one_round, two_rounds: payload.two_rounds, irv: payload.irv, sbs: payload.sbs, fsb: payload.fsb, mvc: payload.mvc }
 
         this.setState({ progress_bar: true, progress_bar_msg: "Creating Candidates..." });
 
@@ -109,7 +115,7 @@ export class Dashboard extends Component {
                     })
                     .then(response => {
                         this.setState({ progress_bar_width: "100%" });
-                        this.setState({ redirect: true, go: true, trs: response.data.status1, irv: response.data.status2, sbs: response.data.status3 })
+                        this.setState({ redirect: true, go: true, ors: response.data.status, trs: response.data.status1, irv: response.data.status2, sbs: response.data.status3, fsb: response.data.status4, mvc: response.data.status5 })
                     })
                     .catch(error => {
                         console.error(error);
@@ -136,10 +142,17 @@ export class Dashboard extends Component {
                 <div style={{textAlign:'center'}}>
                     <h1 style={{padding:'1rem', fontSize: "3rem"}}> ELECTION SYSTEM </h1>
                     <br></br>
-                    <div style={{textAlign:'center'}} className="btn-group btn-group-toggle" data-toggle="buttons">
-                        <button style={{margin:'1rem'}} onClick={this.props.setTwoRounds.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="The two-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate.">2 Round System</button>
-                        <button style={{margin:'1rem'}} onClick={this.props.setSbs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters give scores to every candidate, the candidate(s) with the highest sum of scores wins.">Score Based System</button>
-                        <button style={{margin:'1rem'}} onClick={this.props.setIrv.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="right" title="" data-original-title="Instead of voting only for a single candidate, voters in IRV can rank the candidates in order of preference and each round the worst ranked candidate is eliminated.">Instant-runoff Voting</button>
+                    <div style={{display:'block'}} className="btn-group btn-group-toggle" data-toggle="buttons">
+                        <div>
+                            <button style={{margin:'1rem'}} onClick={this.props.setOneRound.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="top" title="" data-original-title="The one-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate.">1 Round System</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setTwoRounds.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="The two-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate. The 2 best placed candidates go to a second round.">2 Round System</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setSbs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters give scores to every candidate, the candidate(s) with the highest sum of scores wins.">Score Based System</button>
+                        </div>
+                        <div>
+                            <button style={{margin:'1rem'}} onClick={this.props.setFsb.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters rank the candidates by preference, each rank has a fixed score, the candidate(s) with the highest sum of scores wins.">Fixed Score Based</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setIrv.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="top" title="" data-original-title="Instead of voting only for a single candidate, voters in IRV can rank the candidates in order of preference and each round the worst ranked candidate is eliminated.">Instant-runoff Voting</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setMvc.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="top" title="" data-original-title="In this system voters can vote for as many candidates as the number of candidates elected">Multiple Votes Cast</button>
+                        </div>
                     </div>
                 </div>
                 <br></br><br></br>
@@ -163,38 +176,6 @@ export class Dashboard extends Component {
                             <input type="checkbox" className="custom-control-input" id="minority-check" name="minority_checked" checked={this.state.minority_checked} onChange={this.toggleMinorityCheckbox} />
                             <label className="custom-control-label" htmlFor="minority-check">Minority Voting</label>
                         </div>
-                        {/* <div style={{marginBottom:"2rem"}} className="form-group">
-                            <label style={{marginLeft:"25%"}} for="tacticalVote">Tactical Votes Percentage</label>
-                            <select style={{width:"50%", marginLeft:"25%"}} className="form-control" id="tacticalVote">
-                                <option>0%</option>
-                                <option>10%</option>
-                                <option>20%</option>
-                                <option>30%</option>
-                                <option>40%</option>
-                                <option>50%</option>
-                                <option>60%</option>
-                                <option>70%</option>
-                                <option>80%</option>
-                                <option>90%</option>
-                                <option>100%</option>
-                            </select>
-                        </div>
-                        <div style={{marginBottom:"2rem"}} className="form-group">
-                            <label style={{marginLeft:"25%"}} for="minorityVote">Minority Votes Percentage</label>
-                            <select style={{width:"50%", marginLeft:"25%"}} className="form-control" id="minorityVote">
-                                <option>0%</option>
-                                <option>10%</option>
-                                <option>20%</option>
-                                <option>30%</option>
-                                <option>40%</option>
-                                <option>50%</option>
-                                <option>60%</option>
-                                <option>70%</option>
-                                <option>80%</option>
-                                <option>90%</option>
-                                <option>100%</option>
-                            </select>
-                        </div> */}
                     </div>
 
                     <div className="candidates" style={{margin: '0 auto'}}>
@@ -232,9 +213,12 @@ export class Dashboard extends Component {
 }
 
 const mapStateToProps = state => ({
+    one_round: state.electionsReducer.one_round,    
     two_rounds: state.electionsReducer.two_rounds,
     irv: state.electionsReducer.irv,
     sbs: state.electionsReducer.sbs,
+    fsb: state.electionsReducer.fsb,
+    mvc: state.electionsReducer.mvc,
     n_voters: state.electionsReducer.n_voters,
     n_vacancies: state.electionsReducer.n_vacancies,
     candidates: state.electionsReducer.candidates,
@@ -243,4 +227,4 @@ const mapStateToProps = state => ({
     minority_votes: state.electionsReducer.minority_votes
 });
 
-export default connect(mapStateToProps, {setTwoRounds, setIrv, setSbs, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority})(Dashboard);
+export default connect(mapStateToProps, {setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority})(Dashboard);

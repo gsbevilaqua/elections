@@ -1,9 +1,12 @@
-import { SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC } from '../actions/types.js'
+import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_FSB, SET_MVC, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC } from '../actions/types.js'
 
 const initial_state = {
+    one_round: false,
     two_rounds: false,
     irv: false,
     sbs: false,
+    fsb: false,
+    mvc: false,
     n_voters: 1000,
     n_vacancies: 1,
     candidates: [],
@@ -14,6 +17,11 @@ const initial_state = {
 
 export default function(state = initial_state, action) {
     switch(action.type) {
+        case SET_ONE_ROUND:
+        return {
+            ...state,
+            one_round: !state.one_round
+        }
         case SET_TWO_ROUNDS:
             return {
                 ...state,
@@ -28,7 +36,17 @@ export default function(state = initial_state, action) {
             return {
                 ...state,
                 sbs: !state.sbs
-            }            
+            }
+        case SET_FSB:
+            return {
+                ...state,
+                fsb: !state.fsb
+            }
+        case SET_MVC:
+            return {
+                ...state,
+                mvc: !state.mvc
+            }                      
         case SET_NUMBER_CANDIDATES:
             return {
                 ...state,
@@ -75,9 +93,12 @@ export default function(state = initial_state, action) {
             }
         case RESET:
             return{
+                one_round: false,
                 two_rounds: false,
                 irv: false,
                 sbs: false,
+                fsb: false,
+                mvc: false,
                 n_voters: 1000,
                 n_vacancies: 1,
                 candidates: [],

@@ -3,9 +3,12 @@ from django.views.decorators.csrf import csrf_protect
 from django.http import JsonResponse
 import json
 
+from api.OneRoundSystem import OneRoundSystem
 from api.TwoRoundSystem import TwoRoundSystem
 from api.InstantRunoffVoting import InstantRunoffVoting
 from api.ScoreBased import ScoreBased
+from api.FixedScoreBased import FixedScoreBased
+from api.MultipleVotesCast import MultipleVotesCast
 from api.Elections import Elections
 
 elec = None
@@ -46,14 +49,23 @@ def sort_ranks(request):
 
 def get_results(request):
     global elec
+    one_round = json.loads(request.body.decode('utf-8')).get('one_round')
     two_rounds = json.loads(request.body.decode('utf-8')).get('two_rounds')
     irv = json.loads(request.body.decode('utf-8')).get('irv')
     scores = json.loads(request.body.decode('utf-8')).get('sbs')
+    fsb = json.loads(request.body.decode('utf-8')).get('fsb')
+    mvc = json.loads(request.body.decode('utf-8')).get('mvc')
 
+    status = "null"
     status1 = "null"
     status2 = "null"
     status3 = "null"
+    status4 = "null"
+    status5 = "null"
 
+    if(one_round):
+        ors = OneRoundSystem(elec)
+        status = ors.simulate()
     if(two_rounds):
         trs = TwoRoundSystem(elec)
         status1 = trs.simulate()
@@ -63,9 +75,18 @@ def get_results(request):
     if(scores):
         scores = ScoreBased(elec)
         status3 = scores.simulate()
+    if(fsb):
+        fsb = FixedScoreBased(elec)
+        status4 = fsb.simulate()
+    if(mvc):
+        mvc = MultipleVotesCast(elec)
+        status5 = mvc.simulate()
 
     return JsonResponse({
+        'status': status,
         'status1': status1,
         'status2': status2,
-        'status3': status3
+        'status3': status3,
+        'status4': status4,
+        'status5': status5
     })

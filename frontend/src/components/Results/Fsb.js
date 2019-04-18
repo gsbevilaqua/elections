@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Chart from 'react-apexcharts'
 
-export default class Sbs extends Component {
+export default class Fsb extends Component {
   constructor(props){
     super(props);
     let mean = this.props.res[1]
@@ -146,7 +146,7 @@ export default class Sbs extends Component {
     if(this.props.didRun){
       return (
         <div style={{backgroundColor: "#2b2d3e"}}>
-            <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", background: "black"}}> SCORE BASED SYSTEM </h1>
+            <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", background: "black"}}> FIXED SCORE BASED SYSTEM </h1>
             <div style={{padding:"4rem"}}>            
                 <div>
                   <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>

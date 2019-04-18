@@ -1,4 +1,10 @@
-import { SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC } from './types';
+import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_FSB, SET_MVC, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC } from './types';
+
+export const setOneRound = (val) => dispatch => {
+    dispatch({
+        type: SET_ONE_ROUND
+    });
+}
 
 export const setTwoRounds = (val) => dispatch => {
     dispatch({
@@ -15,6 +21,18 @@ export const setIrv = (val) => dispatch => {
 export const setSbs = (val) => dispatch => {
     dispatch({
         type: SET_SBS
+    });
+}
+
+export const setFsb = (val) => dispatch => {
+    dispatch({
+        type: SET_FSB
+    });
+}
+
+export const setMvc = (val) => dispatch => {
+    dispatch({
+        type: SET_MVC
     });
 }
 

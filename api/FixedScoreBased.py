@@ -2,7 +2,7 @@ import random, copy
 from api.Elections import Elections
 #from Elections import Elections
 
-class ScoreBased:
+class FixedScoreBased:
 
     elec = None
     candidates = dict()
@@ -19,12 +19,14 @@ class ScoreBased:
         for voter_index, voter in enumerate(self.elec.sorted_voters):
             if random.random() < self.elec.tactical_vote_percentages[voter[-1][self.elec.CANDIDATE_INDEX]]:
                 t_votes_changed += 1
-                for candidate_index, candidate in enumerate(reversed(voter)):
-                    if candidate_index == 0:
+                temp = []
+                for candidate in reversed(self.elec.sorted_candidates):
+                    if candidate[0] == voter[-1][self.elec.CANDIDATE_INDEX]:
                         continue
                     else:
-                        self.sorted_voters[voter_index][-(candidate_index + 1)] = (voter[-(candidate_index + 1)][self.elec.CANDIDATE_INDEX], -10)
-
+                        temp.append((candidate[0], 0))
+                temp.append((voter[-1][self.elec.CANDIDATE_INDEX], 10))
+                self.sorted_voters[voter_index] = temp
 		
         print(":::::ScoreBased T votes changed: ", t_votes_changed)
 
@@ -33,11 +35,13 @@ class ScoreBased:
             self.candidates[index] = 0
 
         for voter in self.sorted_voters:
+            score = 1
             for candidate in voter:
-                self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += candidate[self.elec.CANDIDATE_RANK]
+                self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += score
+                score += 1
 
     def simulate(self):
-        print("SCORE BASED SYSTEM")
+        print("FIXED SCORE BASED SYSTEM")
 
         if self.elec.TACTICAL_VOTING:
             self._apply_tactical_votes()
