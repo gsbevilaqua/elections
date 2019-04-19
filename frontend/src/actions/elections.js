@@ -1,4 +1,4 @@
-import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_FSB, SET_MVC, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC } from './types';
+import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_FSB, SET_MVC, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC, ADD_COALITION, ADD_CANDIDATE_TO_COALITION, DELETE_COALITION, SET_CANDIDATE } from './types';
 
 export const setOneRound = (val) => dispatch => {
     dispatch({
@@ -41,16 +41,18 @@ export const setNCandidates = (val) => dispatch => {
     let candidates_names_array = [];
     let tactical_votes_array = [];
     let minority_votes_array = [];
+    let ava = [];
     for (let index = 0; index < val; index++) {
         candidates_array.push(0);
         candidates_names_array.push("Candidate " + index);
         tactical_votes_array.push(0.0);
         minority_votes_array.push(0.0);
+        ava.push({"value": index, "label": "Candidate " + index});
     }
 
     dispatch({
         type: SET_NUMBER_CANDIDATES,
-        payload: { fames: candidates_array, names: candidates_names_array, tacts: tactical_votes_array, minos: minority_votes_array }
+        payload: { fames: candidates_array, names: candidates_names_array, tacts: tactical_votes_array, minos: minority_votes_array, ava: ava }
     });
 }
 
@@ -76,10 +78,10 @@ export const setNVacancies = (val) => dispatch => {
     });
 }
 
-export const addCandidate = (fame, name, tact, mino) => dispatch => {
+export const addCandidate = (fame, name, tact, mino, index) => dispatch => {
     dispatch({
         type: ADD_CANDIDATE, 
-        payload: { fame: fame, name: name, tact: tact, mino: mino }
+        payload: { fame: fame, name: name, tact: tact, mino: mino, index: index }
     });
 }
 
@@ -121,5 +123,33 @@ export const setMinority = (index, mino) => dispatch => {
     dispatch({
         type: SET_MINORITY_PERC,
         payload: [index, val]
+    });
+}
+
+export const addCoalition = () => dispatch => {
+    dispatch({
+        type: ADD_COALITION
+    });
+}
+
+export const deleteCoalition = (index) => dispatch => {
+    dispatch({
+        type: DELETE_COALITION,
+        payload: index
+    });
+}
+
+export const addCandidateToCoalition = (index, vec) => dispatch => {
+    vec.push("NO CANDIDATE");
+    dispatch({
+        type: ADD_CANDIDATE_TO_COALITION,
+        payload: [index, vec]
+    });
+}
+
+export const setCandidate = (index, index2, val) => dispatch => {
+    dispatch({
+        type: SET_CANDIDATE,
+        payload: [index, index2, val]
     });
 }

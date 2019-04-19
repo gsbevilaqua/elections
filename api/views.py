@@ -23,8 +23,9 @@ def create_candidates(request):
     minority = json.loads(request.body.decode('utf-8')).get('minority')
     tactical_votes = json.loads(request.body.decode('utf-8')).get('tactical_votes')
     minority_votes = json.loads(request.body.decode('utf-8')).get('minority_votes')
+    coalitions = json.loads(request.body.decode('utf-8')).get('coalitions')
 
-    elec = Elections(int(n_voters), candidates, n_vacancies, tactical, minority, tactical_votes, minority_votes, candidates_names)
+    elec = Elections(int(n_voters), candidates, n_vacancies, tactical, minority, tactical_votes, minority_votes, coalitions, candidates_names)
     elec.reset()
     elec.create_candidates()
 

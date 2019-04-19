@@ -77,7 +77,7 @@ export class Candidate extends Component {
                             <input onBlur={this.props.setFame.bind(this, this.props.index, -2)} type="radio" name="fame" id="most-polarizer" autoComplete="off"/> Most Polarizer
                         </label>
                     </div>
-                    <div style={{margin: '0 auto'}}>
+                    <div style={{margin: '0 auto', display:"flex", alignItems:"center"}}>
                         <button onClick={this.props.deleteCandidate.bind(this, this.props.index)} className="btn btn-primary btn-sm"><i className="fas fa-trash-alt fa-2x"></i></button>
                     </div>
                 </div>

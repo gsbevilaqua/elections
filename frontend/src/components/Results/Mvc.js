@@ -138,10 +138,6 @@ export default class Mvc extends Component {
     }
   }
 
-  componentDidMount(){
-    console.log(this.state.points);
-  }
-
   render() {
     if(this.props.didRun){
       return (

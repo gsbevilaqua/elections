@@ -1,4 +1,4 @@
-import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_FSB, SET_MVC, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC } from '../actions/types.js'
+import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_FSB, SET_MVC, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC, ADD_COALITION, ADD_CANDIDATE_TO_COALITION, DELETE_COALITION, SET_CANDIDATE } from '../actions/types.js'
 
 const initial_state = {
     one_round: false,
@@ -12,7 +12,11 @@ const initial_state = {
     candidates: [],
     candidates_names: [],
     tactical_votes: [],
-    minority_votes: []
+    minority_votes: [],
+    coalitions: [],
+    available: [],
+    og_available: [],
+    added_candidates: []
 }
 
 export default function(state = initial_state, action) {
@@ -53,7 +57,9 @@ export default function(state = initial_state, action) {
                 candidates: action.payload.fames,
                 candidates_names: action.payload.names,
                 tactical_votes: action.payload.tacts,
-                minority_votes: action.payload.minos
+                minority_votes: action.payload.minos,
+                available: action.payload.ava,
+                og_available: action.payload.ava
             }
         case SET_NUMBER_VOTERS:
             return{
@@ -71,7 +77,9 @@ export default function(state = initial_state, action) {
                 candidates: [...state.candidates, action.payload.fame],
                 candidates_names: [...state.candidates_names, action.payload.name],
                 tactical_votes: [...state.tactical_votes, action.payload.tact],
-                minority_votes: [...state.minority_votes, action.payload.mino]
+                minority_votes: [...state.minority_votes, action.payload.mino],
+                available: [...state.available, action.payload.index],
+                og_available: [...state.available, action.payload.index]
             }
         case DELETE_CANDIDATE:
             return{
@@ -104,7 +112,11 @@ export default function(state = initial_state, action) {
                 candidates: [],
                 candidates_names: [],
                 tactical_votes: [],
-                minority_votes: []
+                minority_votes: [],
+                coalitions: [],
+                available: [],
+                og_available: [],
+                added_candidates: []
             }    
         case SET_TACTICAL_PERC:
             return{
@@ -115,7 +127,43 @@ export default function(state = initial_state, action) {
             return{
                 ...state,
                 minority_votes: [...state.minority_votes.slice(0, action.payload[0]), action.payload[1], ...state.minority_votes.slice(action.payload[0] + 1)]
-            }       
+            }
+        case ADD_COALITION:
+            return{
+                ...state,
+                coalitions: [...state.coalitions, []]
+            }
+        case DELETE_COALITION:
+            state.coalitions = [...state.coalitions.slice(0, action.payload), ...state.coalitions.slice(action.payload + 1)]
+            state.added_candidates = []
+            state.available = state.og_available
+            state.coalitions.forEach(element => {
+                element.forEach(cand => {
+                    state.added_candidates.push(cand);
+                });
+            });
+            return{
+                ...state,
+                available: [...state.available.filter((x) => !state.added_candidates.includes(x))]
+            }
+        case ADD_CANDIDATE_TO_COALITION:
+            return{
+                ...state,
+                coalitions: [...state.coalitions.slice(0, action.payload[0]), action.payload[1], ...state.coalitions.slice(action.payload[0] + 1)]
+            }                        
+        case SET_CANDIDATE:
+            state.coalitions = [...state.coalitions.slice(0, action.payload[0]), [...state.coalitions[action.payload[0]].slice(0, action.payload[1]), action.payload[2], ...state.coalitions[action.payload[0]].slice(action.payload[1] + 1)], ...state.coalitions.slice(action.payload[0] + 1)]
+            state.added_candidates = []
+            state.available = state.og_available
+            state.coalitions.forEach(element => {
+                element.forEach(cand => {
+                    state.added_candidates.push(cand)
+                });
+            });
+            return{
+                ...state,
+                available: [...state.available.filter((x) => !state.added_candidates.includes(x))]
+            }            
         default:
             return state;
     }

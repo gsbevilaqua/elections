@@ -36,10 +36,14 @@ class TwoRoundSystem:
 		self.winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX]
 		self.second_place = self.sorted_candidates[-2][self.elec.CANDIDATE_INDEX]
 		print(self.sorted_candidates)
-		for candidate in self.sorted_candidates:
+		winners = []
+		vacancies = self.elec.N_VACANCIES
+		for candidate in reversed(self.sorted_candidates):
 			percentage = str(candidate[self.elec.NUMBER_OF_VOTES]/self.elec.N_VOTERS)
 			print("candidate " + str(candidate[self.elec.CANDIDATE_INDEX]) + ": " + str(candidate[self.elec.NUMBER_OF_VOTES]) + " votes - " + percentage + "%")
-		mean, satisfaction_rate = self.elec.calculate_mean(winner=self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
+			if vacancies > 0:
+				winners.append(candidate[0])
+		mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
 		print("MEAN: ", mean)
 		return self.sorted_candidates, mean, satisfaction_rate
 	
@@ -61,7 +65,13 @@ class TwoRoundSystem:
 
 		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
 		print(self.sorted_candidates)
-		mean, satisfaction_rate = self.elec.calculate_mean(winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
+		winners = []
+		vacancies = self.elec.N_VACANCIES
+		for candidate in reversed(self.sorted_candidates):
+			if vacancies == 0:
+				break
+			winners.append(candidate[0])
+		mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
 		print("MEAN: ", mean)
 		return {self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-1][self.elec.NUMBER_OF_VOTES], self.sorted_candidates[-2][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-2][self.elec.NUMBER_OF_VOTES]}, mean, satisfaction_rate
 

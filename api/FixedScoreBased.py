@@ -53,7 +53,13 @@ class FixedScoreBased:
             out[0].append(self.elec.candidates_names[candidate[self.elec.CANDIDATE_INDEX]])
             out[1].append(candidate[self.elec.CANDIDATE_SCORE])
         
-        mean, satisfaction_rate = self.elec.calculate_mean(self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
+        winners = []
+        vacancies = self.elec.N_VACANCIES
+        for candidate in reversed(self.sorted_candidates):
+            if vacancies == 0:
+                break
+            winners.append(candidate[0])
+        mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
 
         elected = out[0][-self.elec.N_VACANCIES:]
 

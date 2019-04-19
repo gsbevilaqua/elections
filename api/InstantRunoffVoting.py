@@ -44,24 +44,47 @@ class InstantRunoffVoting(Elections):
 
 		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
 		print(self.sorted_candidates)
-		for _round in range(self.elec.N_CANDIDATES - self.elec.N_VACANCIES):
-			result = self._count_votes(_round)
-			if(result == 1):
-				print("first_place wins")
-				#e = [lambda x: len(x) for x in self.votes]
-				#print(":::e: ", e)
-				for e in self.votes:
-					print(len(self.votes[e]))
-				mean, satisfaction_rate = self.elec.calculate_mean(winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
-				print("MEAN: ", mean)
-				break
-			elif(result == 0):
-				print("eliminate last_place")
-			else:
-				print("TIE!")
-				mean, satisfaction_rate = self.elec.calculate_mean(winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX])
-				print("MEAN: ", mean)
-				break
+		if(self.elec.N_VACANCIES < 2):
+			for _round in range(self.elec.N_CANDIDATES - self.elec.N_VACANCIES):
+				result = self._count_votes(_round)
+				if(result == 1):
+					print("first_place wins")
+					#e = [lambda x: len(x) for x in self.votes]
+					#print(":::e: ", e)
+					# for e in self.votes:
+					# 	print(len(self.votes[e]))
+					winners = []
+					vacancies = self.elec.N_VACANCIES
+					for candidate in reversed(self.sorted_candidates):
+						if vacancies == 0:
+							break
+						winners.append(candidate[0])
+					mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
+					print("MEAN: ", mean)
+					break
+				elif(result == 0):
+					print("eliminate last_place")
+				else:
+					print("TIE!")
+					winners = []
+					vacancies = self.elec.N_VACANCIES
+					for candidate in reversed(self.sorted_candidates):
+						if vacancies == 0:
+							break
+						winners.append(candidate[0])
+					mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
+					print("MEAN: ", mean)
+					break
+		else:
+			winners = []
+			vacancies = self.elec.N_VACANCIES
+			for candidate in reversed(self.sorted_candidates):
+				if vacancies == 0:
+					break
+				winners.append(candidate[0])
+			mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
+			print("MEAN: ", mean)
+			self.elec.rounds.append(self.sorted_candidates)
 
 		rout = []
 

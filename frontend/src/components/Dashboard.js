@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority } from "../actions/elections.js";
+import { setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority, addCoalition, addCandidateToCoalition, deleteCoalition, setCandidate } from "../actions/elections.js";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
 
 import Candidate from './Candidate';
+import Coalition from './Coalition';
 
 export class Dashboard extends Component {
     constructor(props) {
@@ -35,6 +36,8 @@ export class Dashboard extends Component {
         candidates_names: PropTypes.array.isRequired,
         tactical_votes: PropTypes.array.isRequired,
         minority_votes: PropTypes.array.isRequired,
+        coalitions: PropTypes.array.isRequired,
+        available_candidates: PropTypes.array.isRequired,
     }
 
     componentDidMount() {
@@ -47,6 +50,10 @@ export class Dashboard extends Component {
 
     toggleTacticalCheckbox = (e) => this.setState({[e.target.name]:e.target.checked});
     toggleMinorityCheckbox = (e) => this.setState({[e.target.name]:e.target.checked});
+
+    setCandidate = (coalition_index, candidate_index, candidate_name) => {
+        this.props.setCandidate(coalition_index, candidate_index, candidate_name);
+    }
 
     renderRedirect = () => {
         if (this.state.redirect) {
@@ -69,7 +76,8 @@ export class Dashboard extends Component {
             tactical: this.state.tactical_checked,
             minority: this.state.minority_checked,
             tactical_votes: this.props.tactical_votes,
-            minority_votes: this.props.minority_votes
+            minority_votes: this.props.minority_votes,
+            coalitions: this.props.coalitions
         };
 
         this.handleAjaxRequest(payload);
@@ -78,7 +86,7 @@ export class Dashboard extends Component {
     handleAjaxRequest = (payload) => {
         const csrfToken = Cookies.get('csrftoken');
 
-        const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, candidates_names: payload.candidates_names, tactical: payload.tactical, minority: payload.minority, tactical_votes: payload.tactical_votes, minority_votes: payload.minority_votes, n_vacancies: payload.n_vacancies }
+        const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, candidates_names: payload.candidates_names, tactical: payload.tactical, minority: payload.minority, tactical_votes: payload.tactical_votes, minority_votes: payload.minority_votes, coalitions: payload.coalitions, n_vacancies: payload.n_vacancies }
         const get_results_payload = { one_round: payload.one_round, two_rounds: payload.two_rounds, irv: payload.irv, sbs: payload.sbs, fsb: payload.fsb, mvc: payload.mvc }
 
         this.setState({ progress_bar: true, progress_bar_msg: "Creating Candidates..." });
@@ -144,14 +152,14 @@ export class Dashboard extends Component {
                     <br></br>
                     <div style={{display:'block'}} className="btn-group btn-group-toggle" data-toggle="buttons">
                         <div>
-                            <button style={{margin:'1rem'}} onClick={this.props.setOneRound.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="top" title="" data-original-title="The one-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate.">1 Round System</button>
-                            <button style={{margin:'1rem'}} onClick={this.props.setTwoRounds.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="The two-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate. The 2 best placed candidates go to a second round.">2 Round System</button>
-                            <button style={{margin:'1rem'}} onClick={this.props.setSbs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters give scores to every candidate, the candidate(s) with the highest sum of scores wins.">Score Based System</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setOneRound.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="The one-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate.">1 Round System</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setTwoRounds.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="top" title="" data-original-title="The two-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate. The 2 best placed candidates go to a second round.">2 Round System</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setSbs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="right" title="" data-original-title="In this system voters give scores to every candidate, the candidate(s) with the highest sum of scores wins.">Score Based System</button>
                         </div>
                         <div>
-                            <button style={{margin:'1rem'}} onClick={this.props.setFsb.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters rank the candidates by preference, each rank has a fixed score, the candidate(s) with the highest sum of scores wins.">Fixed Score Based</button>
-                            <button style={{margin:'1rem'}} onClick={this.props.setIrv.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="top" title="" data-original-title="Instead of voting only for a single candidate, voters in IRV can rank the candidates in order of preference and each round the worst ranked candidate is eliminated.">Instant-runoff Voting</button>
-                            <button style={{margin:'1rem'}} onClick={this.props.setMvc.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="top" title="" data-original-title="In this system voters can vote for as many candidates as the number of candidates elected">Multiple Votes Cast</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setFsb.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="In this system voters rank the candidates by preference, each rank has a fixed score, the candidate(s) with the highest sum of scores wins.">Fixed Score Based</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setIrv.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Instead of voting only for a single candidate, voters in IRV can rank the candidates in order of preference and each round the worst ranked candidate is eliminated.">Instant-runoff Voting</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setMvc.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="right" title="" data-original-title="In this system voters can vote for as many candidates as the number of candidates elected">Multiple Votes Cast</button>
                         </div>
                     </div>
                 </div>
@@ -161,6 +169,12 @@ export class Dashboard extends Component {
                     <input onBlur={this.onBlurNVoters} className="form-control" placeholder="Enter a number" />
                     <small className="form-text text-muted"></small>
                 </div>
+                <br></br><br></br>
+                <div className="form-group">
+                    <label style={{color: 'black', fontSize: '1rem'}}> N° of elected candidates: </label>
+                    <input onBlur={this.onBlurNVacancies} className="form-control" placeholder="Enter a number" />
+                    <small className="form-text text-muted"></small>
+                </div>                
                 <br></br><br></br>
                 <div className="line-break" style={{height:"0.15rem", width:"100%", backgroundColor:"rgba(128, 128, 128, 0.40)"}}></div>
                 <br></br><br></br>
@@ -183,17 +197,28 @@ export class Dashboard extends Component {
                             <Candidate key={index} index={index} fame={candidate} name={this.props.candidates_names[index]} tactical={this.state.tactical_checked} minority={this.state.minority_checked} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} setName={this.props.setName.bind(this)} setFame={this.props.setFame.bind(this)} deleteCandidate={this.props.deleteCandidate.bind(this)} setTactical={this.props.setTactical.bind(this)} setMinority={this.props.setMinority.bind(this)}/>
                         ))}
                         <div style={{padding:'2rem', textAlign: 'center'}}>
-                            <button onClick={this.props.addCandidate.bind(this, 0, "Candidate " + this.props.candidates.length, 0.0, 0.0)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
+                            <button onClick={this.props.addCandidate.bind(this, 0, "Candidate " + this.props.candidates.length, 0.0, 0.0, this.props.candidates.length)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
                             <h6 style={{padding: '1rem'}}> Add a candidate </h6>
                         </div>
                     </div>
                 </div>
-                <br></br>
-                <div className="form-group">
-                    <label style={{color: 'black', fontSize: '1rem'}}> N° of elected candidates: </label>
-                    <input onBlur={this.onBlurNVacancies} className="form-control" placeholder="Enter a number" />
-                    <small className="form-text text-muted"></small>
-                </div>
+                <br></br><br></br>
+                <div className="line-break" style={{height:"0.15rem", width:"100%", backgroundColor:"rgba(128, 128, 128, 0.40)"}}></div>
+                <br></br><br></br>
+                <div>
+                    <div>
+                        <h1 style={{padding:'1rem', margin: "auto"}}> COALITIONS </h1>
+                    </div>
+                    <div className="coalitions" style={{margin: '0 auto'}}>
+                        {this.props.coalitions.map((coalition, index) => (
+                            <Coalition key={index} index={index} candidates={this.props.coalitions[index]} available_candidates={this.props.available_candidates} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} addCandidateToCoalition={this.props.addCandidateToCoalition.bind(this)} setCandidate={this.setCandidate} deleteCoalition={this.props.deleteCoalition.bind(this)}/>
+                        ))}
+                        <div style={{padding:'2rem', textAlign: 'center'}}>
+                            <button onClick={this.props.addCoalition.bind(this)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
+                            <h6 style={{padding: '1rem'}}> Add a coalition </h6>
+                        </div>
+                    </div>
+                </div>                
                 <br></br>
                 <div>
                     <button onClick={this.handleSubmit.bind(this)} type="button" className="btn btn-info btn-lg" style={{width:'100%', fontFamily: "Germania One, cursive", fontSize: "2rem"}}>  Run </button>
@@ -224,7 +249,9 @@ const mapStateToProps = state => ({
     candidates: state.electionsReducer.candidates,
     candidates_names: state.electionsReducer.candidates_names,
     tactical_votes: state.electionsReducer.tactical_votes,
-    minority_votes: state.electionsReducer.minority_votes
+    minority_votes: state.electionsReducer.minority_votes,
+    coalitions: state.electionsReducer.coalitions,
+    available_candidates: state.electionsReducer.available
 });
 
-export default connect(mapStateToProps, {setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority})(Dashboard);
+export default connect(mapStateToProps, {setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority, addCoalition, addCandidateToCoalition, deleteCoalition, setCandidate})(Dashboard);

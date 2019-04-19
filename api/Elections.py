@@ -27,7 +27,7 @@ class Elections:
 	excluded = set()
 	rounds = []
 
-	def __init__(self, n_voters, bias_vector, n_vacancies, tactical, minority, tactical_votes, minority_votes, candidates_names = []):
+	def __init__(self, n_voters, bias_vector, n_vacancies, tactical, minority, tactical_votes, minority_votes, coalitions, candidates_names = []):
 		self.N_VOTERS = n_voters # NUMBER OF VOTERS
 		self.N_CANDIDATES = len(bias_vector) # NUMBER OF CANDIDATES
 		self.BIAS_VECTOR = bias_vector # VECTOR OF HELP VALUES FROM 0 TO 4 FOR CANDIDATES - 0 (WORST CHANCE FOR GETTING GOOD RATING) , 4 (BEST CHANCE FOR GETTING GOOD RATINGS)
@@ -37,6 +37,7 @@ class Elections:
 		self.MINORITY_VOTING = minority
 		self.tactical_vote_percentages = tactical_votes
 		self.minority_vote_percentages = minority_votes
+		self.coalitions = coalitions
 		random.seed(4)
 
 	def initialize(self):
@@ -140,17 +141,20 @@ class Elections:
 	def sort_candidates(self, candidates):
 			return sorted(candidates.items(), key=operator.itemgetter(1))
 
-	def calculate_mean(self, winner):
+	def calculate_mean(self, winners):
 		rating_sum = 0
 		#c = 0
 		satisfied_population_count = 0
 		for voter in self.voters:
 			#c += 1
-			rating_sum += voter[winner]
-			if voter[winner] > 0:
-				satisfied_population_count += 1
+			voter_satisfaction = 0
+			for candidate in winners:
+				rating_sum += voter[candidate]
+				voter_satisfaction += voter[candidate]
+			if voter_satisfaction > 0:
+					satisfied_population_count += 1
 		print(":::rating sum: ", rating_sum)
 		print(":::N Voters: ", self.N_VOTERS)
 		#print(":::Count: ", c)
-		print(":::Winner: ", winner)
-		return rating_sum/self.N_VOTERS, satisfied_population_count/self.N_VOTERS
+		print(":::Winners: ", winners)
+		return rating_sum/(self.N_VOTERS*self.N_VACANCIES), satisfied_population_count/self.N_VOTERS

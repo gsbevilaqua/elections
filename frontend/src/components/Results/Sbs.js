@@ -138,10 +138,6 @@ export default class Sbs extends Component {
     }
   }
 
-  componentDidMount(){
-    console.log(this.state.points);
-  }
-
   render() {
     if(this.props.didRun){
       return (
