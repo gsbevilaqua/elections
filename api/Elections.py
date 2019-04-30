@@ -1,4 +1,4 @@
-import random
+import random, copy, math
 from random import randint, shuffle
 import time
 import operator
@@ -27,7 +27,7 @@ class Elections:
 	excluded = set()
 	rounds = []
 
-	def __init__(self, n_voters, bias_vector, n_vacancies, tactical, minority, tactical_votes, minority_votes, coalitions, candidates_names = []):
+	def __init__(self, n_voters, bias_vector, n_vacancies, tactical, minority, tactical_votes = [], minority_votes = [], coalitions = [], candidates_names = [], voter_profiles = []):
 		self.N_VOTERS = n_voters # NUMBER OF VOTERS
 		self.N_CANDIDATES = len(bias_vector) # NUMBER OF CANDIDATES
 		self.BIAS_VECTOR = bias_vector # VECTOR OF HELP VALUES FROM 0 TO 4 FOR CANDIDATES - 0 (WORST CHANCE FOR GETTING GOOD RATING) , 4 (BEST CHANCE FOR GETTING GOOD RATINGS)
@@ -38,6 +38,7 @@ class Elections:
 		self.tactical_vote_percentages = tactical_votes
 		self.minority_vote_percentages = minority_votes
 		self.coalitions = coalitions
+		self.voter_profiles = voter_profiles
 		random.seed(4)
 
 	def initialize(self):
@@ -85,29 +86,66 @@ class Elections:
 	# CREATES LIST OF VOTERS (LIST OF DICTS) => [(KEY: INDEX OF CANDIDATE, VALUE: RATING), (), ...]
 	def create_voters(self):
 		start_time = time.time()
-		for voter in range(self.N_VOTERS):
-			candidates_rank = dict()
-			for candidate in reversed(range(self.N_CANDIDATES)):
-				if(self.BIAS_VECTOR[candidate]==4):
-					candidates_rank[candidate] = self._sortear(self.loved)
-				elif(self.BIAS_VECTOR[candidate]==3):
-					candidates_rank[candidate] = self._sortear(self.liked)
-				elif(self.BIAS_VECTOR[candidate]==2):
-					candidates_rank[candidate] = self._sortear(self.disliked)								
-				elif(self.BIAS_VECTOR[candidate]==1):
-					candidates_rank[candidate] = self._sortear(self.hated)
-				elif(self.BIAS_VECTOR[candidate]==-1):
-					candidates_rank[candidate] = self._sortear(self.polarizer)
-				elif(self.BIAS_VECTOR[candidate]==-2):
-					candidates_rank[candidate] = self._sortear(self.more_polarizer)				
-				else:
-					candidates_rank[candidate] = self._sortear(self.neutral)
-			self.voters.append(candidates_rank)
+		if(not len(self.voter_profiles)):
+			print("Generating Voters")
+			for voter in range(self.N_VOTERS):
+				candidates_rank = dict()
+				for candidate in reversed(range(self.N_CANDIDATES)):
+					if(self.BIAS_VECTOR[candidate]==4):
+						candidates_rank[candidate] = self._sortear(self.loved)
+					elif(self.BIAS_VECTOR[candidate]==3):
+						candidates_rank[candidate] = self._sortear(self.liked)
+					elif(self.BIAS_VECTOR[candidate]==2):
+						candidates_rank[candidate] = self._sortear(self.disliked)								
+					elif(self.BIAS_VECTOR[candidate]==1):
+						candidates_rank[candidate] = self._sortear(self.hated)
+					elif(self.BIAS_VECTOR[candidate]==-1):
+						candidates_rank[candidate] = self._sortear(self.polarizer)
+					elif(self.BIAS_VECTOR[candidate]==-2):
+						candidates_rank[candidate] = self._sortear(self.more_polarizer)				
+					else:
+						candidates_rank[candidate] = self._sortear(self.neutral)
+				self.voters.append(candidates_rank)
+		else:
+			print("Used Profiles")
+			ranges = []
+			ranks = []
+			for prof in self.voter_profiles:
+				ranges.append(int(prof["pop_percentage"]))
+				rank = {}
+				for index, score in enumerate(prof["scores"]):
+					rank[index] = score
+				ranks.append(rank)
+			print("RANGES::: ", ranges)
+			print("RANKS:::: ", ranks)
+			for index, _range in enumerate(ranges):
+				for _ in range(int(self.N_VOTERS*(_range/100))):
+					self.voters.append(ranks[index])
 		now = time.time()
 		print('voters creation: ' + str(round(now - start_time, 2)) + ' seg' )
 
+	def _account_for_coalitions(self):
+		for voter_index, voter in enumerate(copy.deepcopy(self.voters)):
+			for coalition in self.coalitions:
+				for candidate in coalition:
+					add_to_score = 0
+					for candidate2 in coalition:
+						if candidate == candidate2:
+							continue
+						add_to_score += math.floor(voter[candidate2['value']]/2)
+					if self.voters[voter_index][candidate['value']] + add_to_score > 10:
+						self.voters[voter_index][candidate['value']] = 10
+					elif self.voters[voter_index][candidate['value']] + add_to_score < -10:
+						self.voters[voter_index][candidate['value']] = -10
+					else:
+						self.voters[voter_index][candidate['value']] += add_to_score
+
+
 	# SORT EACH VOTER'S CANDIDATE'S RANKING
 	def sort_ranks(self):
+		
+		self._account_for_coalitions()
+
 		start_time = time.time()
 		for voter in self.voters:
 			self.sorted_voters.append(sorted(voter.items(), key=operator.itemgetter(1)))

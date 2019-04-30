@@ -1,4 +1,4 @@
-import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_FSB, SET_MVC, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC, ADD_COALITION, ADD_CANDIDATE_TO_COALITION, DELETE_COALITION, SET_CANDIDATE } from './types';
+import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_FSB, SET_MVC, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC, ADD_COALITION, ADD_CANDIDATE_TO_COALITION, DELETE_COALITION, SET_CANDIDATE, SET_NUMBER_PROFILES, ADD_VOTER, DELETE_VOTER, SET_CANDIDATE_SCORE, SET_PROFILE_NAME, SET_PROFILE_PERC } from './types';
 
 export const setOneRound = (val) => dispatch => {
     dispatch({
@@ -42,6 +42,7 @@ export const setNCandidates = (val) => dispatch => {
     let tactical_votes_array = [];
     let minority_votes_array = [];
     let ava = [];
+
     for (let index = 0; index < val; index++) {
         candidates_array.push(0);
         candidates_names_array.push("Candidate " + index);
@@ -81,7 +82,7 @@ export const setNVacancies = (val) => dispatch => {
 export const addCandidate = (fame, name, tact, mino, index) => dispatch => {
     dispatch({
         type: ADD_CANDIDATE, 
-        payload: { fame: fame, name: name, tact: tact, mino: mino, index: index }
+        payload: { fame: fame, name: name, tact: tact, mino: mino, ava: {"value": index, "label": "Candidate " + index} }
     });
 }
 
@@ -95,14 +96,14 @@ export const deleteCandidate = (val) => dispatch => {
 export const setName = (index, name) => dispatch => {
     dispatch({
         type: SET_NAME,
-        payload: [index, name]
+        payload: {index: index, name: name, ava: {"value": index, "label": name}}
     });
 }
 
 export const setFame = (index, fame) => dispatch => {
     dispatch({
         type: SET_FAME,
-        payload: [index, fame]
+        payload: {index: index, fame: fame}
     });
 }
 
@@ -151,5 +152,53 @@ export const setCandidate = (index, index2, val) => dispatch => {
     dispatch({
         type: SET_CANDIDATE,
         payload: [index, index2, val]
+    });
+}
+
+export const setNProfiles = (val) => dispatch => {
+    let voters = []
+    
+    for (let index = 0; index < val; index++) {
+        voters.push({pop_percentage: 0.0, name: "Voter Profile " + index, scores: []})
+    }
+
+    dispatch({
+        type: SET_NUMBER_PROFILES,
+        payload: voters
+    });
+}
+
+export const addVoter = (pop, name, scores) => dispatch => {
+    dispatch({
+        type: ADD_VOTER,
+        payload: { pop_percentage: pop, name: name, scores: scores }
+    });
+}
+
+export const deleteVoter = (val) => dispatch => {
+    dispatch({
+        type: DELETE_VOTER,
+        payload: val
+    });
+}
+
+export const setCandidateScore = (val, profile_index, candidate_index) => dispatch => {
+    dispatch({
+        type: SET_CANDIDATE_SCORE,
+        payload: { val: val, profile_index: profile_index, candidate_index: candidate_index }
+    });
+}
+
+export const setProfileName = (index, val) => dispatch => {
+    dispatch({
+        type: SET_PROFILE_NAME,
+        payload: {index: index, val: val}
+    });
+}
+
+export const setProfilePerc = (index, val) => dispatch => {
+    dispatch({
+        type: SET_PROFILE_PERC,
+        payload: {index: index, val: val}
     });
 }

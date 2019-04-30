@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority, addCoalition, addCandidateToCoalition, deleteCoalition, setCandidate } from "../actions/elections.js";
+import { setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority, addCoalition, addCandidateToCoalition, deleteCoalition, setCandidate, setNProfiles, addVoter, deleteVoter, setCandidateScore, setProfileName, setProfilePerc } from "../actions/elections.js";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
 
 import Candidate from './Candidate';
+import Voter from './Voter';
 import Coalition from './Coalition';
 
 export class Dashboard extends Component {
@@ -38,6 +39,7 @@ export class Dashboard extends Component {
         minority_votes: PropTypes.array.isRequired,
         coalitions: PropTypes.array.isRequired,
         available_candidates: PropTypes.array.isRequired,
+        voters: PropTypes.array.isRequired
     }
 
     componentDidMount() {
@@ -47,6 +49,7 @@ export class Dashboard extends Component {
     onBlurNVoters = (e) => this.props.setNVoters(e.target.value);
     onBlurNCandidates = (e) => this.props.setNCandidates(e.target.value);
     onBlurNVacancies = (e) => this.props.setNVacancies(e.target.value);
+    onBlurNProfiles = (e) => this.props.setNProfiles(e.target.value);
 
     toggleTacticalCheckbox = (e) => this.setState({[e.target.name]:e.target.checked});
     toggleMinorityCheckbox = (e) => this.setState({[e.target.name]:e.target.checked});
@@ -77,7 +80,8 @@ export class Dashboard extends Component {
             minority: this.state.minority_checked,
             tactical_votes: this.props.tactical_votes,
             minority_votes: this.props.minority_votes,
-            coalitions: this.props.coalitions
+            coalitions: this.props.coalitions,
+            voters: this.props.voters
         };
 
         this.handleAjaxRequest(payload);
@@ -86,7 +90,7 @@ export class Dashboard extends Component {
     handleAjaxRequest = (payload) => {
         const csrfToken = Cookies.get('csrftoken');
 
-        const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, candidates_names: payload.candidates_names, tactical: payload.tactical, minority: payload.minority, tactical_votes: payload.tactical_votes, minority_votes: payload.minority_votes, coalitions: payload.coalitions, n_vacancies: payload.n_vacancies }
+        const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, candidates_names: payload.candidates_names, tactical: payload.tactical, minority: payload.minority, tactical_votes: payload.tactical_votes, minority_votes: payload.minority_votes, coalitions: payload.coalitions, n_vacancies: payload.n_vacancies, voters: payload.voters }
         const get_results_payload = { one_round: payload.one_round, two_rounds: payload.two_rounds, irv: payload.irv, sbs: payload.sbs, fsb: payload.fsb, mvc: payload.mvc }
 
         this.setState({ progress_bar: true, progress_bar_msg: "Creating Candidates..." });
@@ -144,7 +148,7 @@ export class Dashboard extends Component {
 
     render() {
         return (
-            <div className="container" style={{display: 'grid', backgroundColor: '#e8e8e8', padding: '4rem'}}>
+            <div className="container" style={{display: 'grid', backgroundColor: '#fff', padding: '4rem'}}>
                 {this.renderRedirect()}
                 <br></br>
                 <div style={{textAlign:'center'}}>
@@ -178,50 +182,91 @@ export class Dashboard extends Component {
                 <br></br><br></br>
                 <div className="line-break" style={{height:"0.15rem", width:"100%", backgroundColor:"rgba(128, 128, 128, 0.40)"}}></div>
                 <br></br><br></br>
-                <div>
-                    <div style={{display: "grid", gridTemplateColumns:"30% 20% 25% 25%"}}>
-                        <h1 style={{padding:'1rem', margin: "auto"}}> CANDIDATES </h1>
-                        <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
-                        <div style={{margin: "auto"}} className="custom-control custom-checkbox">
-                            <input type="checkbox" className="custom-control-input" id="tactical-check" name="tactical_checked" checked={this.state.tactical_checked} onChange={this.toggleTacticalCheckbox} />
-                            <label className="custom-control-label" htmlFor="tactical-check">Tactical Voting</label>
+                <ul className="nav nav-tabs">
+                    <li className="nav-item">
+                        <a className="nav-link active" data-toggle="tab" href="#manipulate">Manipulate</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link" data-toggle="tab" href="#generate">Generate</a>
+                    </li>
+                </ul>
+                <div id="myTabContent" className="tab-content">
+                    <br></br><br></br>
+                    <div className="tab-pane fade active show" id="manipulate">
+                        <div>
+                            <div className="form-group">
+                                <label style={{color: 'black', fontSize: '1rem'}}> N° of candidates: </label>
+                                <input onBlur={this.onBlurNCandidates} className="form-control" placeholder="Enter a number" />
+                                <small className="form-text text-muted"></small>
+                            </div>
                         </div>
-                        <div style={{margin: "auto"}} className="custom-control custom-checkbox">
-                            <input type="checkbox" className="custom-control-input" id="minority-check" name="minority_checked" checked={this.state.minority_checked} onChange={this.toggleMinorityCheckbox} />
-                            <label className="custom-control-label" htmlFor="minority-check">Minority Voting</label>
-                        </div>
-                    </div>
+                        <br></br><br></br>
+                        <div className="line-break" style={{height:"0.15rem", width:"100%", backgroundColor:"rgba(128, 128, 128, 0.40)"}}></div>
+                        <br></br><br></br>                        
+                        <div>
+                            <div style={{display: "grid", gridTemplateColumns:"20% 20%"}}>
+                                <h1 style={{padding:'1rem'}}> VOTERS </h1>
+                                <input onBlur={this.onBlurNProfiles} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
+                            </div>
 
-                    <div className="candidates" style={{margin: '0 auto'}}>
-                        {this.props.candidates.map((candidate, index) => (
-                            <Candidate key={index} index={index} fame={candidate} name={this.props.candidates_names[index]} tactical={this.state.tactical_checked} minority={this.state.minority_checked} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} setName={this.props.setName.bind(this)} setFame={this.props.setFame.bind(this)} deleteCandidate={this.props.deleteCandidate.bind(this)} setTactical={this.props.setTactical.bind(this)} setMinority={this.props.setMinority.bind(this)}/>
-                        ))}
-                        <div style={{padding:'2rem', textAlign: 'center'}}>
-                            <button onClick={this.props.addCandidate.bind(this, 0, "Candidate " + this.props.candidates.length, 0.0, 0.0, this.props.candidates.length)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
-                            <h6 style={{padding: '1rem'}}> Add a candidate </h6>
+                            <div className="voters" style={{margin: '0 auto'}}>
+                                {this.props.voters.map((voter, index) => (
+                                    <Voter key={index} index={index} pop_percentage={voter.pop_percentage} name={voter.name} candidates={this.props.candidates_names} scores={voter.scores} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} deleteVoter={this.props.deleteVoter} setCandidateScore={this.props.setCandidateScore}  setProfileName={this.props.setProfileName.bind(this)} setProfilePerc={this.props.setProfilePerc} />
+                                ))}
+                                <div style={{padding:'2rem', textAlign: 'center'}}>
+                                    <button onClick={this.props.addVoter.bind(this, 0, "Voter Profile " + this.props.voters.length, 0.0)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
+                                    <h6 style={{padding: '1rem'}}> Add a profile </h6>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <br></br><br></br>
-                <div className="line-break" style={{height:"0.15rem", width:"100%", backgroundColor:"rgba(128, 128, 128, 0.40)"}}></div>
-                <br></br><br></br>
-                <div>
-                    <div>
-                        <h1 style={{padding:'1rem', margin: "auto"}}> COALITIONS </h1>
-                    </div>
-                    <div className="coalitions" style={{margin: '0 auto'}}>
-                        {this.props.coalitions.map((coalition, index) => (
-                            <Coalition key={index} index={index} candidates={this.props.coalitions[index]} available_candidates={this.props.available_candidates} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} addCandidateToCoalition={this.props.addCandidateToCoalition.bind(this)} setCandidate={this.setCandidate} deleteCoalition={this.props.deleteCoalition.bind(this)}/>
-                        ))}
-                        <div style={{padding:'2rem', textAlign: 'center'}}>
-                            <button onClick={this.props.addCoalition.bind(this)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
-                            <h6 style={{padding: '1rem'}}> Add a coalition </h6>
+                    <div className="tab-pane fade" id="generate">
+                        <div>
+                            <div style={{display: "grid", gridTemplateColumns:"30% 20% 25% 25%"}}>
+                                <h1 style={{padding:'1rem'}}> CANDIDATES </h1>
+                                <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
+                                <div style={{margin: "auto"}} className="custom-control custom-checkbox">
+                                    <input type="checkbox" className="custom-control-input" id="tactical-check" name="tactical_checked" checked={this.state.tactical_checked} onChange={this.toggleTacticalCheckbox} />
+                                    <label className="custom-control-label" htmlFor="tactical-check">Tactical Voting</label>
+                                </div>
+                                <div style={{margin: "auto"}} className="custom-control custom-checkbox">
+                                    <input type="checkbox" className="custom-control-input" id="minority-check" name="minority_checked" checked={this.state.minority_checked} onChange={this.toggleMinorityCheckbox} />
+                                    <label className="custom-control-label" htmlFor="minority-check">Minority Voting</label>
+                                </div>
+                            </div>
+
+                            <div className="candidates" style={{margin: '0 auto'}}>
+                                {this.props.candidates.map((candidate, index) => (
+                                    <Candidate key={index} index={index} fame={candidate} name={this.props.candidates_names[index]} tactical={this.state.tactical_checked} minority={this.state.minority_checked} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} setName={this.props.setName.bind(this)} setFame={this.props.setFame.bind(this)} deleteCandidate={this.props.deleteCandidate.bind(this)} setTactical={this.props.setTactical.bind(this)} setMinority={this.props.setMinority.bind(this)}/>
+                                ))}
+                                <div style={{padding:'2rem', textAlign: 'center'}}>
+                                    <button onClick={this.props.addCandidate.bind(this, 0, "Candidate " + this.props.candidates.length, 0.0, 0.0, this.props.candidates.length)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
+                                    <h6 style={{padding: '1rem'}}> Add a candidate </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <br></br><br></br>
+                        <div className="line-break" style={{height:"0.15rem", width:"100%", backgroundColor:"rgba(128, 128, 128, 0.40)"}}></div>
+                        <br></br><br></br>
+                        <div>
+                            <div>
+                                <h1 style={{padding:'1rem', margin: "auto"}}> COALITIONS </h1>
+                            </div>
+                            <div className="coalitions" style={{margin: '0 auto'}}>
+                                {this.props.coalitions.map((coalition, index) => (
+                                    <Coalition key={index} index={index} candidates={this.props.coalitions[index]} available_candidates={this.props.available_candidates} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} addCandidateToCoalition={this.props.addCandidateToCoalition.bind(this)} setCandidate={this.setCandidate} deleteCoalition={this.props.deleteCoalition.bind(this)}/>
+                                ))}
+                                <div style={{padding:'2rem', textAlign: 'center'}}>
+                                    <button onClick={this.props.addCoalition.bind(this)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
+                                    <h6 style={{padding: '1rem'}}> Add a coalition </h6>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>                
+                </div>             
                 <br></br>
                 <div>
-                    <button onClick={this.handleSubmit.bind(this)} type="button" className="btn btn-info btn-lg" style={{width:'100%', fontFamily: "Germania One, cursive", fontSize: "2rem"}}>  Run </button>
+                    <button onClick={this.handleSubmit.bind(this)} type="button" className="btn btn-info btn-lg" style={{width:'100%', fontFamily: "Germania One, cursive", fontSize: "2rem", borderRadius: "0.5rem"}}>  Run </button>
                 </div>
                 {this.state.progress_bar ?
                     <div>
@@ -251,7 +296,8 @@ const mapStateToProps = state => ({
     tactical_votes: state.electionsReducer.tactical_votes,
     minority_votes: state.electionsReducer.minority_votes,
     coalitions: state.electionsReducer.coalitions,
-    available_candidates: state.electionsReducer.available
+    available_candidates: state.electionsReducer.available,
+    voters: state.electionsReducer.voters,
 });
 
-export default connect(mapStateToProps, {setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority, addCoalition, addCandidateToCoalition, deleteCoalition, setCandidate})(Dashboard);
+export default connect(mapStateToProps, { setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority, addCoalition, addCandidateToCoalition, deleteCoalition, setCandidate, setNProfiles, addVoter, deleteVoter, setCandidateScore, setProfileName, setProfilePerc })(Dashboard);

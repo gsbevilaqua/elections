@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
-// import 'react-select/dist/react-select.css';
 
 export class Coalition extends Component {
 
@@ -10,8 +9,6 @@ export class Coalition extends Component {
             selected: []
         }
     }
-
-    onBlurSetCandidate = (cand, e) => this.props.setCandidate(this.props.index, cand, e.target.value)
 
     handleOnChange(candidate_index, value) {
         this.setState({
@@ -48,7 +45,7 @@ export class Coalition extends Component {
                         ))}
                         <div style={{padding:'1rem', textAlign: 'center'}}>
                             <button onClick={this.props.addCandidateToCoalition.bind(this, this.props.index, this.props.candidates)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-2x"></i></button>
-                            <h6 style={{padding: '0.5rem', letterSpacing:"0.1rem"}}> Add Candidate </h6>
+                            <h6 style={{padding: '0.5rem', letterSpacing:"0.1rem", color:this.props.fontcolor}}> Add Candidate </h6>
                         </div>
                     </div>
                     <div style={{margin: '0 auto', display:"flex", alignItems:"center"}}>
