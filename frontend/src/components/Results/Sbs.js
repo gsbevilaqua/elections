@@ -144,7 +144,7 @@ export default class Sbs extends Component {
         <div style={{backgroundColor: "#2b2d3e"}}>
             <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", background: "black"}}> SCORE BASED SYSTEM </h1>
             <div style={{padding:"4rem"}}>            
-                <div>
+                <div style={{display:"flex", justifyContent:"center"}}>
                   <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
                     <div style={{margin: "auto", backgroundColor: "#2B2D3E"}}>
                     <Chart options={{annotations: {points: this.state.points}, dataLabels: {enabled: true,dropShadow: {enabled: true,left: 2,top: 2,opacity: 0.5}}, colors: ["#46adfb"], xaxis:{categories: this.props.res[0][0], labels:{style:{colors: '#ffffff'}}}, yaxis:{title:{text:"Scores", style:{color:'white'}},labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme:{palette: 'palette8'}, fill: {type: 'gradient',gradient: {shade: 'light',type: "horizontal",shadeIntensity: 0.25,gradientToColors: undefined,inverseColors: true,opacityFrom: 0.85,opacityTo: 0.85,stops: [50, 0, 100]}}}}
@@ -153,13 +153,13 @@ export default class Sbs extends Component {
                             width="500"
                     />
                     </div> 
-                    <div style={{margin: "auto", paddingTop: "5rem", backgroundColor: "#2B2D3E"}}>
+                    {/* <div style={{margin: "auto", paddingTop: "5rem", backgroundColor: "#2B2D3E"}}>
                       <Chart options={{labels: this.props.res[0][0], theme: {palette: 'palette4'}, legend:{fontSize: '14px', labels:{colors: '#ffffff'}}}}
                         series={this.props.res[0][1]}
                         type="pie"
                         width="380"
                       />
-                    </div>                    
+                    </div> */}
                   </div>
                 </div>
                 <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>

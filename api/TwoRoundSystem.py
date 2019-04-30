@@ -43,6 +43,7 @@ class TwoRoundSystem:
 			print("candidate " + str(candidate[self.elec.CANDIDATE_INDEX]) + ": " + str(candidate[self.elec.NUMBER_OF_VOTES]) + " votes - " + percentage + "%")
 			if vacancies > 0:
 				winners.append(candidate[0])
+			vacancies -= 1
 		mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
 		print("MEAN: ", mean)
 		return self.sorted_candidates, mean, satisfaction_rate
@@ -71,6 +72,7 @@ class TwoRoundSystem:
 			if vacancies == 0:
 				break
 			winners.append(candidate[0])
+			vacancies -= 1
 		mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
 		print("MEAN: ", mean)
 		return {self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-1][self.elec.NUMBER_OF_VOTES], self.sorted_candidates[-2][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-2][self.elec.NUMBER_OF_VOTES]}, mean, satisfaction_rate

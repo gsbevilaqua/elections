@@ -59,6 +59,7 @@ class InstantRunoffVoting(Elections):
 						if vacancies == 0:
 							break
 						winners.append(candidate[0])
+						vacancies -= 1
 					mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
 					print("MEAN: ", mean)
 					break
@@ -72,6 +73,7 @@ class InstantRunoffVoting(Elections):
 						if vacancies == 0:
 							break
 						winners.append(candidate[0])
+						vacancies -= 1
 					mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
 					print("MEAN: ", mean)
 					break
@@ -82,6 +84,7 @@ class InstantRunoffVoting(Elections):
 				if vacancies == 0:
 					break
 				winners.append(candidate[0])
+				vacancies -= 1
 			mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
 			print("MEAN: ", mean)
 			self.elec.rounds.append(self.sorted_candidates)
