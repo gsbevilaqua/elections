@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom";
 
-import Ors from './Ors.js';
+import Fptp from './Fptp.js';
 import Trs from './Trs.js';
 import Irv from './Irv.js';
 import Sbs from './Sbs.js';
@@ -23,7 +23,7 @@ export default class Results extends Component {
         return (
             <div style={{textAlign: "center"}}>
                 <h1 style={{fontSize: "5rem", padding: "2rem", background: "#826dc3", margin: "0", letterSpacing: "2rem"}}>RESULTS</h1>
-                <Ors didRun={this.props.location.state.ors_run} res={this.props.location.state.ors} />
+                <Fptp didRun={this.props.location.state.ors_run} res={this.props.location.state.ors} />
                 <Trs didRun={this.props.location.state.trs_run} res={this.props.location.state.trs} />
                 <Sbs didRun={this.props.location.state.sbs_run} res={this.props.location.state.sbs} />
                 <Fsb didRun={this.props.location.state.fsb_run} res={this.props.location.state.fsb} />

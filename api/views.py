@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.http import JsonResponse
 import json
 
-from api.OneRoundSystem import OneRoundSystem
+from api.FirstPastThePost import FirstPastThePost
 from api.TwoRoundSystem import TwoRoundSystem
 from api.InstantRunoffVoting import InstantRunoffVoting
 from api.ScoreBased import ScoreBased
@@ -66,8 +66,8 @@ def get_results(request):
     status5 = "null"
 
     if(one_round):
-        ors = OneRoundSystem(elec)
-        status = ors.simulate()
+        fptp = FirstPastThePost(elec)
+        status = fptp.simulate()
     if(two_rounds):
         trs = TwoRoundSystem(elec)
         status1 = trs.simulate()

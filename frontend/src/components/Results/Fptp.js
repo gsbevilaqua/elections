@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Chart from 'react-apexcharts'
 
-export default class Ors extends Component {
+export default class Fptp extends Component {
   constructor(props){
     super(props);
     let mean = this.props.res[1]

@@ -190,7 +190,7 @@ class Elections:
 				rating_sum += voter[candidate]
 				voter_satisfaction += voter[candidate]
 			if voter_satisfaction > 0:
-					satisfied_population_count += 1
+				satisfied_population_count += 1
 		print(":::rating sum: ", rating_sum)
 		print(":::N Voters: ", self.N_VOTERS)
 		print(":::Count: ", c)
