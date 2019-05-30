@@ -2,7 +2,7 @@ import random, copy
 from api.Elections import Elections
 #from Elections import Elections
 
-class FixedScoreBased:
+class BordaCount:
 
     elec = None
     candidates = dict()
@@ -28,20 +28,20 @@ class FixedScoreBased:
                 temp.append((voter[-1][self.elec.CANDIDATE_INDEX], 10))
                 self.sorted_voters[voter_index] = temp
 		
-        print(":::::ScoreBased T votes changed: ", t_votes_changed)
+        print("::::: T votes changed: ", t_votes_changed)
 
     def _sum_candidates_scores(self):
         for index in range(self.elec.N_CANDIDATES):
             self.candidates[index] = 0
 
         for voter in self.sorted_voters:
-            score = 1
+            score = 0
             for candidate in voter:
                 self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += score
                 score += 1
 
     def simulate(self):
-        print("FIXED SCORE BASED SYSTEM")
+        print("BORDA COUNT")
 
         if self.elec.TACTICAL_VOTING:
             self._apply_tactical_votes()

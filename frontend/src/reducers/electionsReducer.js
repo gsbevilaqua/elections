@@ -1,12 +1,13 @@
-import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_FSB, SET_MVC, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC, ADD_COALITION, ADD_CANDIDATE_TO_COALITION, DELETE_COALITION, SET_CANDIDATE, SET_NUMBER_PROFILES, ADD_VOTER, DELETE_VOTER, SET_CANDIDATE_SCORE, SET_PROFILE_NAME, SET_PROFILE_PERC } from '../actions/types.js'
+import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_AVS, SET_TBC, SET_SVS, SET_BVS, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC, ADD_COALITION, ADD_CANDIDATE_TO_COALITION, DELETE_COALITION, SET_CANDIDATE, SET_NUMBER_PROFILES, ADD_VOTER, DELETE_VOTER, SET_CANDIDATE_SCORE, SET_PROFILE_NAME, SET_PROFILE_PERC } from '../actions/types.js'
 
 const initial_state = {
     one_round: false,
     two_rounds: false,
     irv: false,
-    sbs: false,
-    fsb: false,
-    mvc: false,
+    avs: false,
+    tbc: false,
+    svs: false,
+    bvs: false,
     n_voters: 1000,
     n_vacancies: 1,
     candidates: [],
@@ -37,20 +38,25 @@ export default function(state = initial_state, action) {
                 ...state,
                 irv: !state.irv
             }
-        case SET_SBS:
+        case SET_AVS:
             return {
                 ...state,
-                sbs: !state.sbs
+                avs: !state.avs
+            }            
+        case SET_TBC:
+            return {
+                ...state,
+                tbc: !state.tbc
+            }            
+        case SET_SVS:
+            return {
+                ...state,
+                svs: !state.svs
             }
-        case SET_FSB:
+        case SET_BVS:
             return {
                 ...state,
-                fsb: !state.fsb
-            }
-        case SET_MVC:
-            return {
-                ...state,
-                mvc: !state.mvc
+                bvs: !state.bvs
             }                      
         case SET_NUMBER_CANDIDATES:
             return {
@@ -109,9 +115,10 @@ export default function(state = initial_state, action) {
                 one_round: false,
                 two_rounds: false,
                 irv: false,
-                sbs: false,
-                fsb: false,
-                mvc: false,
+                avs: false,
+                tbc: false,
+                svs: false,
+                bvs: false,
                 n_voters: 1000,
                 n_vacancies: 1,
                 candidates: [],

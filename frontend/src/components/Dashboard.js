@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority, addCoalition, addCandidateToCoalition, deleteCoalition, setCandidate, setNProfiles, addVoter, deleteVoter, setCandidateScore, setProfileName, setProfilePerc } from "../actions/elections.js";
+import { setOneRound, setTwoRounds, setIrv, setAvs, setTbc, setSvs, setBvs, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority, addCoalition, addCandidateToCoalition, deleteCoalition, setCandidate, setNProfiles, addVoter, deleteVoter, setCandidateScore, setProfileName, setProfilePerc } from "../actions/elections.js";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
 
@@ -28,9 +28,10 @@ export class Dashboard extends Component {
         one_round: PropTypes.bool.isRequired,
         two_rounds: PropTypes.bool.isRequired,
         irv: PropTypes.bool.isRequired,
-        sbs: PropTypes.bool.isRequired,
-        fsb: PropTypes.bool.isRequired,
-        mvc: PropTypes.bool.isRequired,
+        avs: PropTypes.bool.isRequired,
+        tbc: PropTypes.bool.isRequired,
+        svs: PropTypes.bool.isRequired,
+        bvs: PropTypes.bool.isRequired,
         n_voters: PropTypes.number.isRequired,
         n_vacancies: PropTypes.number.isRequired,
         candidates: PropTypes.array.isRequired,
@@ -60,7 +61,7 @@ export class Dashboard extends Component {
 
     renderRedirect = () => {
         if (this.state.redirect) {
-          return <Redirect to={{ pathname: "/results", state: { go: true, ors_run: this.props.one_round, ors: this.state.ors, trs_run: this.props.two_rounds, trs: this.state.trs, irv_run: this.props.irv, irv: this.state.irv, sbs_run: this.props.sbs, sbs: this.state.sbs, fsb_run: this.props.fsb, fsb: this.state.fsb, mvc_run: this.props.mvc, mvc: this.state.mvc } }}/>
+          return <Redirect to={{ pathname: "/results", state: { go: true, ors_run: this.props.one_round, ors: this.state.ors, trs_run: this.props.two_rounds, trs: this.state.trs, irv_run: this.props.irv, irv: this.state.irv, avs_run: this.props.avs, avs: this.state.avs, tbc_run: this.props.tbc, tbc: this.state.tbc, svs_run: this.props.svs, svs: this.state.svs, bvs_run: this.props.bvs, bvs: this.state.bvs } }}/>
         }
     }
 
@@ -69,9 +70,10 @@ export class Dashboard extends Component {
             one_round: this.props.one_round,
             two_rounds: this.props.two_rounds,
             irv: this.props.irv,
-            sbs: this.props.sbs,
-            fsb: this.props.fsb,
-            mvc: this.props.mvc,
+            avs: this.props.avs,
+            tbc: this.props.tbc,
+            svs: this.props.svs,
+            bvs: this.props.bvs,
             n_voters: this.props.n_voters,
             n_vacancies: this.props.n_vacancies,
             candidates: this.props.candidates,
@@ -91,7 +93,7 @@ export class Dashboard extends Component {
         const csrfToken = Cookies.get('csrftoken');
 
         const create_candidates_payload = { n_voters: payload.n_voters, candidates: payload.candidates, candidates_names: payload.candidates_names, tactical: payload.tactical, minority: payload.minority, tactical_votes: payload.tactical_votes, minority_votes: payload.minority_votes, coalitions: payload.coalitions, n_vacancies: payload.n_vacancies, voters: payload.voters }
-        const get_results_payload = { one_round: payload.one_round, two_rounds: payload.two_rounds, irv: payload.irv, sbs: payload.sbs, fsb: payload.fsb, mvc: payload.mvc }
+        const get_results_payload = { one_round: payload.one_round, two_rounds: payload.two_rounds, irv: payload.irv, avs: payload.avs, tbc: payload.tbc, svs: payload.svs, bvs: payload.bvs }
 
         this.setState({ progress_bar: true, progress_bar_msg: "Creating Candidates..." });
 
@@ -127,7 +129,7 @@ export class Dashboard extends Component {
                     })
                     .then(response => {
                         this.setState({ progress_bar_width: "100%" });
-                        this.setState({ redirect: true, go: true, ors: response.data.status, trs: response.data.status1, irv: response.data.status2, sbs: response.data.status3, fsb: response.data.status4, mvc: response.data.status5 })
+                        this.setState({ redirect: true, go: true, ors: response.data.status, trs: response.data.status1, irv: response.data.status2, avs: response.data.status6, tbc: response.data.status4, svs: response.data.status3, bvs: response.data.status5 })
                     })
                     .catch(error => {
                         console.error(error);
@@ -158,12 +160,13 @@ export class Dashboard extends Component {
                         <div>
                             <button style={{margin:'1rem'}} onClick={this.props.setOneRound.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="The first past the post system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate.">First Past The Post</button>
                             <button style={{margin:'1rem'}} onClick={this.props.setTwoRounds.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="top" title="" data-original-title="The two-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate. The 2 best placed candidates go to a second round.">2 Round System</button>
-                            <button style={{margin:'1rem'}} onClick={this.props.setSbs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="right" title="" data-original-title="In this system voters give scores to every candidate, the candidate(s) with the highest sum of scores wins.">Score Based System</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setIrv.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="right" title="" data-original-title="Instead of voting only for a single candidate, voters in IRV can rank the candidates in order of preference and each round the worst ranked candidate is eliminated.">Instant-runoff Voting</button>
                         </div>
                         <div>
-                            <button style={{margin:'1rem'}} onClick={this.props.setFsb.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="In this system voters rank the candidates by preference, each rank has a fixed score, the candidate(s) with the highest sum of scores wins.">Fixed Score Based</button>
-                            <button style={{margin:'1rem'}} onClick={this.props.setIrv.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Instead of voting only for a single candidate, voters in IRV can rank the candidates in order of preference and each round the worst ranked candidate is eliminated.">Instant-runoff Voting</button>
-                            <button style={{margin:'1rem'}} onClick={this.props.setMvc.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="right" title="" data-original-title="In this system voters can vote for as many candidates as the number of candidates elected">Multiple Votes Cast</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setAvs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="In this system voters rank the candidates by preference, each rank has a fixed score, the candidate(s) with the highest sum of scores wins.">Appoval Voting System</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setTbc.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters rank the candidates by preference, each rank has a fixed score, the candidate(s) with the highest sum of scores wins.">The Borda Count</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setSvs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters give scores to every candidate, the candidate(s) with the highest sum of scores wins.">Score Voting System</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setBvs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="right" title="" data-original-title="In this system voters can vote for as many candidates as the number of candidates elected">Bloc Vote</button>
                         </div>
                     </div>
                 </div>
@@ -286,9 +289,10 @@ const mapStateToProps = state => ({
     one_round: state.electionsReducer.one_round,    
     two_rounds: state.electionsReducer.two_rounds,
     irv: state.electionsReducer.irv,
-    sbs: state.electionsReducer.sbs,
-    fsb: state.electionsReducer.fsb,
-    mvc: state.electionsReducer.mvc,
+    avs: state.electionsReducer.avs,
+    tbc: state.electionsReducer.tbc,
+    svs: state.electionsReducer.svs,
+    bvs: state.electionsReducer.bvs,
     n_voters: state.electionsReducer.n_voters,
     n_vacancies: state.electionsReducer.n_vacancies,
     candidates: state.electionsReducer.candidates,
@@ -300,4 +304,4 @@ const mapStateToProps = state => ({
     voters: state.electionsReducer.voters,
 });
 
-export default connect(mapStateToProps, { setOneRound, setTwoRounds, setIrv, setSbs, setFsb, setMvc, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority, addCoalition, addCandidateToCoalition, deleteCoalition, setCandidate, setNProfiles, addVoter, deleteVoter, setCandidateScore, setProfileName, setProfilePerc })(Dashboard);
+export default connect(mapStateToProps, { setOneRound, setTwoRounds, setIrv, setAvs, setTbc, setSvs, setBvs, setNCandidates, setNVoters, setNVacancies, addCandidate, deleteCandidate, setName, setFame, fullReset, setTactical, setMinority, addCoalition, addCandidateToCoalition, deleteCoalition, setCandidate, setNProfiles, addVoter, deleteVoter, setCandidateScore, setProfileName, setProfilePerc })(Dashboard);

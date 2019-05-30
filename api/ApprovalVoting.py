@@ -2,29 +2,35 @@ import random, copy
 from api.Elections import Elections
 #from Elections import Elections
 
-class MultipleVotesCast:
+class ApprovalVoting:
 
     elec = None
     candidates = dict()
     sorted_candidates = []
+    sorted_voters = []
 
     def __init__(self, elec):
         self.elec = elec
+        self.sorted_voters = copy.deepcopy(elec.sorted_voters)
 
     def _count_votes(self):
         for index in range(self.elec.N_CANDIDATES):
             self.candidates[index] = 0
 
-        for voter in self.elec.sorted_voters:
-            votes = self.elec.N_VACANCIES
-            for candidate in reversed(voter):
-                if votes == 0:
-                    break
-                self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += 1
-                votes -= 1
+        t_votes_changed = 0
+        for voter in self.sorted_voters:
+            if random.random() < self.elec.tactical_vote_percentages[voter[-1][self.elec.CANDIDATE_INDEX]]:
+                t_votes_changed += 1
+                self.candidates[voter[-1][self.elec.CANDIDATE_INDEX]] += 1
+            else:
+                for _, candidate in enumerate(reversed(voter)):
+                    if candidate[self.elec.CANDIDATE_SCORE] > 0:
+                        self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += 1
+                    else:
+                        break
 
     def simulate(self):
-        print("MULTIPLE VOTES CAST SYSTEM")
+        print("APPROVAL VOTING SYSTEM")
 
         self._count_votes()
         self.sorted_candidates = self.elec.sort_candidates(self.candidates)

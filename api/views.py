@@ -6,9 +6,10 @@ import json
 from api.FirstPastThePost import FirstPastThePost
 from api.TwoRoundSystem import TwoRoundSystem
 from api.InstantRunoffVoting import InstantRunoffVoting
-from api.ScoreBased import ScoreBased
-from api.FixedScoreBased import FixedScoreBased
-from api.MultipleVotesCast import MultipleVotesCast
+from api.ApprovalVoting import ApprovalVoting
+from api.BordaCount import BordaCount
+from api.ScoreVoting import ScoreVoting
+from api.BlocVote import BlocVote
 from api.Elections import Elections
 
 elec = None
@@ -51,12 +52,13 @@ def sort_ranks(request):
 
 def get_results(request):
     global elec
-    one_round = json.loads(request.body.decode('utf-8')).get('one_round')
-    two_rounds = json.loads(request.body.decode('utf-8')).get('two_rounds')
+    fptp = json.loads(request.body.decode('utf-8')).get('one_round')
+    trs = json.loads(request.body.decode('utf-8')).get('two_rounds')
     irv = json.loads(request.body.decode('utf-8')).get('irv')
-    scores = json.loads(request.body.decode('utf-8')).get('sbs')
-    fsb = json.loads(request.body.decode('utf-8')).get('fsb')
-    mvc = json.loads(request.body.decode('utf-8')).get('mvc')
+    avs = json.loads(request.body.decode('utf-8')).get('avs')
+    tbc = json.loads(request.body.decode('utf-8')).get('tbc')
+    svs = json.loads(request.body.decode('utf-8')).get('svs')
+    bvs = json.loads(request.body.decode('utf-8')).get('bvs')
 
     status = "null"
     status1 = "null"
@@ -64,25 +66,29 @@ def get_results(request):
     status3 = "null"
     status4 = "null"
     status5 = "null"
+    status6 = "null"
 
-    if(one_round):
+    if(fptp):
         fptp = FirstPastThePost(elec)
         status = fptp.simulate()
-    if(two_rounds):
+    if(trs):
         trs = TwoRoundSystem(elec)
         status1 = trs.simulate()
     if(irv):
         irv = InstantRunoffVoting(elec)
         status2 = irv.simulate()
-    if(scores):
-        scores = ScoreBased(elec)
-        status3 = scores.simulate()
-    if(fsb):
-        fsb = FixedScoreBased(elec)
-        status4 = fsb.simulate()
-    if(mvc):
-        mvc = MultipleVotesCast(elec)
-        status5 = mvc.simulate()
+    if(avs):
+        avs = ApprovalVoting(elec)
+        status6 = avs.simulate()        
+    if(tbc):
+        tbc = BordaCount(elec)
+        status4 = tbc.simulate()
+    if(svs):
+        svs = ScoreVoting(elec)
+        status3 = svs.simulate()        
+    if(bvs):
+        bvs = BlocVote(elec)
+        status5 = bvs.simulate()
 
     return JsonResponse({
         'status': status,
@@ -90,5 +96,6 @@ def get_results(request):
         'status2': status2,
         'status3': status3,
         'status4': status4,
-        'status5': status5
+        'status5': status5,
+        'status6': status6
     })

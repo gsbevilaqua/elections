@@ -1,9 +1,10 @@
 export const SET_ONE_ROUND = "SET_ONE_ROUND";
 export const SET_TWO_ROUNDS = "SET_TWO_ROUNDS";
 export const SET_IRV = "SET_IRV";
-export const SET_SBS = "SET_SBS";
-export const SET_FSB = "SET_FSB";
-export const SET_MVC = "SET_MVC";
+export const SET_AVS = "SET_AVS";
+export const SET_TBC = "SET_TBC";
+export const SET_SVS = "SET_SVS";
+export const SET_BVS = "SET_BVS";
 export const SET_NUMBER_CANDIDATES = "SET_NUMBER_CANDIDATES";
 export const SET_NUMBER_VOTERS = "SET_NUMBER_VOTERS";
 export const SET_NUMBER_VACANCIES = "SET_NUMBER_VACANCIES";

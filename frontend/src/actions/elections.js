@@ -1,4 +1,4 @@
-import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_SBS, SET_FSB, SET_MVC, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC, ADD_COALITION, ADD_CANDIDATE_TO_COALITION, DELETE_COALITION, SET_CANDIDATE, SET_NUMBER_PROFILES, ADD_VOTER, DELETE_VOTER, SET_CANDIDATE_SCORE, SET_PROFILE_NAME, SET_PROFILE_PERC } from './types';
+import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_AVS, SET_TBC, SET_SVS, SET_BVS, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC, ADD_COALITION, ADD_CANDIDATE_TO_COALITION, DELETE_COALITION, SET_CANDIDATE, SET_NUMBER_PROFILES, ADD_VOTER, DELETE_VOTER, SET_CANDIDATE_SCORE, SET_PROFILE_NAME, SET_PROFILE_PERC } from './types';
 
 export const setOneRound = (val) => dispatch => {
     dispatch({
@@ -18,21 +18,27 @@ export const setIrv = (val) => dispatch => {
     });
 }
 
-export const setSbs = (val) => dispatch => {
+export const setAvs = (val) => dispatch => {
     dispatch({
-        type: SET_SBS
+        type: SET_AVS
     });
 }
 
-export const setFsb = (val) => dispatch => {
+export const setTbc = (val) => dispatch => {
     dispatch({
-        type: SET_FSB
+        type: SET_TBC
     });
 }
 
-export const setMvc = (val) => dispatch => {
+export const setSvs = (val) => dispatch => {
     dispatch({
-        type: SET_MVC
+        type: SET_SVS
+    });
+}
+
+export const setBvs = (val) => dispatch => {
+    dispatch({
+        type: SET_BVS
     });
 }
 

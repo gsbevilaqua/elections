@@ -2,7 +2,7 @@ import random, copy
 from api.Elections import Elections
 #from Elections import Elections
 
-class ScoreBased:
+class ScoreVoting:
 
     elec = None
     candidates = dict()
@@ -37,7 +37,7 @@ class ScoreBased:
                 self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += candidate[self.elec.CANDIDATE_RANK]
 
     def simulate(self):
-        print("SCORE BASED SYSTEM")
+        print("SCORE VOTING SYSTEM")
 
         if self.elec.TACTICAL_VOTING:
             self._apply_tactical_votes()

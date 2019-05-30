@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Chart from 'react-apexcharts'
 
-export default class Mvc extends Component {
+export default class Tbc extends Component {
   constructor(props){
     super(props);
     let mean = this.props.res[1]
@@ -142,7 +142,7 @@ export default class Mvc extends Component {
     if(this.props.didRun){
       return (
         <div style={{backgroundColor: "#2b2d3e"}}>
-            <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", background: "black"}}> MULTIPLE VOTES CAST </h1>
+            <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", background: "black"}}> THE BORDA COUNT </h1>
             <div style={{padding:"4rem"}}>            
                 <div>
                   <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>

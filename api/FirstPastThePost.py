@@ -56,14 +56,15 @@ class FirstPastThePost:
 	def _count_minority_votes(self):
 		print("::::::::COUNTING MINORITY VOTES...")
 		m_votes_changed = 0
+		half_vacancies = math.floor(self.elec.N_VACANCIES/2)
 
 		for candidate in self.leading_candidates:
-			if self.leading_candidates.index(candidate) >= math.floor(self.elec.N_VACANCIES/2):
+			if self.leading_candidates.index(candidate) >= half_vacancies:
 				break
 			for voter_index in self.votes_copy[candidate]:
 				for index, _candidate in enumerate(self.sorted_voters[voter_index]):
 					if _candidate[self.elec.CANDIDATE_INDEX] in self.leading_candidates:
-						if self.leading_candidates.index(_candidate[self.elec.CANDIDATE_INDEX]) >= math.floor(self.elec.N_VACANCIES/2):
+						if self.leading_candidates.index(_candidate[self.elec.CANDIDATE_INDEX]) >= half_vacancies:
 							if _candidate[self.elec.CANDIDATE_RANK] >= 0:
 								if random.random() < self.elec.minority_vote_percentages[_candidate[self.elec.CANDIDATE_INDEX]]:
 									m_votes_changed += 1
