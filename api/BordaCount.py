@@ -1,17 +1,18 @@
-import random, copy
+import random, copy, time
 from api.Elections import Elections
-#from Elections import Elections
+#from Elections import Elections # used for testing
 
 class BordaCount:
 
     elec = None
     candidates = dict()
     sorted_candidates = []
-    sorted_voters = []
+    rankings_changed = dict()
 
     def __init__(self, elec):
+        start_time = time.time()
         self.elec = elec
-        self.sorted_voters = copy.deepcopy(elec.sorted_voters)
+        print('TBC init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
     def _apply_tactical_votes(self):
         print("::::::::APPLYING TACTICAL VOTES...")
@@ -26,7 +27,7 @@ class BordaCount:
                     else:
                         temp.append((candidate[0], 0))
                 temp.append((voter[-1][self.elec.CANDIDATE_INDEX], 10))
-                self.sorted_voters[voter_index] = temp
+                self.rankings_changed[voter_index] = temp
 		
         print("::::: T votes changed: ", t_votes_changed)
 
@@ -34,14 +35,20 @@ class BordaCount:
         for index in range(self.elec.N_CANDIDATES):
             self.candidates[index] = 0
 
-        for voter in self.sorted_voters:
+        for voter_index, voter in enumerate(self.elec.sorted_voters):
             score = 0
-            for candidate in voter:
-                self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += score
-                score += 1
+            if voter_index in self.rankings_changed:
+                for candidate in self.rankings_changed[voter_index]:
+                    self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += score
+                    score += 1
+            else:
+                for candidate in voter:
+                    self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += score
+                    score += 1
 
     def simulate(self):
         print("BORDA COUNT")
+        start_time = time.time()
 
         if self.elec.TACTICAL_VOTING:
             self._apply_tactical_votes()
@@ -64,4 +71,6 @@ class BordaCount:
 
         elected = out[0][-self.elec.N_VACANCIES:]
 
+        now = time.time()
+        print('TBC duration: ' + str(round(now - start_time, 2)) + ' seg' )
         return out, mean, elected, satisfaction_rate

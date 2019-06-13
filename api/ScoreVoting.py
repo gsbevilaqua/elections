@@ -1,17 +1,19 @@
-import random, copy
+import random, copy, time
 from api.Elections import Elections
-#from Elections import Elections
+#from Elections import Elections # used for testing
 
 class ScoreVoting:
 
     elec = None
     candidates = dict()
     sorted_candidates = []
-    sorted_voters = []
+    rankings_changed = dict()
+
 
     def __init__(self, elec):
+        start_time = time.time()
         self.elec = elec
-        self.sorted_voters = copy.deepcopy(elec.sorted_voters)
+        print('SVS init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
     def _apply_tactical_votes(self):
         print("::::::::APPLYING TACTICAL VOTES...")
@@ -23,7 +25,8 @@ class ScoreVoting:
                     if candidate_index == 0:
                         continue
                     else:
-                        self.sorted_voters[voter_index][-(candidate_index + 1)] = (voter[-(candidate_index + 1)][self.elec.CANDIDATE_INDEX], -10)
+                        self.rankings_changed[voter_index] = self.elec.sorted_voters[voter_index]
+                        self.rankings_changed[voter_index][-(candidate_index + 1)] = (voter[-(candidate_index + 1)][self.elec.CANDIDATE_INDEX], -10)
 
 		
         print(":::::ScoreBased T votes changed: ", t_votes_changed)
@@ -32,12 +35,17 @@ class ScoreVoting:
         for index in range(self.elec.N_CANDIDATES):
             self.candidates[index] = 0
 
-        for voter in self.sorted_voters:
-            for candidate in voter:
-                self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += candidate[self.elec.CANDIDATE_RANK]
+        for voter_index, voter in enumerate(self.elec.sorted_voters):
+            if voter_index in self.rankings_changed:
+                for candidate in self.rankings_changed[voter_index]:
+                    self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += candidate[self.elec.CANDIDATE_RANK]                
+            else:   
+                for candidate in voter:
+                    self.candidates[candidate[self.elec.CANDIDATE_INDEX]] += candidate[self.elec.CANDIDATE_RANK]
 
     def simulate(self):
         print("SCORE VOTING SYSTEM")
+        start_time = time.time()
 
         if self.elec.TACTICAL_VOTING:
             self._apply_tactical_votes()
@@ -60,4 +68,6 @@ class ScoreVoting:
 
         elected = out[0][-self.elec.N_VACANCIES:]
 
+        now = time.time()
+        print('SVS duration: ' + str(round(now - start_time, 2)) + ' seg' )
         return out, mean, elected, satisfaction_rate

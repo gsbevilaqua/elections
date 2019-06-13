@@ -207,8 +207,8 @@ export class Dashboard extends Component {
                         <div className="line-break" style={{height:"0.15rem", width:"100%", backgroundColor:"rgba(128, 128, 128, 0.40)"}}></div>
                         <br></br><br></br>                        
                         <div>
-                            <div style={{display: "grid", gridTemplateColumns:"20% 20%"}}>
-                                <h1 style={{padding:'1rem'}}> VOTERS </h1>
+                            <div style={{display: "grid", gridTemplateColumns:"40% 20%"}}>
+                                <h1 style={{padding:'1rem'}}> VOTERS PROFILES </h1>
                                 <input onBlur={this.onBlurNProfiles} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
                             </div>
 

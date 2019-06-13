@@ -11,7 +11,7 @@ class Elections:
 
 	candidates = dict() # DICTIONARY OF KEY -> INDEX OF CANDIDATE, VALUE -> NUMBER OF VOTES
 	voters = []	# LIST OF DICTIONAIRIES WICH HOLDS KEY -> INDEX CANDIDATE, VALUE -> RATING OF THE VOTER FOR THE CANDIDATE
-	votes = dict()
+	votes = dict() # DICTIONARY OF KEY -> INDEX OF CANDIDATE, VALUE -> SET WITH THE INDICES OF THE VOTERS THAT VOTED FOR THIS CANDIDATE
 	sorted_voters = [] # LIST OF VOTERS, EACH VOTER BEING A LIST OF TUPLES -> (INDEX OF CANDIDATE, RATING) IN ORDER FROM LOWER RANKED CANDIDATE TO HIGHEST RANKED
 	sorted_candidates = [] # LIST OF CANDIDATES IN ORDER FROM LEAST VOTED TO MOST VOTED
 	uniform = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0] # EQUAL CHANCE TO EACH RATING - UNIFORM
@@ -23,23 +23,23 @@ class Elections:
 	polarizer = [0.1, 0.19, 0.28, 0.35, 0.41, 0.436, 0.452, 0.468, 0.484, 0.5, 0.5, 0.516, 0.532, 0.548, 0.564, 0.59, 0.65, 0.72, 0.81, 0.9, 1.0] # HIGH CHANCE OF WORST RATINGS AND BEST RATINGS
 	more_polarizer = [0.15, 0.25, 0.35, 0.4, 0.45, 0.46, 0.47, 0.48, 0.49, 0.5, 0.5, 0.51, 0.52, 0.53, 0.54, 0.55, 0.6, 0.65, 0.75, 0.85, 1.0] # HIGHER CHANCE OF WORST RATINGS AND BEST RATINGS
 
-	leading_candidates = []
-	excluded = set()
-	rounds = []
+	leading_candidates = [] # INDICES OF CANDIDATES LEADING THE ELECTIONS: THE FIRST (N_VACANCIES + 1) CANDIDATES
+	excluded = set() # SET UTILIZED IN IRV TO KEEP TRACK OF THE CANDIDATES EXCLUDED FROM THE ELECTIONS
+	rounds = [] # LIST WITH THE RESULTS FOR EACH ROUND OF IRV
 
-	def __init__(self, n_voters, bias_vector, n_vacancies, tactical, minority, tactical_votes = [], minority_votes = [], coalitions = [], candidates_names = [], voter_profiles = []):
+	def __init__(self, n_voters, bias_vector, n_vacancies, tactical = 0, minority = 0, tactical_votes = [], minority_votes = [], coalitions = [], candidates_names = [], voter_profiles = [], seed = 4):
 		self.N_VOTERS = n_voters # NUMBER OF VOTERS
 		self.N_CANDIDATES = len(bias_vector) # NUMBER OF CANDIDATES
-		self.BIAS_VECTOR = bias_vector # VECTOR OF HELP VALUES FROM 0 TO 4 FOR CANDIDATES - 0 (WORST CHANCE FOR GETTING GOOD RATING) , 4 (BEST CHANCE FOR GETTING GOOD RATINGS)
-		self.N_VACANCIES = n_vacancies
-		self.candidates_names = candidates_names
-		self.TACTICAL_VOTING = tactical
-		self.MINORITY_VOTING = minority
-		self.tactical_vote_percentages = tactical_votes
-		self.minority_vote_percentages = minority_votes
-		self.coalitions = coalitions
-		self.voter_profiles = voter_profiles
-		random.seed(4)
+		self.BIAS_VECTOR = bias_vector # INDICATES THE DISTRIBUTION USED FOR EACH CANDIDATE - VALUES FROM 0 TO 4: 0 (WORST CHANCE FOR GETTING GOOD RATING) , 4 (BEST CHANCE FOR GETTING GOOD RATINGS)
+		self.N_VACANCIES = n_vacancies # NUMBER OF VACANCIES
+		self.candidates_names = candidates_names # NAMES OF CANDIDATES
+		self.TACTICAL_VOTING = tactical # BOOLEAN - ENABLES/DISABLES TACTICAL VOTING
+		self.MINORITY_VOTING = minority # BOOLEAN - ENABLES/DISABLES MINORITY VOTING
+		self.tactical_vote_percentages = tactical_votes # INDICATES THE PERCENTAGE OF TACTICAL VOTES RECEIVED FOR EACH CANDIDATE
+		self.minority_vote_percentages = minority_votes # INDICATES THE PERCENTAGE OF MINORITY VOTES RECEIVED FOR EACH CANDIDATE
+		self.coalitions = coalitions # LIST OF COALITIONS
+		self.voter_profiles = voter_profiles # LIST OF VOTER'S PROFILES. EXAMPLE OF VOTER PORFILE: {"pop_percentage": 50, "scores": [10, 5, 4, 3, 2, 1, -10]}
+		random.seed(seed)
 
 	def initialize(self):
 		start_time = time.time()
@@ -53,6 +53,7 @@ class Elections:
 		now = time.time()
 		print('sorting: ' + str(round(now - start_time, 2)) + ' seg' )
 
+	# RESETS EVERY STRUCTURE
 	def reset(self):
 		self.excluded = set()
 		self.rounds = []
@@ -86,6 +87,7 @@ class Elections:
 	# CREATES LIST OF VOTERS (LIST OF DICTS) => [(KEY: INDEX OF CANDIDATE, VALUE: RATING), (), ...]
 	def create_voters(self):
 		start_time = time.time()
+		# IN GENERATE MODE OF THE SIMULATOR VOTERS PREFERENCES ARE GENERATED FROM EACH CANDIDATE'S SET DISTRIBUTION
 		if(not len(self.voter_profiles)):
 			print("Generating Voters")
 			for voter in range(self.N_VOTERS):
@@ -106,24 +108,27 @@ class Elections:
 					else:
 						candidates_rank[candidate] = self._sortear(self.neutral)
 				self.voters.append(candidates_rank)
+		# IN MANIPULATE MODE VOTER'S PREFERENCES ARE SET FROM VOTER'S PROFILES
 		else:
-			print("Used Profiles")
-			ranges = []
-			ranks = []
+			# print("Used Profiles")
+			ranges = [] # LIST OF EACH PROFILE'S POPULATION PERCENTAGE
+			ranks = [] # LIST OF EACH PROFILE'S RANKING OF CANDIDATES
 			for prof in self.voter_profiles:
+				# print(prof)
 				ranges.append(int(prof["pop_percentage"]))
 				rank = {}
 				for index, score in enumerate(prof["scores"]):
 					rank[index] = score
 				ranks.append(rank)
-			print("RANGES::: ", ranges)
-			print("RANKS:::: ", ranks)
+			# print("RANGES::: ", ranges)
+			# print("RANKS:::: ", ranks)
 			for index, _range in enumerate(ranges):
 				for _ in range(int(self.N_VOTERS*(_range/100))):
 					self.voters.append(ranks[index])
 		now = time.time()
 		print('voters creation: ' + str(round(now - start_time, 2)) + ' seg' )
 
+	# EVERY CANDIDATE IN A COALITION ADDS TO ITS SCORE HALF THE POINTS OF THE OTHER CANDIDATES IN THE COALITION
 	def _account_for_coalitions(self):
 		for voter_index, voter in enumerate(copy.deepcopy(self.voters)):
 			for coalition in self.coalitions:
@@ -147,11 +152,13 @@ class Elections:
 		self._account_for_coalitions()
 
 		start_time = time.time()
+		# SORTING EACH VOTER'S RANKING OF CANDIDATES
 		for voter in self.voters:
 			self.sorted_voters.append(sorted(voter.items(), key=operator.itemgetter(1)))
 
 		temp = []
 
+		# THIS CREATES A DICT FOR EACH VOTER'S RANKING AND APPENDS TO 'temp' LIST. DICT WITH KEY => SOCORE AND VALUE => LIST WITH CANDIDATES WITH THAT SCORE
 		for voter in self.sorted_voters:
 			new_dict = defaultdict(list)
 			for k in voter:
@@ -160,6 +167,8 @@ class Elections:
 
 		self.sorted_voters = []
 
+		# THIS PROCEDURE IS TO AVOID FAVORING CANDIDATES WITH HIGHER INDICES WHEN MULTIPLE CANDIDATES HAS THE SAME SCORE WITHIN A VOTER'S RANKING
+		# THE DICTS IN 'temp' ARE TRANSFORMED BACK TO THE RANKINGS BUT WHEN THERE IS A LIST OF CANDIDATES WITH THE SAME SCORE THE LIST IS SHUFFLED 
 		for voter_index, current_voter in enumerate(temp):
 			new_voter = []
 			for rating, candidate_indexes in current_voter.items():
@@ -176,9 +185,28 @@ class Elections:
 		now = time.time()
 		print('sorting: ' + str(round(now - start_time, 2)) + ' seg' )
 
+		self.sorted_candidates = self.sort_candidates(self.candidates)
+		self._set_leading_candidates()
+
+	# THIS FILLS 'leading_candidates' LIST: THE FIRST (N_VACANCIES + 1) CANDIDATES
+	def _set_leading_candidates(self):
+		if self.N_VACANCIES == 1 or self.N_VACANCIES == 2:
+			self.leading_candidates.append(self.sorted_candidates[-1][self.CANDIDATE_INDEX])
+			self.leading_candidates.append(self.sorted_candidates[-2][self.CANDIDATE_INDEX])
+			self.leading_candidates.append(self.sorted_candidates[-3][self.CANDIDATE_INDEX])
+		elif self.N_VACANCIES > 2:
+			for i in range(1, self.N_VACANCIES + 2):
+				self.leading_candidates.append(self.sorted_candidates[-i][self.CANDIDATE_INDEX])
+		
+		print("leading: ", self.leading_candidates)		
+
 	def sort_candidates(self, candidates):
 			return sorted(candidates.items(), key=operator.itemgetter(1))
 
+	# THIS METHOD CALCULATES BOTH THE MEAN OF THE SCORE OF THE WINNERS OF THE ELECTIONS AND THE PERCENTAGE OF THE VOTERS SATISFIED WITH THE RESULTS
+	# THE MEAN IS THE SUM OF THE SCORES OF EACH CANDIDATE PER VOTER DIVIDED BY THE NUMBER OF VOTERS AND NUMBER OF VACANCIES
+	# THE SATISFACTION RATE IS THE NUMBER OF VOTERS SATISFIED OVER THE TOTAL NUMBER OF VOTERS
+	# A VOTER IS SATISFIED WHEN THE MEAN OF THE SCORES HE GAVE TO THE WINNERS IS POSITIVE (>0)
 	def calculate_mean(self, winners):
 		rating_sum = 0
 		c = 0
@@ -189,9 +217,11 @@ class Elections:
 			for candidate in winners:
 				rating_sum += voter[candidate]
 				voter_satisfaction += voter[candidate]
+			# print("::::VS: ", voter_satisfaction)
 			if voter_satisfaction > 0:
 				satisfied_population_count += 1
 		print(":::rating sum: ", rating_sum)
+		print(":::satisfied_pop_count: ", satisfied_population_count)
 		print(":::N Voters: ", self.N_VOTERS)
 		print(":::Count: ", c)
 		print(":::Winners: ", winners)

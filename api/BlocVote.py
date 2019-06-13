@@ -1,6 +1,6 @@
-import random, copy
+import random, copy, time
 from api.Elections import Elections
-#from Elections import Elections
+#from Elections import Elections # used for testing
 
 class BlocVote:
 
@@ -9,7 +9,9 @@ class BlocVote:
     sorted_candidates = []
 
     def __init__(self, elec):
+        start_time = time.time()
         self.elec = elec
+        print('BVS init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
     def _count_votes(self):
         for index in range(self.elec.N_CANDIDATES):
@@ -25,6 +27,7 @@ class BlocVote:
 
     def simulate(self):
         print("BLOC VOTE")
+        start_time = time.time()
 
         self._count_votes()
         self.sorted_candidates = self.elec.sort_candidates(self.candidates)
@@ -45,4 +48,6 @@ class BlocVote:
 
         elected = out[0][-self.elec.N_VACANCIES:]
 
+        now = time.time()
+        print('BVS duration: ' + str(round(now - start_time, 2)) + ' seg' )
         return out, mean, elected, satisfaction_rate
