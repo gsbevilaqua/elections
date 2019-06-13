@@ -19,7 +19,7 @@ class InstantRunoffVoting(Elections):
 	def _count_votes(self, _round):
 		self.elec.rounds.append(self.sorted_candidates[_round:])
 		# print(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS)
-		if(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS == 0.5):
+		if(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS == 0.5 and _round == self.elec.N_CANDIDATES - self.elec.N_VACANCIES - 1):
 			return 2
 		elif(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS > 0.5):
 			return 1

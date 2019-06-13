@@ -152,7 +152,7 @@ class TwoRoundSystem:
 		scout = [[], []]
 		ssr = None
 		elected = fcout[0][-self.elec.N_VACANCIES:]
-		if(not self.elec.N_VACANCIES > 1 and self.sorted_candidates[-1][self.elec.NUMBER_OF_VOTES]/self.elec.N_VOTERS < 0.5):
+		if(not self.elec.N_VACANCIES > 1 and self.sorted_candidates[-1][self.elec.NUMBER_OF_VOTES]/self.elec.N_VOTERS <= 0.5):
 			second_round = True
 			sc, sm, ssr = self._second_round()
 			for key, votes in sc.items():
