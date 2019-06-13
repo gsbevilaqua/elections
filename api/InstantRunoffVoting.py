@@ -4,10 +4,10 @@ from api.Elections import Elections
 
 class InstantRunoffVoting(Elections):	
 
-	elec = None
-	candidates = dict()
-	sorted_candidates = []
-	votes = dict()
+	elec = None # ELECTIONS OBJECT
+	candidates = dict() # DICTIONARY OF KEY -> INDEX OF CANDIDATE, VALUE -> NUMBER OF VOTES
+	sorted_candidates = [] # LIST OF CANDIDATES IN ORDER FROM LEAST VOTED TO MOST VOTED
+	votes = dict() # DICTIONARY OF KEY -> INDEX OF CANDIDATE, VALUE -> SET WITH THE INDICES OF THE VOTERS THAT VOTED FOR THIS CANDIDATE
 
 	def __init__(self, elec):
 		start_time = time.time()
@@ -16,9 +16,12 @@ class InstantRunoffVoting(Elections):
 		self.votes = copy.deepcopy(elec.votes)
 		print('IRV init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
+	# FEVERY ROUND THIS METHOD IS CALLED. FOR EACH ROUND OF IRV VOTES OF ELIMINATED CANDIDATES ARE REDISTRIBUTED.
+	# EXCLUDED ARRAY KEEPS TRACK OF THE ELIMINATED CANDIDATES. THE 3 IFS BELOW ARE FOR WHEN THE TWO LAST CANDIDATES
+	# TIE WITH 50%/50%, FOR WHEN ONE CANDIDATE HAS REACHED MORE THAN 50% VOTES AND FOR WHEN NO CANDIDATE REACHED
+	# MORE THAN 50% AND THE NEXT ROUND IS REQUIRED
 	def _count_votes(self, _round):
 		self.elec.rounds.append(self.sorted_candidates[_round:])
-		# print(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS)
 		if(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS == 0.5 and _round == self.elec.N_CANDIDATES - self.elec.N_VACANCIES - 1):
 			return 2
 		elif(self.sorted_candidates[self.elec.N_CANDIDATES - 1][1]/self.elec.N_VOTERS > 0.5):
@@ -35,7 +38,6 @@ class InstantRunoffVoting(Elections):
 						continue
 					
 			self.sorted_candidates = self.elec.sort_candidates(self.candidates)
-			# print(self.sorted_candidates)
 			return 0
 
 	def simulate(self):
@@ -45,16 +47,12 @@ class InstantRunoffVoting(Elections):
 		satisfaction_rate = 0
 
 		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
-		# print(self.sorted_candidates)
+
+		# FOR SINGLE WINNER ELECTIONS
 		if(self.elec.N_VACANCIES < 2):
 			for _round in range(self.elec.N_CANDIDATES - self.elec.N_VACANCIES):
 				result = self._count_votes(_round)
 				if(result == 1):
-					# print("first_place wins")
-					#e = [lambda x: len(x) for x in self.votes]
-					#print(":::e: ", e)
-					# for e in self.votes:
-					# 	print(len(self.votes[e]))
 					winners = []
 					vacancies = self.elec.N_VACANCIES
 					for candidate in reversed(self.sorted_candidates):
@@ -63,10 +61,9 @@ class InstantRunoffVoting(Elections):
 						winners.append(candidate[0])
 						vacancies -= 1
 					mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
-					# print("MEAN: ", mean)
 					break
 				elif(result == 0):
-				# 	# print("eliminate last_place")
+					# print("eliminate last place")
 					continue
 				else:
 					# print("TIE!")
@@ -78,9 +75,8 @@ class InstantRunoffVoting(Elections):
 						winners.append(candidate[0])
 						vacancies -= 1
 					mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
-					# print("MEAN: ", mean)
 					break
-		else:
+		else: # FOR MULTIPLE WINNER ELECTIONS, TURNS INTO FPTP
 			winners = []
 			vacancies = self.elec.N_VACANCIES
 			for candidate in reversed(self.sorted_candidates):

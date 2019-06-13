@@ -36,17 +36,15 @@ class TwoRoundSystem:
 		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
 		self.winner = self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX]
 		self.second_place = self.sorted_candidates[-2][self.elec.CANDIDATE_INDEX]
-		# print(self.sorted_candidates)
 		winners = []
 		vacancies = self.elec.N_VACANCIES
 		for candidate in reversed(self.sorted_candidates):
 			percentage = str(candidate[self.elec.NUMBER_OF_VOTES]/self.elec.N_VOTERS)
-			# print("candidate " + str(candidate[self.elec.CANDIDATE_INDEX]) + ": " + str(candidate[self.elec.NUMBER_OF_VOTES]) + " votes - " + percentage + "%")
 			if vacancies > 0:
 				winners.append(candidate[0])
 			vacancies -= 1
 		mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
-		# print("MEAN: ", mean)
+
 		return self.sorted_candidates, mean, satisfaction_rate
 	
 	def _second_round(self):
@@ -70,7 +68,6 @@ class TwoRoundSystem:
 		# print("\nSECOND ROUND:")
 
 		self.sorted_candidates = self.elec.sort_candidates(self.candidates)
-		# print(self.sorted_candidates)
 		winners = []
 		vacancies = self.elec.N_VACANCIES
 		for candidate in reversed(self.sorted_candidates):
@@ -79,7 +76,6 @@ class TwoRoundSystem:
 			winners.append(candidate[0])
 			vacancies -= 1
 		mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
-		# print("MEAN: ", mean)
 		return {self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-1][self.elec.NUMBER_OF_VOTES], self.sorted_candidates[-2][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-2][self.elec.NUMBER_OF_VOTES]}, mean, satisfaction_rate
 
 	# CANDIDATES THAT ARE NOT IN 'leading_candidates' LIST LOSE VOTES TO LEADING CANDIDATES BASED ON LEADING CANDIDATES TACTICAL VOTING PERCENTAGE PARAMETER
@@ -152,6 +148,8 @@ class TwoRoundSystem:
 		scout = [[], []]
 		ssr = None
 		elected = fcout[0][-self.elec.N_VACANCIES:]
+		# SECOND ROUND IS ONLY REQUIRED WHEN N CANDIDATE HAS REACHED MORE THAN 50% VOTES
+		# AND THE ELECTION IS NOT A MULTIPLE WINNER ELECTION
 		if(not self.elec.N_VACANCIES > 1 and self.sorted_candidates[-1][self.elec.NUMBER_OF_VOTES]/self.elec.N_VOTERS <= 0.5):
 			second_round = True
 			sc, sm, ssr = self._second_round()
@@ -162,10 +160,6 @@ class TwoRoundSystem:
 			scout[1] = [scout[1][1], scout[1][0]]
 			elected = [scout[0][-1]]
 
-		# print("second round: ", scout)
-		# print("elected:", elected)
-		# print("og candidates: ", self.elec.candidates)
-		# print("my candidates: ", self.candidates)
 		now = time.time()
 		print('TRS duration: ' + str(round(now - start_time, 2)) + ' seg' )
 		return fcout, fm, scout, sm, second_round, elected, fsr, ssr

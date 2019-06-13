@@ -75,7 +75,6 @@ class FirstPastThePost:
 	def simulate(self):
 		print("FIRST PAST THE POST")
 		start_time = time.time()
-		# print(self.elec.candidates_names)
 
 		if self.elec.N_CANDIDATES > 3 and self.elec.TACTICAL_VOTING:
 			self._count_tactical_votes()
