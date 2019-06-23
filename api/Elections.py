@@ -39,7 +39,8 @@ class Elections:
 		self.minority_vote_percentages = minority_votes # INDICATES THE PERCENTAGE OF MINORITY VOTES RECEIVED FOR EACH CANDIDATE
 		self.coalitions = coalitions # LIST OF COALITIONS
 		self.voter_profiles = voter_profiles # LIST OF VOTER'S PROFILES. EXAMPLE OF VOTER PORFILE: {"pop_percentage": 50, "scores": [10, 5, 4, 3, 2, 1, -10]}
-		random.seed(seed)
+		if seed is not None:
+			random.seed(seed)
 
 	def initialize(self):
 		start_time = time.time()

@@ -17,10 +17,10 @@ def setup_module(module):
     global elec, elec2, elec3, trs, trs2, trs3
     print ("") # this is to get a newline after the dots
     print ("Setup...")
-    elec = Elections(1000, [0, 0, 0, 0], 1, voter_profiles = [{"pop_percentage": 50, "scores": [10, -10, -10, -10,]},
-                                                              {"pop_percentage": 30, "scores": [-10, 10, -10, -10,]},
-                                                              {"pop_percentage": 15, "scores": [-10, -10, 10, -10,]},
-                                                              {"pop_percentage": 5, "scores": [1, -10, -10, 10,]}], tactical = 1, tactical_votes = [1.0, 0.0, 0.0, 0.0])
+    elec = Elections(1000, [0, 0, 0, 0], 1, voter_profiles = [{"pop_percentage": 50, "scores": [10, -10, -10, -10]},
+                                                              {"pop_percentage": 30, "scores": [-10, 10, -10, -10]},
+                                                              {"pop_percentage": 15, "scores": [-10, -10, 10, -10]},
+                                                              {"pop_percentage": 5, "scores": [1, -10, -10, 10]}], tactical = 1, tactical_votes = [1.0, 0.0, 0.0, 0.0])
     elec2 = Elections(1000, [0, 0, 0, 0], 2, voter_profiles = [{"pop_percentage": 100, "scores": [10, -10, -10, -10]}], tactical = 1)
     elec3 = Elections(1000, [0, 0, 0, 0, 0, 0, 0], 5, voter_profiles = [{"pop_percentage": 55, "scores": [10, 5, 4, 3, 8, 1, -10]},{"pop_percentage": 45, "scores": [-10, -10, -10, -10, -10, -10, 0]}], minority = 1, minority_votes = [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0])
     elec.reset()

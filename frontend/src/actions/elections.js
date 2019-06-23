@@ -1,4 +1,9 @@
-import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_AVS, SET_TBC, SET_SVS, SET_BVS, SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC, ADD_COALITION, ADD_CANDIDATE_TO_COALITION, DELETE_COALITION, SET_CANDIDATE, SET_NUMBER_PROFILES, ADD_VOTER, DELETE_VOTER, SET_CANDIDATE_SCORE, SET_PROFILE_NAME, SET_PROFILE_PERC } from './types';
+import { SET_ONE_ROUND, SET_TWO_ROUNDS, SET_IRV, SET_AVS, SET_TBC, SET_SVS, SET_BVS, 
+         SET_NUMBER_CANDIDATES, SET_NUMBER_VOTERS, SET_NUMBER_VACANCIES, ADD_CANDIDATE, 
+         DELETE_CANDIDATE, SET_NAME, SET_FAME, RESET, SET_TACTICAL_PERC, SET_MINORITY_PERC, 
+         ADD_COALITION, ADD_CANDIDATE_TO_COALITION, DELETE_COALITION, SET_CANDIDATE, 
+         SET_NUMBER_PROFILES, ADD_VOTER, DELETE_VOTER, SET_CANDIDATE_SCORE, SET_PROFILE_NAME, 
+         SET_PROFILE_PERC, SET_SEED, ERROR_SYS, ERROR_CAN, ERROR_VAC, MANIPULATE_MODE, GENERATE_MODE } from './types';
 
 export const setOneRound = (val) => dispatch => {
     dispatch({
@@ -64,7 +69,7 @@ export const setNCandidates = (val) => dispatch => {
 }
 
 export const setNVoters = (val) => dispatch => {
-    if(val == '' || val == null){
+    if(val == '' || val == null || isNaN(parseInt(val))){
         val = 1000;
     }
 
@@ -75,10 +80,9 @@ export const setNVoters = (val) => dispatch => {
 }
 
 export const setNVacancies = (val) => dispatch => {
-    if(val == '' || val == null){
+    if(val == '' || val == null || isNaN(parseInt(val))){
         val = 1;
     }
-
     dispatch({
         type: SET_NUMBER_VACANCIES, 
         payload: parseInt(val)
@@ -206,5 +210,48 @@ export const setProfilePerc = (index, val) => dispatch => {
     dispatch({
         type: SET_PROFILE_PERC,
         payload: {index: index, val: val}
+    });
+}
+
+export const setSeed = (val) => dispatch => {
+    if(val == '' || val == null){
+        val = null;
+    } else{
+        val = parseInt(val);
+    }
+
+    dispatch({
+        type: SET_SEED,
+        payload: val
+    });
+}
+
+export const errorSys = (val) => dispatch => {
+    dispatch({
+        type: ERROR_SYS
+    });
+}
+
+export const errorCan = (val) => dispatch => {
+    dispatch({
+        type: ERROR_CAN
+    });
+}
+
+export const errorVac = (val) => dispatch => {
+    dispatch({
+        type: ERROR_VAC
+    });
+}
+
+export const manipulateMode = (val) => dispatch => {
+    dispatch({
+        type: MANIPULATE_MODE
+    });
+}
+
+export const generateMode = (val) => dispatch => {
+    dispatch({
+        type: GENERATE_MODE
     });
 }

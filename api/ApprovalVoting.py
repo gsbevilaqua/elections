@@ -7,6 +7,7 @@ class ApprovalVoting:
     elec = None
     candidates = dict()
     sorted_candidates = []
+    t_votes_changed = 0
 
     def __init__(self, elec):
         start_time = time.time()
@@ -17,10 +18,10 @@ class ApprovalVoting:
         for index in range(self.elec.N_CANDIDATES):
             self.candidates[index] = 0
 
-        t_votes_changed = 0
+        self.t_votes_changed = 0
         for voter in self.elec.sorted_voters:
             if random.random() < self.elec.tactical_vote_percentages[voter[-1][self.elec.CANDIDATE_INDEX]]:
-                t_votes_changed += 1
+                self.t_votes_changed += 1
                 self.candidates[voter[-1][self.elec.CANDIDATE_INDEX]] += 1
             else:
                 for candidate in reversed(voter):
@@ -33,7 +34,6 @@ class ApprovalVoting:
         for index in range(self.elec.N_CANDIDATES):
             self.candidates[index] = 0
 
-        t_votes_changed = 0
         for voter in self.elec.sorted_voters:
             for candidate in reversed(voter):
                 if candidate[self.elec.CANDIDATE_SCORE] > 0:

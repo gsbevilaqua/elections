@@ -21,11 +21,11 @@ class ScoreVoting:
         for voter_index, voter in enumerate(self.elec.sorted_voters):
             if random.random() < self.elec.tactical_vote_percentages[voter[-1][self.elec.CANDIDATE_INDEX]]:
                 t_votes_changed += 1
+                self.rankings_changed[voter_index] = self.elec.sorted_voters[voter_index]
                 for candidate_index, candidate in enumerate(reversed(voter)):
                     if candidate_index == 0:
-                        continue
+                        self.rankings_changed[voter_index][-(candidate_index + 1)] = (voter[-(candidate_index + 1)][self.elec.CANDIDATE_INDEX], 10)
                     else:
-                        self.rankings_changed[voter_index] = self.elec.sorted_voters[voter_index]
                         self.rankings_changed[voter_index][-(candidate_index + 1)] = (voter[-(candidate_index + 1)][self.elec.CANDIDATE_INDEX], -10)
 
 		
