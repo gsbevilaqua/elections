@@ -57,7 +57,7 @@ export class Dashboard extends Component {
         this.props.fullReset();
     }
 
-    setTrs = () => { if (!(this.state.disable_trs.length > 0)) this.props.setTrs() }
+    setTrs = () => { if (!(this.state.disable_trs.length > 0)) this.props.setTwoRounds() }
     setIrv = () => { if (!(this.state.disable_irv.length > 0)) this.props.setIrv() }
     setBvs = () => { if (!(this.state.disable_bv.length > 0)) this.props.setBvs() }
     
@@ -69,7 +69,7 @@ export class Dashboard extends Component {
             this.state.disable_irv = "disabled";
             this.state.disable_bv = "";
             if (this.props.trs == true){
-                this.props.setTrs();
+                this.props.setTwoRounds();
             }
             if (this.props.irv == true){
                 this.props.setIrv();
