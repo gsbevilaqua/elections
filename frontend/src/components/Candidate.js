@@ -74,7 +74,7 @@ export class Candidate extends Component {
                             <input onBlur={this.props.setFame.bind(this, this.props.index, -1)} type="radio" name="fame" id="polarizer" autoComplete="off"/> Polarizer
                         </label>
                         <label className={"btn btn-secondary btn-sm" + (this.props.fame == -2 ? ' active' : '')} style={{backgroundColor:"#9a3734"}}>
-                            <input onBlur={this.props.setFame.bind(this, this.props.index, -2)} type="radio" name="fame" id="most-polarizer" autoComplete="off"/> Most Polarizer
+                            <input onBlur={this.props.setFame.bind(this, this.props.index, -2)} type="radio" name="fame" id="most-polarizer" autoComplete="off"/> Strongly Polarizer
                         </label>
                     </div>
                     <div style={{margin: '0 auto', display:"flex", alignItems:"center"}}>
