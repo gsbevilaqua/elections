@@ -280,7 +280,7 @@ export class Dashboard extends Component {
                     <br></br><br></br>
                     <div className="tab-pane fade active show" id="manipulate">
                         <div>
-                            <div style={{display: "grid", gridTemplateColumns:"30% 20% 25% 25%"}}>
+                            <div style={{display: "grid", gridTemplateColumns:"1fr 1fr 1fr 1fr"}}>
                                 <h1 style={{padding:'1rem'}}> CANDIDATES </h1>
                                 <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
                                 <div style={{margin: "auto"}} className="custom-control custom-checkbox">
@@ -340,7 +340,7 @@ export class Dashboard extends Component {
                     </div>
                     <div className="tab-pane fade" id="generate">
                         <div>
-                            <div style={{display: "grid", gridTemplateColumns:"30% 20% 25% 25%"}}>
+                            <div style={{display: "grid", gridTemplateColumns:"1fr 1fr 1fr 1fr"}}>
                                 <h1 style={{padding:'1rem'}}> CANDIDATES </h1>
                                 <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
                                 <div style={{margin: "auto"}} className="custom-control custom-checkbox">

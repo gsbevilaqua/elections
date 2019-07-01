@@ -54,7 +54,7 @@ export class Candidate extends Component {
                     <div style={{margin: '0 auto'}}>
                         <i className="far fa-user fa-5x"></i>
                     </div>
-                    <div className="btn-group btn-group-toggle" data-toggle="buttons">
+                    <div className="btn-group btn-group-toggle" data-toggle="buttons" style={{display: "flex", flexWrap: "wrap"}}>
                         <label className={"btn btn-secondary btn-sm" + (this.props.fame == 4 ? ' active' : '')} >
                             <input onBlur={this.props.setFame.bind(this, this.props.index, 4)} type="radio" name="fame" id="loved" autoComplete="off"/> Loved
                         </label>

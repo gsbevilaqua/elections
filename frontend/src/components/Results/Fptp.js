@@ -144,7 +144,7 @@ export default class Fptp extends Component {
         <div style={{backgroundColor: "#2b2d3e"}}>
             <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", background: "black"}}> FIRST PAST THE POST </h1>
             <div style={{padding:"4rem", display:"flex", justifyContent: "center", flexDirection: "column"}}> 
-              <div style={{display:"flex", justifyContent: "space-evenly"}}> 
+              <div style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>
                 <div style={{margin: "auto", backgroundColor: "#2B2D3E", display: "flex", justifyContent: "center", alignItems: "center"}}>
                   <Chart options={{annotations: {points: this.state.points}, dataLabels: {enabled: true,dropShadow: {enabled: true,left: 2,top: 2,opacity: 0.5}}, colors: ["#46adfb"], xaxis:{categories: this.props.res[0][0], labels:{style:{colors: '#ffffff'}}}, yaxis:{title:{text:"Scores", style:{color:'white'}},labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme:{palette: 'palette8'}, fill: {type: 'gradient',gradient: {shade: 'light',type: "horizontal",shadeIntensity: 0.25,gradientToColors: undefined,inverseColors: true,opacityFrom: 0.85,opacityTo: 0.85,stops: [50, 0, 100]}}}}
                           series={[{name: "series-1", data: this.props.res[0][1] }]}
@@ -160,7 +160,7 @@ export default class Fptp extends Component {
                   />
                 </div>
               </div>
-              <div style={{display:"flex", justifyContent: "space-evenly"}}>
+              <div style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
                   <Chart options={this.state.options1} 
                         series={[((this.props.res[1] + 10)*5).toFixed(2)]} 

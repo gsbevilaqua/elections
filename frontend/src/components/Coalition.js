@@ -24,7 +24,7 @@ export class Coalition extends Component {
                     <h1 style={{backgroundColor:this.props.color, color:this.props.fontcolor, fontSize: "1.2rem"}}>{"Coalition " + this.props.index}</h1>
                 </div>
                 <div className="card-body" style={{backgroundColor:this.props.color, display: 'grid', gridTemplateColumns: '90% 10%'}}>
-                    <div className="coalition-candidates" style={{display: "flex"}}>
+                    <div className="coalition-candidates" style={{display: "flex", flexWrap: "wrap"}}>
                         {this.props.candidates.map((candidate_name, candidate_index) => (
                             <div key={candidate_index} style={{display:"flex", alignItems:"center", padding:"0.5rem"}}>
                                 <div style={{display:"block", textAlign:"center"}}>

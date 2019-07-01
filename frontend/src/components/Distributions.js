@@ -40,10 +40,10 @@ export default class Details extends Component {
     render() {
         return (
             <div style={{textAlign: "center"}}>
-                <h1 style={{fontSize: "5rem", padding: "2rem", background: "#826dc3", margin: "0", letterSpacing: "2rem"}}>DISTRIBUTIONS</h1>
+                <h1 style={{padding: "2rem", background: "#826dc3", margin: "0", letterSpacing: "2rem"}}>DISTRIBUTIONS</h1>
                 <div>
                     <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", margin: "0", background: "black"}}> {this.state.labels.neutral} </h1>
-                    <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center"}}>
                         <div style={{margin: "auto", paddingTop: "6rem", paddingLeft: "6rem", paddingRight: "4rem", paddingBottom: "3rem", backgroundColor: "#2B2D3E"}}>
                             <Chart options={{ chart: { id: "basic-bar" }, xaxis: { categories: this.state.ratings, labels:{style:{colors: '#ffffff', fontSize: '14px'}}}, yaxis:{labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme: {palette: 'palette6'}, title: {text: "PDF", style: { color: 'white' } }}}
                                     series={[{ name: "neutral", data: this.state.dists.neutral }]}
@@ -62,7 +62,7 @@ export default class Details extends Component {
                 </div>
                 <div>
                     <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", margin: "0", background: "black"}}> {this.state.labels.liked} </h1>
-                    <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center"}}>
                         <div style={{margin: "auto", paddingTop: "6rem", paddingLeft: "6rem", paddingRight: "4rem", paddingBottom: "3rem", backgroundColor: "#2B2D3E"}}>
                             <Chart options={{ chart: { id: "basic-bar" }, xaxis: { categories: this.state.ratings, labels:{style:{colors: '#ffffff', fontSize: '14px'}}}, yaxis:{labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme: {palette: 'palette6'}, title: {text: "PDF", style: { color: 'white' } }}}
                                     series={[{ name: "liked", data: this.state.dists.liked }]}
@@ -81,7 +81,7 @@ export default class Details extends Component {
                 </div>
                 <div>
                     <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", margin: "0", background: "black"}}> {this.state.labels.disliked} </h1>
-                    <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center"}}>
                         <div style={{margin: "auto", paddingTop: "6rem", paddingLeft: "6rem", paddingRight: "4rem", paddingBottom: "3rem", backgroundColor: "#2B2D3E"}}>
                             <Chart options={{ chart: { id: "basic-bar" }, xaxis: { categories: this.state.ratings, labels:{style:{colors: '#ffffff', fontSize: '14px'}}}, yaxis:{labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme: {palette: 'palette6'}, title: {text: "PDF", style: { color: 'white' } }}}
                                     series={[{ name: "disliked", data: this.state.dists.disliked }]}
@@ -100,7 +100,7 @@ export default class Details extends Component {
                 </div>
                 <div>
                     <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", margin: "0", background: "black"}}> {this.state.labels.loved} </h1>
-                    <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center"}}>
                         <div style={{margin: "auto", paddingTop: "6rem", paddingLeft: "6rem", paddingRight: "4rem", paddingBottom: "3rem", backgroundColor: "#2B2D3E"}}>
                             <Chart options={{ chart: { id: "basic-bar" }, xaxis: { categories: this.state.ratings, labels:{style:{colors: '#ffffff', fontSize: '14px'}}}, yaxis:{labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme: {palette: 'palette6'}, title: {text: "PDF", style: { color: 'white' } }}}
                                     series={[{ name: "loved", data: this.state.dists.loved }]}
@@ -119,7 +119,7 @@ export default class Details extends Component {
                 </div>
                 <div>
                     <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", margin: "0", background: "black"}}> {this.state.labels.hated} </h1>
-                    <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center"}}>
                         <div style={{margin: "auto", paddingTop: "6rem", paddingLeft: "6rem", paddingRight: "4rem", paddingBottom: "3rem", backgroundColor: "#2B2D3E"}}>
                             <Chart options={{ chart: { id: "basic-bar" }, xaxis: { categories: this.state.ratings, labels:{style:{colors: '#ffffff', fontSize: '14px'}}}, yaxis:{labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme: {palette: 'palette6'}, title: {text: "PDF", style: { color: 'white' } }}}
                                     series={[{ name: "hated", data: this.state.dists.hated }]}
@@ -138,7 +138,7 @@ export default class Details extends Component {
                 </div>
                 <div>
                     <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", margin: "0", background: "black"}}> {this.state.labels.polarizer} </h1>
-                    <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center"}}>
                         <div style={{margin: "auto", paddingTop: "6rem", paddingLeft: "6rem", paddingRight: "4rem", paddingBottom: "3rem", backgroundColor: "#2B2D3E"}}>
                             <Chart options={{ chart: { id: "basic-bar" }, xaxis: { categories: this.state.ratings, labels:{style:{colors: '#ffffff', fontSize: '14px'}}}, yaxis:{labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme: {palette: 'palette6'}, title: {text: "PDF", style: { color: 'white' } }}}
                                     series={[{ name: "polarizer", data: this.state.dists.polarizer }]}
@@ -157,7 +157,7 @@ export default class Details extends Component {
                 </div>
                 <div>
                 <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", margin: "0", background: "black"}}> {this.state.labels.more_polarizer} </h1>
-                    <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center"}}>
                         <div style={{margin: "auto", paddingTop: "6rem", paddingLeft: "6rem", paddingRight: "4rem", paddingBottom: "3rem", backgroundColor: "#2B2D3E"}}>
                             <Chart options={{ chart: { id: "basic-bar" }, xaxis: { categories: this.state.ratings, labels:{style:{colors: '#ffffff', fontSize: '14px'}}}, yaxis:{labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme: {palette: 'palette6'}, title: {text: "PDF", style: { color: 'white' } }}}
                                     series={[{ name: "more_polarizer", data: this.state.dists.more_polarizer }]}
