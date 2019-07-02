@@ -147,7 +147,7 @@ export default class Irv extends Component {
               { this.props.res[0].map((_, index) => 
                 (<div key={index}>
                   <h1 style={{color: "white", fontFamily: "Bungee, cursive", padding: "2rem", background: "#797979"}}> ROUND {index + 1} </h1>
-                  <div key={index} style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                  <div key={index} style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>
                     {(index + 1 === this.props.res[0].length) ?
                       <div style={{margin: "auto", backgroundColor: "#2B2D3E"}}>
                         <Chart options={{annotations: {points: this.state.points}, dataLabels: {enabled: true,dropShadow: {enabled: true,left: 2,top: 2,opacity: 0.5}}, colors: ["#46adfb"], xaxis:{categories: this.props.res[0][index][0], labels:{style:{colors: '#ffffff'}}}, yaxis:{title:{text:"Votes", style:{color:'white'}},labels:{style:{color: '#ffffff', fontSize: '14px'}}}, theme:{palette: 'palette8'}, fill: {type: 'gradient',gradient: {shade: 'light',type: "horizontal",shadeIntensity: 0.25,gradientToColors: undefined,inverseColors: true,opacityFrom: 0.85,opacityTo: 0.85,stops: [50, 0, 100]}}}}
@@ -174,7 +174,7 @@ export default class Irv extends Component {
                     </div>                    
                   </div>
                 </div>)) }
-                <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                <div style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>
                   <div>
                     <Chart options={this.state.options1} 
                           series={[((this.props.res[1] + 10)*5).toFixed(2)]} 

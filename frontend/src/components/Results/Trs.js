@@ -146,7 +146,7 @@ export default class Trs extends Component {
           <div style={{padding:'4rem'}}>
           <h1 style={{color: "white", fontFamily: "Bungee, cursive", padding: "2rem", background: "#797979"}}> FIRST ROUND </h1>
             <div>
-              <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+              <div style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>
                 {this.props.res[4] ?
                   <div style={{margin: "auto", backgroundColor: "#2B2D3E"}}>
                     <Chart options={{dataLabels: {enabled: true,dropShadow: {enabled: true,left: 2,top: 2,opacity: 0.5}}, colors: ["#46adfb"], xaxis:{categories: this.props.res[0][0], labels:{style:{colors: '#ffffff'}}}, yaxis:{title:{text:"Votes", style:{color:'white'}},labels:{style:{color: '#ffffff', fontSize: '14px'}}}, fill: {type: 'gradient',gradient: {shade: 'light',type: "horizontal",shadeIntensity: 0.25,gradientToColors: undefined,inverseColors: true,opacityFrom: 0.85,opacityTo: 0.85,stops: [50, 0, 100]}}}}
@@ -175,7 +175,7 @@ export default class Trs extends Component {
             </div>
             {this.props.res[4] ? 
               '' :
-              <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+              <div style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>
                 <div>
                   <Chart options={this.state.options1} 
                         series={[((this.props.res[1] + 10)*5).toFixed(2)]} 
@@ -195,7 +195,7 @@ export default class Trs extends Component {
             {this.props.res[4] ?
               <div>
                 <h1 style={{color: "white", fontFamily: "Bungee, cursive", padding: "2rem", background: "#797979"}}> SECOND ROUND </h1>
-                <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                <div style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>
                   <div style={{margin: "auto", backgroundColor: "#2B2D3E"}}>
                     <Chart options={{annotations: {points: this.state.points}, dataLabels: {enabled: true,dropShadow: {enabled: true,left: 2,top: 2,opacity: 0.5}}, colors: ["#46adfb"], xaxis:{categories: this.props.res[2][0], labels:{style:{colors: '#ffffff'}}}, yaxis:{title:{text:"Votes", style:{color:'white'}},labels:{style:{color: '#ffffff', fontSize: '14px'}}}, fill: {type: 'gradient',gradient: {shade: 'light',type: "horizontal",shadeIntensity: 0.25,gradientToColors: undefined,inverseColors: true,opacityFrom: 0.85,opacityTo: 0.85,stops: [50, 0, 100]}}}}
                           series={[{ name: "series-1", data: this.props.res[2][1] }]}
@@ -211,7 +211,7 @@ export default class Trs extends Component {
                     />
                   </div>
                 </div>
-                <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                <div style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>
                   <div>
                     <Chart options={this.state.options1} 
                           series={[((this.props.res[3] + 10)*5).toFixed(2)]} 

@@ -125,7 +125,7 @@ class Elections:
 			# print("RANKS:::: ", ranks)
 			for index, _range in enumerate(ranges):
 				for _ in range(int(self.N_VOTERS*(_range/100))):
-					self.voters.append(ranks[index])
+					self.voters.append(copy.deepcopy(ranks[index]))
 		now = time.time()
 		print('voters creation: ' + str(round(now - start_time, 2)) + ' seg' )
 
@@ -145,7 +145,6 @@ class Elections:
 						self.voters[voter_index][candidate['value']] = -10
 					else:
 						self.voters[voter_index][candidate['value']] += add_to_score
-
 
 	# SORT EACH VOTER'S CANDIDATE'S RANKING
 	def sort_ranks(self):

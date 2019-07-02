@@ -282,12 +282,12 @@ export class Dashboard extends Component {
                         <div>
                             <div style={{display: "grid", gridTemplateColumns:"1fr 1fr 1fr 1fr"}}>
                                 <h1 style={{padding:'1rem'}}> CANDIDATES </h1>
-                                <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
-                                <div style={{margin: "auto"}} className="custom-control custom-checkbox">
+                                <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto", padding: "0"}} placeholder="Enter a number" />
+                                <div style={{margin: "auto", backgroundColor: "aquamarine", color: "dimgray"}} className="custom-control custom-checkbox">
                                     <input type="checkbox" className="custom-control-input" id="tactical-check" name="tactical_checked" checked={this.state.tactical_checked} onChange={this.toggleTacticalCheckbox} />
                                     <label className="custom-control-label" htmlFor="tactical-check">Tactical Voting</label>
                                 </div>
-                                <div style={{margin: "auto"}} className="custom-control custom-checkbox">
+                                <div style={{margin: "auto", backgroundColor: "aquamarine", color: "dimgray"}} className="custom-control custom-checkbox">
                                     <input type="checkbox" className="custom-control-input" id="minority-check" name="minority_checked" checked={this.state.minority_checked} onChange={this.toggleMinorityCheckbox} />
                                     <label className="custom-control-label" htmlFor="minority-check">Minority Voting</label>
                                 </div>
@@ -309,7 +309,7 @@ export class Dashboard extends Component {
                         <div>
                             <div style={{display: "grid", gridTemplateColumns:"40% 20%"}}>
                                 <h1 style={{padding:'1rem'}}> VOTERS PROFILES </h1>
-                                <input onBlur={this.onBlurNProfiles} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
+                                <input onBlur={this.onBlurNProfiles} className="form-control" style={{height: "50%", margin: "auto", padding: "0"}} placeholder="Enter a number" />
                             </div>
 
                             <div className="voters" style={{margin: '0 auto'}}>
@@ -342,12 +342,12 @@ export class Dashboard extends Component {
                         <div>
                             <div style={{display: "grid", gridTemplateColumns:"1fr 1fr 1fr 1fr"}}>
                                 <h1 style={{padding:'1rem'}}> CANDIDATES </h1>
-                                <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto"}} placeholder="Enter a number" />
-                                <div style={{margin: "auto"}} className="custom-control custom-checkbox">
+                                <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto", padding: "0"}} placeholder="Enter a number" />
+                                <div style={{margin: "auto", backgroundColor: "aquamarine", color: "dimgray"}} className="custom-control custom-checkbox">
                                     <input type="checkbox" className="custom-control-input" id="tactical-check" name="tactical_checked" checked={this.state.tactical_checked} onChange={this.toggleTacticalCheckbox} />
                                     <label className="custom-control-label" htmlFor="tactical-check">Tactical Voting</label>
                                 </div>
-                                <div style={{margin: "auto"}} className="custom-control custom-checkbox">
+                                <div style={{margin: "auto", backgroundColor: "aquamarine", color: "dimgray"}} className="custom-control custom-checkbox">
                                     <input type="checkbox" className="custom-control-input" id="minority-check" name="minority_checked" checked={this.state.minority_checked} onChange={this.toggleMinorityCheckbox} />
                                     <label className="custom-control-label" htmlFor="minority-check">Minority Voting</label>
                                 </div>
