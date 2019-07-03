@@ -142,7 +142,13 @@ export default class Tbc extends Component {
     if(this.props.didRun){
       return (
         <div style={{backgroundColor: "#2b2d3e"}}>
-            <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", background: "black"}}> THE BORDA COUNT </h1>
+            <div style={{fontFamily: "Bungee, cursive", padding: "2rem", background: "black"}}>
+              <h1 style={{color: "aliceblue", fontSize: "2.5rem"}}> THE BORDA COUNT </h1>
+              {this.props.res[4] ?
+                <span style={{fontSize: "1.1rem", marginTop: "1rem"}} className="badge badge-pill badge-success">Elected best candidate!!</span>
+                : ""
+              }
+            </div>
             <div style={{padding:"4rem"}}>            
                 <div>
                   <div style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>

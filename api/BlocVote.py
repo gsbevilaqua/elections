@@ -13,6 +13,10 @@ class BlocVote:
         self.elec = elec
         print('BVS init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
+    def reset(self):
+        self.candidates = dict()
+        self.sorted_candidates = []
+
     def _count_votes(self):
         for index in range(self.elec.N_CANDIDATES):
             self.candidates[index] = 0
@@ -44,7 +48,7 @@ class BlocVote:
                 break
             winners.append(candidate[0])
             vacancies -= 1
-        mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
+        mean, satisfaction_rate = self.elec.get_mean(winners = winners)
 
         elected = out[0][-self.elec.N_VACANCIES:]
 

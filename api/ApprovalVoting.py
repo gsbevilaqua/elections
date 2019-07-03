@@ -14,6 +14,11 @@ class ApprovalVoting:
         self.elec = elec
         print('AVS init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
+    def reset(self):
+        self.candidates = dict()
+        self.sorted_candidates = []
+        self.t_votes_changed = 0
+
     def _count_votes_with_tactical(self):
         for index in range(self.elec.N_CANDIDATES):
             self.candidates[index] = 0
@@ -55,6 +60,9 @@ class ApprovalVoting:
         print(self.elec.candidates_names)
         print(self.sorted_candidates)
         for candidate in self.sorted_candidates:
+            print("for:::", candidate[self.elec.CANDIDATE_INDEX])
+            print(self.elec.candidates_names)
+            print(self.sorted_candidates)
             out[0].append(self.elec.candidates_names[candidate[self.elec.CANDIDATE_INDEX]])
             out[1].append(candidate[self.elec.CANDIDATE_SCORE])
         
@@ -65,10 +73,10 @@ class ApprovalVoting:
                 break
             winners.append(candidate[0])
             vacancies -= 1
-        mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
+        mean, satisfaction_rate, chose_best = self.elec.get_mean(winners = winners)
 
         elected = out[0][-self.elec.N_VACANCIES:]
 
         now = time.time()
         print('AVS duration: ' + str(round(now - start_time, 2)) + ' seg' )
-        return out, mean, elected, satisfaction_rate
+        return out, mean, elected, satisfaction_rate, chose_best

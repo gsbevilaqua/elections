@@ -7,12 +7,19 @@ class BordaCount:
     elec = None
     candidates = dict()
     sorted_candidates = []
+    t_votes_changed = 0
     rankings_changed = dict()
 
     def __init__(self, elec):
         start_time = time.time()
         self.elec = elec
         print('TBC init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
+
+    def reset(self):
+        self.candidates = dict()
+        self.sorted_candidates = []
+        self.t_votes_changed = 0
+        self.rankings_changed = dict()
 
     def _apply_tactical_votes(self):
         print("::::::::APPLYING TACTICAL VOTES...")
@@ -67,10 +74,10 @@ class BordaCount:
                 break
             winners.append(candidate[0])
             vacancies -= 1
-        mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
+        mean, satisfaction_rate, chose_best = self.elec.get_mean(winners = winners)
 
         elected = out[0][-self.elec.N_VACANCIES:]
 
         now = time.time()
         print('TBC duration: ' + str(round(now - start_time, 2)) + ' seg' )
-        return out, mean, elected, satisfaction_rate
+        return out, mean, elected, satisfaction_rate, chose_best

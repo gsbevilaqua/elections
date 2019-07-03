@@ -23,6 +23,11 @@ class FirstPastThePost:
 		self.sorted_candidates = elec.sorted_candidates
 		print('FPTP init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
+	def reset(self):
+		self.t_votes_changed = 0
+		self.m_votes_changed = 0
+		self.rankings_changed = dict()
+
 	# CANDIDATES THAT ARE NOT IN 'leading_candidates' LIST LOSE VOTES TO LEADING CANDIDATES BASED ON LEADING CANDIDATES TACTICAL VOTING PERCENTAGE PARAMETER
 	def _count_tactical_votes(self):
 		print("::::::::COUNTING TACTICAL VOTES...")
@@ -94,10 +99,10 @@ class FirstPastThePost:
 				break
 			winners.append(candidate[0])
 			vacancies -= 1
-		mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
+		mean, satisfaction_rate, chose_best = self.elec.get_mean(winners = winners)
 
 		elected = out[0][-self.elec.N_VACANCIES:]
 
 		now = time.time()
 		print('FPTP duration: ' + str(round(now - start_time, 2)) + ' seg' )
-		return out, mean, elected, satisfaction_rate
+		return out, mean, elected, satisfaction_rate, chose_best

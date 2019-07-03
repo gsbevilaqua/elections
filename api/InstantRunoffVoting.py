@@ -16,6 +16,9 @@ class InstantRunoffVoting(Elections):
 		self.votes = copy.deepcopy(elec.votes)
 		print('IRV init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
+	def reset(self):
+		self.sorted_candidates = []
+
 	# FOR EVERY ROUND THIS METHOD IS CALLED. FOR EACH ROUND OF IRV VOTES OF ELIMINATED CANDIDATES ARE REDISTRIBUTED.
 	# EXCLUDED ARRAY KEEPS TRACK OF THE ELIMINATED CANDIDATES. THE 3 IFS BELOW ARE FOR WHEN THE TWO LAST CANDIDATES
 	# TIE WITH 50%/50%, FOR WHEN ONE CANDIDATE HAS REACHED MORE THAN 50% VOTES AND FOR WHEN NO CANDIDATE REACHED
@@ -60,7 +63,7 @@ class InstantRunoffVoting(Elections):
 							break
 						winners.append(candidate[0])
 						vacancies -= 1
-					mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
+					mean, satisfaction_rate, chose_best = self.elec.get_mean(winners = winners)
 					break
 				elif(result == 0):
 					# print("eliminate last place")
@@ -74,7 +77,7 @@ class InstantRunoffVoting(Elections):
 							break
 						winners.append(candidate[0])
 						vacancies -= 1
-					mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
+					mean, satisfaction_rate, chose_best = self.elec.get_mean(winners = winners)
 					break
 		else: # FOR MULTIPLE WINNER ELECTIONS, TURNS INTO FPTP
 			winners = []
@@ -84,7 +87,7 @@ class InstantRunoffVoting(Elections):
 					break
 				winners.append(candidate[0])
 				vacancies -= 1
-			mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
+			mean, satisfaction_rate, chose_best = self.elec.get_mean(winners = winners)
 			# print("MEAN: ", mean)
 			self.elec.rounds.append(self.sorted_candidates)
 
@@ -101,4 +104,4 @@ class InstantRunoffVoting(Elections):
 
 		now = time.time()
 		print('IRV duration: ' + str(round(now - start_time, 2)) + ' seg' )
-		return rout, mean, elected, satisfaction_rate
+		return rout, mean, elected, satisfaction_rate, chose_best

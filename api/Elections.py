@@ -26,6 +26,12 @@ class Elections:
 	leading_candidates = [] # INDICES OF CANDIDATES LEADING THE ELECTIONS: THE FIRST (N_VACANCIES + 1) CANDIDATES
 	excluded = set() # SET UTILIZED IN IRV TO KEEP TRACK OF THE CANDIDATES EXCLUDED FROM THE ELECTIONS
 	rounds = [] # LIST WITH THE RESULTS FOR EACH ROUND OF IRV
+	
+	# MEANS OF SCORES AND POPULATION SATISFACTION FOR EACH CANDIDATE. 
+	# PS: ONLY USED FOR 1 CANDIDATE ELECTED ELECTIONS AND LESS THAN 10 CANDIDATES ELECTIONS. 
+	# PSS: CALCULATED IN _calculate_means())
+	stats = {'means': dict(), 'satisfaction_rates': dict()}
+	best_candidate = None
 
 	def __init__(self, n_voters, bias_vector, n_vacancies, tactical = 0, minority = 0, tactical_votes = [], minority_votes = [], coalitions = [], candidates_names = [], voter_profiles = [], seed = 4):
 		self.N_VOTERS = n_voters # NUMBER OF VOTERS
@@ -66,6 +72,8 @@ class Elections:
 		self.sorted_voters = []
 		self.sorted_candidates = []	
 		self.leading_candidates = []
+		self.stats = {'means': dict(), 'satisfaction_rates': dict()}
+		self.best_candidate = None
 
 	def _sortear(self, dist):
 		res = -10
@@ -185,6 +193,10 @@ class Elections:
 		now = time.time()
 		print('sorting: ' + str(round(now - start_time, 2)) + ' seg' )
 
+		if not (self.N_VACANCIES > 1 or self.N_CANDIDATES > 10):
+			self._calculate_means()
+			self.best_candidate = max(self.stats['means'].items(), key=operator.itemgetter(1))[0]
+			print("::::::::::::::::::::::::TABELAAAAAAAAAAAA:::::::::::::::::::::::", self.stats)
 		self.sorted_candidates = self.sort_candidates(self.candidates)
 		self._set_leading_candidates()
 
@@ -201,7 +213,7 @@ class Elections:
 		print("leading: ", self.leading_candidates)		
 
 	def sort_candidates(self, candidates):
-			return sorted(candidates.items(), key=operator.itemgetter(1))
+		return sorted(candidates.items(), key=operator.itemgetter(1))
 
 	# THIS METHOD CALCULATES BOTH THE MEAN OF THE SCORE OF THE WINNERS OF THE ELECTIONS AND THE PERCENTAGE OF THE VOTERS SATISFIED WITH THE RESULTS
 	# THE MEAN IS THE SUM OF THE SCORES OF EACH CANDIDATE PER VOTER DIVIDED BY THE NUMBER OF VOTERS AND NUMBER OF VACANCIES
@@ -225,4 +237,29 @@ class Elections:
 		print(":::N Voters: ", self.N_VOTERS)
 		print(":::Count: ", c)
 		print(":::Winners: ", winners)
-		return rating_sum/(self.N_VOTERS*self.N_VACANCIES), satisfied_population_count/self.N_VOTERS
+		return rating_sum/(self.N_VOTERS*self.N_VACANCIES), satisfied_population_count/self.N_VOTERS, False
+
+	def _calculate_means(self):
+		for candidate in range(self.N_CANDIDATES):
+			rating_sum = 0
+			c = 0
+			satisfied_population_count = 0
+			for voter in self.voters:
+				c += 1
+				voter_satisfaction = 0
+				rating_sum += voter[candidate]
+				if voter[candidate] > 0:
+					satisfied_population_count += 1
+			
+			self.stats['means'][candidate] = rating_sum/self.N_VOTERS
+			self.stats['satisfaction_rates'][candidate] = satisfied_population_count/self.N_VOTERS
+
+
+	def get_mean(self, winners):
+		if len(winners) > 1 or self.N_CANDIDATES > 10:
+			print("nao conferi tabela")
+			return self.calculate_mean(winners)
+		else:
+			print("conferi tabela")
+			chose_best = True if winners[0] == self.best_candidate else False
+			return self.stats['means'][winners[0]], self.stats['satisfaction_rates'][winners[0]], chose_best

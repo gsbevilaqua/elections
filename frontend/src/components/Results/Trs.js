@@ -142,7 +142,13 @@ export default class Trs extends Component {
     if(this.props.didRun){
       return (
         <div style={{backgroundColor: "#2b2d3e"}}>
-          <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", background: "black"}}> TWO-ROUND SYSTEM </h1>
+          <div style={{fontFamily: "Bungee, cursive", padding: "2rem", background: "black"}}>
+              <h1 style={{color: "aliceblue", fontSize: "2.5rem"}}> TWO-ROUND SYSTEM </h1>
+              {this.props.res[8] ?
+                <span style={{fontSize: "1.1rem", marginTop: "1rem"}} className="badge badge-pill badge-success">Elected best candidate!!</span>
+                : ""
+              }
+          </div>
           <div style={{padding:'4rem'}}>
           <h1 style={{color: "white", fontFamily: "Bungee, cursive", padding: "2rem", background: "#797979"}}> FIRST ROUND </h1>
             <div>

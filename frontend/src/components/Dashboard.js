@@ -68,7 +68,7 @@ export class Dashboard extends Component {
             this.state.disable_trs = "disabled";
             this.state.disable_irv = "disabled";
             this.state.disable_bv = "";
-            if (this.props.trs == true){
+            if (this.props.two_rounds == true){
                 this.props.setTwoRounds();
             }
             if (this.props.irv == true){
@@ -235,15 +235,15 @@ export class Dashboard extends Component {
                     <br></br>
                     <div style={{display:'block'}} className="btn-group btn-group-toggle" data-toggle="buttons">
                         <div>
-                            <button style={{margin:'1rem'}} onClick={this.props.setOneRound.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="The first past the post system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate.">First Past The Post</button>
-                            <button style={{margin:'1rem'}} onClick={this.setTrs} type="checkbox" className={"btn btn-outline-primary btn-lg " + this.state.disable_trs} data-toggle="tooltip" data-placement="top" title="" data-original-title="The two-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate. The 2 best placed candidates go to a second round.">2 Round System</button>
-                            <button style={{margin:'1rem'}} onClick={this.setIrv} type="checkbox" className={"btn btn-outline-primary btn-lg " + this.state.disable_irv} data-toggle="tooltip" data-placement="right" title="" data-original-title="Instead of voting only for a single candidate, voters in IRV can rank the candidates in order of preference and each round the worst ranked candidate is eliminated.">Instant-runoff Voting</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setOneRound.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="The first past the post system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate.">First Past The Post</button>
+                            <button style={{margin:'1rem'}} onClick={this.setTrs} type="checkbox" className={"btn btn-outline-primary btn-lg " + this.state.disable_trs} data-toggle="tooltip" data-placement="bottom" title="" data-original-title="The two-round system is a voting method used to elect a single winner, where the voter casts a single vote for their chosen candidate. The 2 best placed candidates go to a second round.">2 Round System</button>
+                            <button style={{margin:'1rem'}} onClick={this.setIrv} type="checkbox" className={"btn btn-outline-primary btn-lg " + this.state.disable_irv} data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Instead of voting only for a single candidate, voters in IRV can rank the candidates in order of preference and each round the worst ranked candidate is eliminated.">Instant-runoff Voting</button>
                         </div>
                         <div>
-                            <button style={{margin:'1rem'}} onClick={this.props.setAvs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="In this system voters rank the candidates by preference, each rank has a fixed score, the candidate(s) with the highest sum of scores wins.">Appoval Voting System</button>
+                            <button style={{margin:'1rem'}} onClick={this.props.setAvs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters rank the candidates by preference, each rank has a fixed score, the candidate(s) with the highest sum of scores wins.">Appoval Voting System</button>
                             <button style={{margin:'1rem'}} onClick={this.props.setTbc.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters rank the candidates by preference, each rank has a fixed score, the candidate(s) with the highest sum of scores wins.">The Borda Count</button>
                             <button style={{margin:'1rem'}} onClick={this.props.setSvs.bind(this)} type="checkbox" className="btn btn-outline-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters give scores to every candidate, the candidate(s) with the highest sum of scores wins.">Score Voting System</button>
-                            <button style={{margin:'1rem'}} onClick={this.setBvs} type="checkbox" className={"btn btn-outline-primary btn-lg " + this.state.disable_bv} data-toggle="tooltip" data-placement="right" title="" data-original-title="In this system voters can vote for as many candidates as the number of candidates elected">Bloc Vote</button>
+                            <button style={{margin:'1rem'}} onClick={this.setBvs} type="checkbox" className={"btn btn-outline-primary btn-lg " + this.state.disable_bv} data-toggle="tooltip" data-placement="bottom" title="" data-original-title="In this system voters can vote for as many candidates as the number of candidates elected">Bloc Vote</button>
                         </div>
                     </div>
                 </div>
@@ -283,13 +283,17 @@ export class Dashboard extends Component {
                             <div style={{display: "grid", gridTemplateColumns:"1fr 1fr 1fr 1fr"}}>
                                 <h1 style={{padding:'1rem'}}> CANDIDATES </h1>
                                 <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto", padding: "0"}} placeholder="Enter a number" />
-                                <div style={{margin: "auto", backgroundColor: "aquamarine", color: "dimgray"}} className="custom-control custom-checkbox">
-                                    <input type="checkbox" className="custom-control-input" id="tactical-check" name="tactical_checked" checked={this.state.tactical_checked} onChange={this.toggleTacticalCheckbox} />
-                                    <label className="custom-control-label" htmlFor="tactical-check">Tactical Voting</label>
+                                <div style={{margin: "auto"}}>
+                                    <div style={{margin: "auto 1rem auto 1rem", backgroundColor: "#7fffd482", color: "dimgray", paddingTop: "0.2rem", paddingBottom: "0.2rem", paddingLeft: "2rem", paddingRight: "1rem", marginRight: "1rem", borderRadius: "0.7rem"}} className="custom-control custom-checkbox">
+                                        <input type="checkbox" className="custom-control-input" id="tactical-check" name="tactical_checked" checked={this.state.tactical_checked} onChange={this.toggleTacticalCheckbox} />
+                                        <label className="custom-control-label" htmlFor="tactical-check">Tactical Voting</label>
+                                    </div>
                                 </div>
-                                <div style={{margin: "auto", backgroundColor: "aquamarine", color: "dimgray"}} className="custom-control custom-checkbox">
-                                    <input type="checkbox" className="custom-control-input" id="minority-check" name="minority_checked" checked={this.state.minority_checked} onChange={this.toggleMinorityCheckbox} />
-                                    <label className="custom-control-label" htmlFor="minority-check">Minority Voting</label>
+                                <div style={{margin: "auto"}}>
+                                    <div style={{margin: "auto 1rem auto 1rem", backgroundColor: "#cae0f3", color: "dimgray", paddingTop: "0.2rem", paddingBottom: "0.2rem", paddingLeft: "2rem", paddingRight: "1rem", marginRight: "1rem", borderRadius: "0.7rem"}} className="custom-control custom-checkbox">
+                                        <input type="checkbox" className="custom-control-input" id="minority-check" name="minority_checked" checked={this.state.minority_checked} onChange={this.toggleMinorityCheckbox} />
+                                        <label className="custom-control-label" htmlFor="minority-check">Minority Voting</label>
+                                    </div>
                                 </div>
                             </div>
 
@@ -343,13 +347,17 @@ export class Dashboard extends Component {
                             <div style={{display: "grid", gridTemplateColumns:"1fr 1fr 1fr 1fr"}}>
                                 <h1 style={{padding:'1rem'}}> CANDIDATES </h1>
                                 <input onBlur={this.onBlurNCandidates} className="form-control" style={{height: "50%", margin: "auto", padding: "0"}} placeholder="Enter a number" />
-                                <div style={{margin: "auto", backgroundColor: "aquamarine", color: "dimgray"}} className="custom-control custom-checkbox">
-                                    <input type="checkbox" className="custom-control-input" id="tactical-check" name="tactical_checked" checked={this.state.tactical_checked} onChange={this.toggleTacticalCheckbox} />
-                                    <label className="custom-control-label" htmlFor="tactical-check">Tactical Voting</label>
+                                <div style={{margin: "auto"}}>
+                                    <div style={{margin: "auto 1rem auto 1rem", backgroundColor: "#7fffd482", color: "dimgray", paddingTop: "0.2rem", paddingBottom: "0.2rem", paddingLeft: "2rem", paddingRight: "1rem", marginRight: "1rem", borderRadius: "0.7rem"}} className="custom-control custom-checkbox">
+                                        <input type="checkbox" className="custom-control-input" id="tactical-check" name="tactical_checked" checked={this.state.tactical_checked} onChange={this.toggleTacticalCheckbox} />
+                                        <label className="custom-control-label" htmlFor="tactical-check">Tactical Voting</label>
+                                    </div>
                                 </div>
-                                <div style={{margin: "auto", backgroundColor: "aquamarine", color: "dimgray"}} className="custom-control custom-checkbox">
-                                    <input type="checkbox" className="custom-control-input" id="minority-check" name="minority_checked" checked={this.state.minority_checked} onChange={this.toggleMinorityCheckbox} />
-                                    <label className="custom-control-label" htmlFor="minority-check">Minority Voting</label>
+                                <div style={{margin: "auto"}}>
+                                    <div style={{margin: "auto 1rem auto 1rem", backgroundColor: "#cae0f3", color: "dimgray", paddingTop: "0.2rem", paddingBottom: "0.2rem", paddingLeft: "2rem", paddingRight: "1rem", marginRight: "1rem", borderRadius: "0.7rem"}} className="custom-control custom-checkbox">
+                                        <input type="checkbox" className="custom-control-input" id="minority-check" name="minority_checked" checked={this.state.minority_checked} onChange={this.toggleMinorityCheckbox} />
+                                        <label className="custom-control-label" htmlFor="minority-check">Minority Voting</label>
+                                    </div>
                                 </div>
                             </div>
 

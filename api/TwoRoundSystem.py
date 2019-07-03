@@ -27,6 +27,11 @@ class TwoRoundSystem:
 		self.second_place = self.sorted_candidates[-2][elec.CANDIDATE_INDEX]
 		print('TRS init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
+	def reset(self):
+		self.t_votes_changed = 0
+		self.m_votes_changed = 0
+		self.rankings_changed = dict()
+
 	def _first_round(self):
 		# print("\nFIRST ROUND:")
 		if self.elec.N_CANDIDATES > 3 and self.elec.TACTICAL_VOTING:
@@ -43,7 +48,7 @@ class TwoRoundSystem:
 			if vacancies > 0:
 				winners.append(candidate[0])
 			vacancies -= 1
-		mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
+		mean, satisfaction_rate, chose_best = self.elec.get_mean(winners = winners)
 
 		return self.sorted_candidates, mean, satisfaction_rate
 	
@@ -75,8 +80,8 @@ class TwoRoundSystem:
 				break
 			winners.append(candidate[0])
 			vacancies -= 1
-		mean, satisfaction_rate = self.elec.calculate_mean(winners = winners)
-		return {self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-1][self.elec.NUMBER_OF_VOTES], self.sorted_candidates[-2][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-2][self.elec.NUMBER_OF_VOTES]}, mean, satisfaction_rate
+		mean, satisfaction_rate, chose_best = self.elec.get_mean(winners = winners)
+		return {self.sorted_candidates[-1][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-1][self.elec.NUMBER_OF_VOTES], self.sorted_candidates[-2][self.elec.CANDIDATE_INDEX] : self.sorted_candidates[-2][self.elec.NUMBER_OF_VOTES]}, mean, satisfaction_rate, chose_best
 
 	# CANDIDATES THAT ARE NOT IN 'leading_candidates' LIST LOSE VOTES TO LEADING CANDIDATES BASED ON LEADING CANDIDATES TACTICAL VOTING PERCENTAGE PARAMETER
 	def _count_tactical_votes(self):
@@ -152,7 +157,7 @@ class TwoRoundSystem:
 		# AND THE ELECTION IS NOT A MULTIPLE WINNER ELECTION
 		if(not self.elec.N_VACANCIES > 1 and self.sorted_candidates[-1][self.elec.NUMBER_OF_VOTES]/self.elec.N_VOTERS <= 0.5):
 			second_round = True
-			sc, sm, ssr = self._second_round()
+			sc, sm, ssr, chose_best = self._second_round()
 			for key, votes in sc.items():
 				scout[0].append(self.elec.candidates_names[int(key)])
 				scout[1].append(votes)
@@ -161,5 +166,6 @@ class TwoRoundSystem:
 			elected = [scout[0][-1]]
 
 		now = time.time()
+
 		print('TRS duration: ' + str(round(now - start_time, 2)) + ' seg' )
-		return fcout, fm, scout, sm, second_round, elected, fsr, ssr
+		return fcout, fm, scout, sm, second_round, elected, fsr, ssr, chose_best

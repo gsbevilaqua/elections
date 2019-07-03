@@ -71,24 +71,31 @@ def get_results(request):
 
     if(fptp):
         fptp = FirstPastThePost(elec)
+        fptp.reset()
         status = fptp.simulate()
     if(trs):
         trs = TwoRoundSystem(elec)
+        trs.reset()
         status1 = trs.simulate()
     if(irv):
         irv = InstantRunoffVoting(elec)
+        irv.reset()
         status2 = irv.simulate()
     if(avs):
         avs = ApprovalVoting(elec)
+        avs.reset()
         status6 = avs.simulate()        
     if(tbc):
         tbc = BordaCount(elec)
+        tbc.reset()
         status4 = tbc.simulate()
     if(svs):
         svs = ScoreVoting(elec)
+        svs.reset()
         status3 = svs.simulate()        
     if(bvs):
         bvs = BlocVote(elec)
+        bvs.reset()
         status5 = bvs.simulate()
 
     return JsonResponse({
