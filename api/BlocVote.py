@@ -48,7 +48,7 @@ class BlocVote:
                 break
             winners.append(candidate[0])
             vacancies -= 1
-        mean, satisfaction_rate = self.elec.get_mean(winners = winners)
+        mean, satisfaction_rate, chose_best = self.elec.get_mean(winners = winners)
 
         elected = out[0][-self.elec.N_VACANCIES:]
 
