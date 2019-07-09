@@ -148,6 +148,7 @@ class TwoRoundSystem:
 			fcout[0].append(self.elec.candidates_names[int(element[self.elec.CANDIDATE_INDEX])])
 			fcout[1].append(element[self.elec.NUMBER_OF_VOTES])
 
+		chose_best = None
 		second_round = False
 		sm = None
 		scout = [[], []]
