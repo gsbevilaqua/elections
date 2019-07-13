@@ -12,7 +12,7 @@ class InstantRunoffVoting(Elections):
 	def __init__(self, elec):
 		start_time = time.time()
 		self.elec = elec
-		self.candidates = elec.candidates.copy()
+		self.candidates = copy.deepcopy(elec.candidates)
 		self.votes = copy.deepcopy(elec.votes)
 		print('IRV init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 

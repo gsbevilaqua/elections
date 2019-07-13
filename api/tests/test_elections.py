@@ -56,9 +56,9 @@ def test_sort_candidates():
 
 def test_calculate_mean():
     global elec2
-    assert_equals(elec2.calculate_mean([0]), (10, 1.0))
-    assert_equals(elec2.calculate_mean([1]), (5, 1.0))
-    assert_equals(elec2.calculate_mean([2]), (0, 0.0))
-    assert_equals(elec2.calculate_mean([3]), (-5, 0.0))
-    assert_equals(elec2.calculate_mean([4]), (-10, 0.0))
+    assert_equals(elec2.calculate_mean([0]), (10, 1.0, False))
+    assert_equals(elec2.calculate_mean([1]), (5, 1.0, False))
+    assert_equals(elec2.calculate_mean([2]), (0, 0.0, False))
+    assert_equals(elec2.calculate_mean([3]), (-5, 0.0, False))
+    assert_equals(elec2.calculate_mean([4]), (-10, 0.0, False))
 

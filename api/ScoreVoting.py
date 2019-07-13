@@ -14,6 +14,8 @@ class ScoreVoting:
     def __init__(self, elec):
         start_time = time.time()
         self.elec = elec
+        if elec.seed is not None:
+            random.seed(elec.seed)
         print('SVS init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
     
     def reset(self):
@@ -28,7 +30,7 @@ class ScoreVoting:
         for voter_index, voter in enumerate(self.elec.sorted_voters):
             if random.random() < self.elec.tactical_vote_percentages[voter[-1][self.elec.CANDIDATE_INDEX]]:
                 t_votes_changed += 1
-                self.rankings_changed[voter_index] = self.elec.sorted_voters[voter_index]
+                self.rankings_changed[voter_index] = copy.deepcopy(self.elec.sorted_voters[voter_index])
                 for candidate_index, candidate in enumerate(reversed(voter)):
                     if candidate_index == 0:
                         self.rankings_changed[voter_index][-(candidate_index + 1)] = (voter[-(candidate_index + 1)][self.elec.CANDIDATE_INDEX], 10)

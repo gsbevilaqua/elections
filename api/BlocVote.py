@@ -1,4 +1,4 @@
-import random, copy, time
+import copy, time
 from api.Elections import Elections
 #from Elections import Elections # used for testing
 

@@ -18,7 +18,11 @@ export default class Results extends Component {
         const { go } = this.props.location.state;
 
         if (go === null) {
-          return null;
+            return (
+                <div style={{textAlign: "center"}}>
+                    <h1> NOTHING TO SEE HERE... </h1>
+                </div>
+            )
         }
 
         return (

@@ -32,6 +32,7 @@ class Elections:
 	# PSS: CALCULATED IN _calculate_means())
 	stats = {'means': dict(), 'satisfaction_rates': dict()}
 	best_candidate = None
+	seed = None
 
 	def __init__(self, n_voters, bias_vector, n_vacancies, tactical = 0, minority = 0, tactical_votes = [], minority_votes = [], coalitions = [], candidates_names = [], voter_profiles = [], seed = 4):
 		self.N_VOTERS = n_voters # NUMBER OF VOTERS
@@ -47,6 +48,7 @@ class Elections:
 		self.voter_profiles = voter_profiles # LIST OF VOTER'S PROFILES. EXAMPLE OF VOTER PORFILE: {"pop_percentage": 50, "scores": [10, 5, 4, 3, 2, 1, -10]}
 		if seed is not None:
 			random.seed(seed)
+			self.seed = seed
 
 	def initialize(self):
 		start_time = time.time()
@@ -196,7 +198,6 @@ class Elections:
 		if not (self.N_VACANCIES > 1 or self.N_CANDIDATES > 10):
 			self._calculate_means()
 			self.best_candidate = max(self.stats['means'].items(), key=operator.itemgetter(1))[0]
-			print("::::::::::::::::::::::::TABELAAAAAAAAAAAA:::::::::::::::::::::::", self.stats)
 		self.sorted_candidates = self.sort_candidates(self.candidates)
 		self._set_leading_candidates()
 

@@ -13,6 +13,8 @@ class BordaCount:
     def __init__(self, elec):
         start_time = time.time()
         self.elec = elec
+        if elec.seed is not None:
+            random.seed(elec.seed)
         print('TBC init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
     def reset(self):

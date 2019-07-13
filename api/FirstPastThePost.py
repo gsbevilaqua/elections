@@ -17,10 +17,12 @@ class FirstPastThePost:
 	def __init__(self, elec):
 		start_time = time.time()
 		self.elec = elec
-		self.candidates = elec.candidates.copy()
+		self.candidates = copy.deepcopy(elec.candidates)
 		self.votes = copy.deepcopy(elec.votes)
 		self.votes_copy = copy.deepcopy(elec.votes)
 		self.sorted_candidates = elec.sorted_candidates
+		if elec.seed is not None:
+			random.seed(elec.seed)
 		print('FPTP init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
 	def reset(self):
@@ -38,7 +40,7 @@ class FirstPastThePost:
 					for index, _candidate in enumerate(reversed(self.elec.sorted_voters[voter_index])):
 						if _candidate[self.elec.CANDIDATE_INDEX] in self.elec.leading_candidates and _candidate[self.elec.CANDIDATE_RANK] >= 0 and random.random() < self.elec.tactical_vote_percentages[_candidate[self.elec.CANDIDATE_INDEX]]:
 							self.t_votes_changed += 1
-							self.rankings_changed[voter_index] = self.elec.sorted_voters[voter_index]
+							self.rankings_changed[voter_index] = copy.deepcopy(self.elec.sorted_voters[voter_index])
 							self.rankings_changed[voter_index][index], self.rankings_changed[voter_index][-1] = self.rankings_changed[voter_index][-1], self.rankings_changed[voter_index][index]
 							self.candidates[candidate] -= 1
 							self.candidates[_candidate[self.elec.CANDIDATE_INDEX]] += 1

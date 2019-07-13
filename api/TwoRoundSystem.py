@@ -19,12 +19,14 @@ class TwoRoundSystem:
 	def __init__(self, elec):
 		start_time = time.time()
 		self.elec = elec
-		self.candidates = elec.candidates.copy()
+		self.candidates = copy.deepcopy(elec.candidates)
 		self.votes = copy.deepcopy(elec.votes)
 		self.votes_copy = copy.deepcopy(elec.votes)
 		self.sorted_candidates = elec.sorted_candidates
 		self.winner = self.sorted_candidates[-1][elec.CANDIDATE_INDEX]
 		self.second_place = self.sorted_candidates[-2][elec.CANDIDATE_INDEX]
+		if elec.seed is not None:
+			random.seed(elec.seed)
 		print('TRS init: ' + str(round(time.time() - start_time, 2)) + ' seg' )
 
 	def reset(self):
@@ -59,7 +61,7 @@ class TwoRoundSystem:
 					if voter_index in self.rankings_changed:
 						ranking = self.rankings_changed[voter_index]
 					else:
-						ranking = self.elec.sorted_voters[voter_index]
+						ranking = copy.deepcopy(self.elec.sorted_voters[voter_index])
 					for index2, candidate in enumerate(reversed(ranking)):
 						if candidate[self.elec.CANDIDATE_INDEX] == self.winner:
 							self.candidates[self.winner] += 1
@@ -93,7 +95,7 @@ class TwoRoundSystem:
 					for index, _candidate in enumerate(reversed(self.elec.sorted_voters[voter_index])):
 						if _candidate[self.elec.CANDIDATE_INDEX] in self.elec.leading_candidates and _candidate[self.elec.CANDIDATE_RANK] >= 0 and random.random() < self.elec.tactical_vote_percentages[_candidate[self.elec.CANDIDATE_INDEX]]:
 							self.t_votes_changed += 1
-							self.rankings_changed[voter_index] = self.elec.sorted_voters[voter_index]
+							self.rankings_changed[voter_index] = copy.deepcopy(self.elec.sorted_voters[voter_index])
 							self.rankings_changed[voter_index][index], self.rankings_changed[voter_index][-1] = self.rankings_changed[voter_index][-1], self.rankings_changed[voter_index][index]
 							self.candidates[candidate] -= 1
 							self.candidates[_candidate[self.elec.CANDIDATE_INDEX]] += 1
@@ -116,7 +118,7 @@ class TwoRoundSystem:
 				if voter_index in self.rankings_changed:
 					ranking = self.rankings_changed[voter_index]
 				else:
-					ranking = self.elec.sorted_voters[voter_index]
+					ranking = copy.deepcopy(self.elec.sorted_voters[voter_index])
 				for index, _candidate in enumerate(reversed(ranking)):
 					if _candidate[self.elec.CANDIDATE_INDEX] not in self.elec.leading_candidates or (_candidate[self.elec.CANDIDATE_INDEX] in self.elec.leading_candidates and self.elec.leading_candidates.index(_candidate[self.elec.CANDIDATE_INDEX]) >= half_vacancies):
 						if _candidate[self.elec.CANDIDATE_RANK] >= 0:
@@ -129,7 +131,7 @@ class TwoRoundSystem:
 								if voter_index in self.rankings_changed:
 									self.rankings_changed[voter_index].append(self.rankings_changed[voter_index].pop(index))
 								else:
-									self.rankings_changed[voter_index] = self.elec.sorted_voters[voter_index]
+									self.rankings_changed[voter_index] = copy.deepcopy(self.elec.sorted_voters[voter_index])
 									self.rankings_changed[voter_index].append(self.rankings_changed[voter_index].pop(index))
 								break
 							else:
