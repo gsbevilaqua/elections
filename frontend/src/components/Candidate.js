@@ -55,25 +55,25 @@ export class Candidate extends Component {
                         <i className="far fa-user fa-5x"></i>
                     </div>
                     <div className="btn-group btn-group-toggle" data-toggle="buttons" style={{display: "flex", flexWrap: "wrap"}}>
-                        <label className={"btn btn-secondary btn-sm" + (this.props.fame == 4 ? ' active' : '')} >
+                        <label style={{zIndex: "auto"}} className={"btn btn-secondary btn-sm" + (this.props.fame == 4 ? ' active' : '')} >
                             <input onBlur={this.props.setFame.bind(this, this.props.index, 4)} type="radio" name="fame" id="loved" autoComplete="off"/> Loved
                         </label>
-                        <label className={"btn btn-secondary btn-sm" + (this.props.fame == 3 ? ' active' : '')}>
+                        <label style={{zIndex: "auto"}} className={"btn btn-secondary btn-sm" + (this.props.fame == 3 ? ' active' : '')}>
                             <input onBlur={this.props.setFame.bind(this, this.props.index, 3)} type="radio" name="fame" id="liked" autoComplete="off"/> Liked
                         </label>
-                        <label className={"btn btn-secondary btn-sm" + (this.props.fame == 0 ? ' active' : '')}>
+                        <label style={{zIndex: "auto"}} className={"btn btn-secondary btn-sm" + (this.props.fame == 0 ? ' active' : '')}>
                             <input onBlur={this.props.setFame.bind(this, this.props.index, 0)} type="radio" name="fame" id="neutral" autoComplete="off"/> Neutral
                         </label>
-                        <label className={"btn btn-secondary btn-sm" + (this.props.fame == 2 ? ' active' : '')}>
+                        <label style={{zIndex: "auto"}} className={"btn btn-secondary btn-sm" + (this.props.fame == 2 ? ' active' : '')}>
                             <input onBlur={this.props.setFame.bind(this, this.props.index, 2)} type="radio" name="fame" id="disliked" autoComplete="off"/> Disliked
                         </label>
-                        <label className={"btn btn-secondary btn-sm" + (this.props.fame == 1 ? ' active' : '')}>
+                        <label style={{zIndex: "auto"}} className={"btn btn-secondary btn-sm" + (this.props.fame == 1 ? ' active' : '')}>
                             <input onBlur={this.props.setFame.bind(this, this.props.index, 1)} type="radio" name="fame" id="hated" autoComplete="off"/> Hated
                         </label>
-                        <label className={"btn btn-danger btn-sm" + (this.props.fame == -1 ? ' active' : '')}>
+                        <label style={{zIndex: "auto"}} className={"btn btn-danger btn-sm" + (this.props.fame == -1 ? ' active' : '')}>
                             <input onBlur={this.props.setFame.bind(this, this.props.index, -1)} type="radio" name="fame" id="polarizer" autoComplete="off"/> Polarizer
                         </label>
-                        <label className={"btn btn-secondary btn-sm" + (this.props.fame == -2 ? ' active' : '')} style={{backgroundColor:"#9a3734"}}>
+                        <label style={{zIndex: "auto"}} className={"btn btn-secondary btn-sm" + (this.props.fame == -2 ? ' active' : '')} style={{backgroundColor:"#9a3734"}}>
                             <input onBlur={this.props.setFame.bind(this, this.props.index, -2)} type="radio" name="fame" id="most-polarizer" autoComplete="off"/> Strongly Polarizer
                         </label>
                     </div>

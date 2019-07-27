@@ -4,7 +4,7 @@ import Link from "react-router-dom";
 export class Header extends Component {
   render() {
     return (
-        <nav className="navbar navbar-expand-sm navbar-dark bg-primary">
+        <nav className="navbar navbar-expand-sm navbar-dark bg-primary" style={{height: "4rem", width: "100%", position: "fixed", zIndex: "1"}}>
             <a className="navbar-brand" href="/">Elections Simulator</a>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>

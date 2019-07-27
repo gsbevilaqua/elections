@@ -29,7 +29,10 @@ def create_candidates(request):
     voters = json.loads(request.body.decode('utf-8')).get('voters')
     seed = json.loads(request.body.decode('utf-8')).get('seed')
 
-    elec = Elections(int(n_voters), candidates, int(n_vacancies), tactical, minority, tactical_votes, minority_votes, coalitions, candidates_names, voters, int(seed))
+    if seed is not None:
+        seed = int(seed)
+
+    elec = Elections(int(n_voters), candidates, int(n_vacancies), tactical, minority, tactical_votes, minority_votes, coalitions, candidates_names, voters, seed)
     elec.reset()
     elec.create_candidates()
 

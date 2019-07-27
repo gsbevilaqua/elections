@@ -327,20 +327,22 @@ export class Dashboard extends Component {
                             </div>
                         </div>
                         <br></br><br></br>
-                        <div>
+                        {this.props.two_rounds ?
                             <div>
-                                <h1 style={{padding:'1rem', margin: "auto"}}> COALITIONS </h1>
-                            </div>
-                            <div className="coalitions" style={{margin: '0 auto'}}>
-                                {this.props.coalitions.map((coalition, index) => (
-                                    <Coalition key={index} index={index} candidates={this.props.coalitions[index]} available_candidates={this.props.available_candidates} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} addCandidateToCoalition={this.props.addCandidateToCoalition.bind(this)} setCandidate={this.setCandidate} deleteCoalition={this.props.deleteCoalition.bind(this)}/>
-                                ))}
-                                <div style={{padding:'2rem', textAlign: 'center'}}>
-                                    <button onClick={this.props.addCoalition.bind(this)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
-                                    <h6 style={{padding: '1rem'}}> Add a coalition </h6>
+                                <div>
+                                    <h1 style={{padding:'1rem', margin: "auto"}}> COALITIONS </h1>
+                                </div>
+                                <div className="coalitions" style={{margin: '0 auto'}}>
+                                    {this.props.coalitions.map((coalition, index) => (
+                                        <Coalition key={index} index={index} candidates={this.props.coalitions[index]} available_candidates={this.props.available_candidates} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} addCandidateToCoalition={this.props.addCandidateToCoalition.bind(this)} setCandidate={this.setCandidate} deleteCoalition={this.props.deleteCoalition.bind(this)}/>
+                                    ))}
+                                    <div style={{padding:'2rem', textAlign: 'center'}}>
+                                        <button onClick={this.props.addCoalition.bind(this)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
+                                        <h6 style={{padding: '1rem'}}> Add a coalition </h6>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        : ""}
                     </div>
                     <div className="tab-pane fade" id="generate">
                         <div>
@@ -374,20 +376,22 @@ export class Dashboard extends Component {
                         <br></br><br></br>
                         <div className="line-break" style={{height:"0.15rem", width:"100%", backgroundColor:"rgba(128, 128, 128, 0.40)"}}></div>
                         <br></br><br></br>
-                        <div>
+                        {this.props.two_rounds ?
                             <div>
-                                <h1 style={{padding:'1rem', margin: "auto"}}> COALITIONS </h1>
-                            </div>
-                            <div className="coalitions" style={{margin: '0 auto'}}>
-                                {this.props.coalitions.map((coalition, index) => (
-                                    <Coalition key={index} index={index} candidates={this.props.coalitions[index]} available_candidates={this.props.available_candidates} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} addCandidateToCoalition={this.props.addCandidateToCoalition.bind(this)} setCandidate={this.setCandidate} deleteCoalition={this.props.deleteCoalition.bind(this)}/>
-                                ))}
-                                <div style={{padding:'2rem', textAlign: 'center'}}>
-                                    <button onClick={this.props.addCoalition.bind(this)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
-                                    <h6 style={{padding: '1rem'}}> Add a coalition </h6>
+                                <div>
+                                    <h1 style={{padding:'1rem', margin: "auto"}}> COALITIONS </h1>
+                                </div>
+                                <div className="coalitions" style={{margin: '0 auto'}}>
+                                    {this.props.coalitions.map((coalition, index) => (
+                                        <Coalition key={index} index={index} candidates={this.props.coalitions[index]} available_candidates={this.props.available_candidates} color={this.colorscheme[index%5]} fontcolor={this.fontcolor[index%5]} addCandidateToCoalition={this.props.addCandidateToCoalition.bind(this)} setCandidate={this.setCandidate} deleteCoalition={this.props.deleteCoalition.bind(this)}/>
+                                    ))}
+                                    <div style={{padding:'2rem', textAlign: 'center'}}>
+                                        <button onClick={this.props.addCoalition.bind(this)} type="button" className="btn btn-primary btn-sm"><i className="fas fa-plus fa-5x"></i></button>
+                                        <h6 style={{padding: '1rem'}}> Add a coalition </h6>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        : ""}
                     </div>
                 </div>             
                 <br></br>

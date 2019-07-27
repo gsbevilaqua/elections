@@ -27,6 +27,7 @@ export default class Results extends Component {
 
         return (
             <div style={{textAlign: "center"}}>
+                <div style={{height: "4rem", background: "#826dc3", margin: "0"}}></div>
                 <h1 style={{fontSize: "5rem", padding: "2rem", background: "#826dc3", margin: "0", letterSpacing: "2rem"}}>RESULTS</h1>
                 <Fptp didRun={this.props.location.state.ors_run} res={this.props.location.state.ors} />
                 <Trs didRun={this.props.location.state.trs_run} res={this.props.location.state.trs} />

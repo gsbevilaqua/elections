@@ -40,6 +40,7 @@ export default class Details extends Component {
     render() {
         return (
             <div style={{textAlign: "center"}}>
+                <div style={{height: "4rem", background: "#826dc3", margin: "0"}}></div>
                 <h1 style={{padding: "2rem", background: "#826dc3", margin: "0", letterSpacing: "2rem"}}>DISTRIBUTIONS</h1>
                 <div>
                     <h1 style={{color: "aliceblue", fontSize: "2.5rem", fontFamily: "Bungee, cursive", padding: "2rem", margin: "0", background: "black"}}> {this.state.labels.neutral} </h1>

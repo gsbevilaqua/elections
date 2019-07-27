@@ -139,27 +139,8 @@ class Elections:
 		now = time.time()
 		print('voters creation: ' + str(round(now - start_time, 2)) + ' seg' )
 
-	# EVERY CANDIDATE IN A COALITION ADDS TO ITS SCORE HALF THE POINTS OF THE OTHER CANDIDATES IN THE COALITION
-	def _account_for_coalitions(self):
-		for voter_index, voter in enumerate(copy.deepcopy(self.voters)):
-			for coalition in self.coalitions:
-				for candidate in coalition:
-					add_to_score = 0
-					for candidate2 in coalition:
-						if candidate == candidate2:
-							continue
-						add_to_score += math.floor(voter[candidate2['value']]/2)
-					if self.voters[voter_index][candidate['value']] + add_to_score > 10:
-						self.voters[voter_index][candidate['value']] = 10
-					elif self.voters[voter_index][candidate['value']] + add_to_score < -10:
-						self.voters[voter_index][candidate['value']] = -10
-					else:
-						self.voters[voter_index][candidate['value']] += add_to_score
-
 	# SORT EACH VOTER'S CANDIDATE'S RANKING
 	def sort_ranks(self):
-		
-		self._account_for_coalitions()
 
 		start_time = time.time()
 		# SORTING EACH VOTER'S RANKING OF CANDIDATES

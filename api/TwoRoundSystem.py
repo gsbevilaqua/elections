@@ -55,6 +55,7 @@ class TwoRoundSystem:
 		return self.sorted_candidates, mean, satisfaction_rate
 	
 	def _second_round(self):
+		self._account_for_coalitions()
 		for candidate in self.votes:
 			if candidate != self.winner and candidate != self.second_place:
 				for voter_index in self.votes[candidate]:
@@ -140,6 +141,36 @@ class TwoRoundSystem:
 							break
 
 		print(":::::M votes changed: ", self.m_votes_changed)
+
+	# EVERY CANDIDATE IN A COALITION ADDS TO ITS SCORE HALF THE POINTS OF THE OTHER CANDIDATES IN THE COALITION
+	def _account_for_coalitions(self):
+		for voter_index, voter in enumerate(self.elec.sorted_voters):
+			voter_dict = dict()
+			og_voter_dict = dict()
+			for tup in voter:
+				voter_dict[tup[0]] = tup[1]
+				og_voter_dict[tup[0]] = tup[1]
+			for coalition in self.elec.coalitions:
+				for candidate in coalition:
+					add_to_score = 0
+					for candidate2 in coalition:
+						if candidate == candidate2:
+							continue
+						half = og_voter_dict[candidate2['value']]/2
+						if half < 0:
+							add_to_score += math.ceil(half)
+						else:
+							add_to_score += math.floor(half)
+					if voter_dict[candidate['value']] + add_to_score > 10:
+						voter_dict[candidate['value']] = 10
+					elif voter_dict[candidate['value']] + add_to_score < -10:
+						voter_dict[candidate['value']] = -10
+					else:
+						voter_dict[candidate['value']] += add_to_score
+			self.rankings_changed[voter_index] = []
+			for candidate in voter_dict:
+				self.rankings_changed[voter_index].append((candidate, voter_dict[candidate]))
+			self.rankings_changed[voter_index] = sorted(self.rankings_changed[voter_index], key=lambda x: x[1])
 
 	def simulate(self):
 		print("TWO-ROUND SYSTEM")
