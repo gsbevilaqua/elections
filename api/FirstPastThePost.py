@@ -38,15 +38,17 @@ class FirstPastThePost:
 			if candidate not in self.elec.leading_candidates:
 				for voter_index in self.votes_copy[candidate]:
 					for index, _candidate in enumerate(reversed(self.elec.sorted_voters[voter_index])):
-						if _candidate[self.elec.CANDIDATE_INDEX] in self.elec.leading_candidates and _candidate[self.elec.CANDIDATE_RANK] >= 0 and random.random() < self.elec.tactical_vote_percentages[_candidate[self.elec.CANDIDATE_INDEX]]:
-							self.t_votes_changed += 1
-							self.rankings_changed[voter_index] = copy.deepcopy(self.elec.sorted_voters[voter_index])
-							self.rankings_changed[voter_index][index], self.rankings_changed[voter_index][-1] = self.rankings_changed[voter_index][-1], self.rankings_changed[voter_index][index]
-							self.candidates[candidate] -= 1
-							self.candidates[_candidate[self.elec.CANDIDATE_INDEX]] += 1
-							self.votes[candidate].remove(voter_index)
-							self.votes[_candidate[self.elec.CANDIDATE_INDEX]].add(voter_index)
-							break
+						if _candidate[self.elec.CANDIDATE_INDEX] in self.elec.leading_candidates:
+							if random.random() < self.elec.tactical_vote_percentages[_candidate[self.elec.CANDIDATE_INDEX]]:
+								self.t_votes_changed += 1
+								self.rankings_changed[voter_index] = copy.deepcopy(self.elec.sorted_voters[voter_index])
+								self.rankings_changed[voter_index][index], self.rankings_changed[voter_index][-1] = self.rankings_changed[voter_index][-1], self.rankings_changed[voter_index][index]
+								self.candidates[candidate] -= 1
+								self.candidates[_candidate[self.elec.CANDIDATE_INDEX]] += 1
+								self.votes[candidate].remove(voter_index)
+								self.votes[_candidate[self.elec.CANDIDATE_INDEX]].add(voter_index)
+								break
+							break # without this break a voter could change its vote to a candidate in leading_cadidates that is not his actual preference between them
 		
 		print(":::::T votes changed: ", self.t_votes_changed)
 
@@ -63,7 +65,7 @@ class FirstPastThePost:
 				if voter_index in self.rankings_changed:
 					ranking = self.rankings_changed[voter_index]
 				else:
-					ranking = self.elec.sorted_voters[voter_index]
+					ranking = copy.deepcopy(self.elec.sorted_voters[voter_index])
 				for index, _candidate in enumerate(reversed(ranking)):
 					if _candidate[self.elec.CANDIDATE_INDEX] not in self.elec.leading_candidates or (_candidate[self.elec.CANDIDATE_INDEX] in self.elec.leading_candidates and self.elec.leading_candidates.index(_candidate[self.elec.CANDIDATE_INDEX]) >= half_vacancies):
 						if _candidate[self.elec.CANDIDATE_RANK] >= 0:
@@ -72,10 +74,8 @@ class FirstPastThePost:
 								self.candidates[candidate] -= 1
 								self.candidates[_candidate[self.elec.CANDIDATE_INDEX]] += 1
 								break
-							else:
-								break
-						else:
 							break
+						break
 			
 		print(":::::M votes changed: ", self.m_votes_changed)
 

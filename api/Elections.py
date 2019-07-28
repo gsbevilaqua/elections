@@ -182,7 +182,12 @@ class Elections:
 		self.sorted_candidates = self.sort_candidates(self.candidates)
 		self._set_leading_candidates()
 
-	# THIS FILLS 'leading_candidates' LIST: THE FIRST (N_VACANCIES + 1) CANDIDATES
+	# # THIS FILLS 'leading_candidates' LIST: THE FIRST (N_VACANCIES + 1) CANDIDATES
+	# def _set_leading_candidates(self):
+	# 	for i in range(1, self.N_VACANCIES + 2):
+	# 		self.leading_candidates.append(self.sorted_candidates[-i][self.CANDIDATE_INDEX])
+	# 	print("leading: ", self.leading_candidates)
+
 	def _set_leading_candidates(self):
 		if self.N_VACANCIES == 1 or self.N_VACANCIES == 2:
 			self.leading_candidates.append(self.sorted_candidates[-1][self.CANDIDATE_INDEX])
@@ -191,8 +196,7 @@ class Elections:
 		elif self.N_VACANCIES > 2:
 			for i in range(1, self.N_VACANCIES + 2):
 				self.leading_candidates.append(self.sorted_candidates[-i][self.CANDIDATE_INDEX])
-		
-		print("leading: ", self.leading_candidates)		
+		print("leading: ", self.leading_candidates)
 
 	def sort_candidates(self, candidates):
 		return sorted(candidates.items(), key=operator.itemgetter(1))
