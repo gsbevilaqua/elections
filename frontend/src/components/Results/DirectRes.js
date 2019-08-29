@@ -33,10 +33,27 @@ export default class DirectRes extends Component {
             for (j = 0; j < i/3; j++) {
                 str[j*3 + 2] = str[j*3 + 2].split(' ')
                 for (var k = 0; k < str[j*3 + 2].length; k++){
-                str[j*3 + 2][k] = parseInt(str[j*3 + 2][k])
+                    str[j*3 + 2][k] = parseInt(str[j*3 + 2][k])
                 }
                 let voter = {pop_percentage: str[j*3], name: str[j*3 + 1], scores: str[j*3 + 2]}
                 voters.push(voter)
+            }
+        }
+
+        var coalitions = []
+        if(this.props.match.params.coal !== '-'){
+            var str = this.props.match.params.coal.split(',')
+            
+            i = str.length
+            var j = i/2
+            for (j = 0; j < i/2; j++) {
+                str[j*2] = str[j*2].split(' ')
+                str[j*2 + 1] = str[j*2 + 1].split(' ')
+                let coal = []
+                for (var k = 0; k < str[j*2].length; k++){
+                    coal.push({value: parseInt(str[j*2][k]), label: str[j*2 + 1][k]})
+                }
+                coalitions.push(coal)
             }
         }
 
@@ -56,7 +73,7 @@ export default class DirectRes extends Component {
             minority: this.props.match.params.mc === '-' ? false : true,
             tactical_votes: this.props.match.params.tv === '-' ? [0, 0, 0] : JSON.parse(this.props.match.params.tv),
             minority_votes: this.props.match.params.mv === '-' ? [0, 0, 0] : JSON.parse(this.props.match.params.mv),
-            coalitions: this.props.match.params.coal === '-' ? [] : JSON.parse(this.props.match.params.coal),
+            coalitions: this.props.match.params.coal === '-' ? [] : coalitions,
             voters: this.props.match.params.voters === '-' ? [] : voters,
             seed: this.props.match.params.seed === '-' ? null : this.props.match.params.seed
         };

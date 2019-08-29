@@ -40,16 +40,21 @@ class FirstPastThePost:
 					for index, _candidate in enumerate(reversed(self.elec.sorted_voters[voter_index])):
 						if _candidate[self.elec.CANDIDATE_INDEX] in self.elec.leading_candidates:
 							if random.random() < self.elec.tactical_vote_percentages[_candidate[self.elec.CANDIDATE_INDEX]]:
+								# print(candidate)
+								# print(self.elec.sorted_voters[voter_index])
+								# print(_candidate[self.elec.CANDIDATE_INDEX])
+								# print("index: ", -(index + 1))
 								self.t_votes_changed += 1
 								self.rankings_changed[voter_index] = copy.deepcopy(self.elec.sorted_voters[voter_index])
-								self.rankings_changed[voter_index][index], self.rankings_changed[voter_index][-1] = self.rankings_changed[voter_index][-1], self.rankings_changed[voter_index][index]
+								# print(self.rankings_changed[voter_index][-(index + 1)])
+								self.rankings_changed[voter_index][-(index + 1)], self.rankings_changed[voter_index][-1] = self.rankings_changed[voter_index][-1], self.rankings_changed[voter_index][-(index + 1)]
 								self.candidates[candidate] -= 1
 								self.candidates[_candidate[self.elec.CANDIDATE_INDEX]] += 1
 								self.votes[candidate].remove(voter_index)
 								self.votes[_candidate[self.elec.CANDIDATE_INDEX]].add(voter_index)
+								# print(self.rankings_changed[voter_index])
 								break
 							break # without this break a voter could change its vote to a candidate in leading_cadidates that is not his actual preference between them
-		
 		print(":::::T votes changed: ", self.t_votes_changed)
 
 	# CANDIDATES THAT ARE NOT IN 'leading_candidates' LIST GAIN VOTES FROM LEADING CANDIDATES BASED IN ITS MINORITY VOTING PERCENTAGE PARAMETER					

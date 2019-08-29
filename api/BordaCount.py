@@ -57,37 +57,39 @@ class BordaCount:
                 for voter_index in self.votes[candidate]:
                     raised = None
                     for candidate_tuple in reversed(self.elec.sorted_voters[voter_index]):
-                        if candidate_tuple[self.elec.CANDIDATE_INDEX] in self.leading_candidates and candidate_tuple[self.elec.CANDIDATE_INDEX] in pos:
-                            if random.random() < self.elec.tactical_vote_percentages[candidate_tuple[self.elec.CANDIDATE_INDEX]]:
-                                #print(self.elec.sorted_voters[voter_index])
-                                ranking = [None]*self.elec.N_CANDIDATES
-                                ranking[-1] = (candidate_tuple[self.elec.CANDIDATE_INDEX], self.elec.voters[voter_index][candidate_tuple[self.elec.CANDIDATE_INDEX]])
-                                raised = candidate_tuple[self.elec.CANDIDATE_INDEX]
+                        if candidate_tuple[self.elec.CANDIDATE_INDEX] in self.leading_candidates:
+                            if candidate_tuple[self.elec.CANDIDATE_INDEX] in pos:
+                                if random.random() < self.elec.tactical_vote_percentages[candidate_tuple[self.elec.CANDIDATE_INDEX]]:
+                                    # print(self.elec.sorted_voters[voter_index])
+                                    ranking = [None]*self.elec.N_CANDIDATES
+                                    ranking[-1] = (candidate_tuple[self.elec.CANDIDATE_INDEX], self.elec.voters[voter_index][candidate_tuple[self.elec.CANDIDATE_INDEX]])
+                                    raised = candidate_tuple[self.elec.CANDIDATE_INDEX]
+                                    break
                                 break
                             break
                     if raised != None:
-                        #print("raised: ", raised)
+                        # print("raised: ", raised)
                         for _candidate in self.leading_candidates:
                             if _candidate != ranking[-1][0]:
                                 ranking[0] = (_candidate, self.elec.voters[voter_index][_candidate])
                                 buried = _candidate
                                 break
                         i = 1
-                        #print("buried: ", buried)
+                        # print("buried: ", buried)
                         for candidate_tuple in self.elec.sorted_voters[voter_index]:
-                            #print(i)
-                            #print(candidate_tuple)
+                            # print(i)
+                            # print(candidate_tuple)
                             if candidate_tuple[self.elec.CANDIDATE_INDEX] in [raised, buried]:
                                 continue
                             else:
                                 ranking[i] = (candidate_tuple[self.elec.CANDIDATE_INDEX], self.elec.voters[voter_index][candidate_tuple[self.elec.CANDIDATE_INDEX]])
                                 i += 1
                         self.rankings_changed[voter_index] = ranking
-                        #print("new: ", ranking)
+                        # print("new: ", ranking)
             elif candidate in pos:
                 for voter_index in self.votes[candidate]:
                     if random.random() < self.elec.tactical_vote_percentages[candidate]:
-                        #print(self.elec.sorted_voters[voter_index])
+                        # print(self.elec.sorted_voters[voter_index])
                         for _candidate in self.leading_candidates:
                             if _candidate != candidate:
                                 ranking = [None]*self.elec.N_CANDIDATES
@@ -95,17 +97,17 @@ class BordaCount:
                                 buried = _candidate
                                 break
                         i = 1
-                        #print("buried: ", buried)
+                        # print("buried: ", buried)
                         for candidate_tuple in self.elec.sorted_voters[voter_index]:
-                            #print(i)
-                            #print(candidate_tuple)
+                            # print(i)
+                            # print(candidate_tuple)
                             if candidate_tuple[self.elec.CANDIDATE_INDEX] == buried:
                                 continue
                             else:
                                 ranking[i] = (candidate_tuple[self.elec.CANDIDATE_INDEX], self.elec.voters[voter_index][candidate_tuple[self.elec.CANDIDATE_INDEX]])
                                 i += 1
                         self.rankings_changed[voter_index] = ranking
-                        #print("new: ", ranking)
+                        # print("new: ", ranking)
 
 
     def _sum_candidates_scores(self):
@@ -138,8 +140,8 @@ class BordaCount:
         if self.elec.TACTICAL_VOTING:
             self._set_leading_candidates()
             self._apply_tactical_votes()
-        self._sum_candidates_scores()
-        self.sorted_candidates = self.elec.sort_candidates(self.candidates)
+            self._sum_candidates_scores()
+            self.sorted_candidates = self.elec.sort_candidates(self.candidates)
 
         out = [[], []]
         for candidate in self.sorted_candidates:
