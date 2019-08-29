@@ -181,17 +181,10 @@ export default class Trs extends Component {
             </div>
             {this.props.res[4] ? 
               '' :
-              <div style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>
+              <div>
                 <div>
                   <Chart options={this.state.options1} 
                         series={[((this.props.res[1] + 10)*5).toFixed(2)]} 
-                        type="radialBar"
-                        height="350"
-                  />
-                </div>
-                <div>
-                  <Chart options={this.state.options2} 
-                        series={[(this.props.res[6]*100).toFixed(2)]} 
                         type="radialBar"
                         height="350"
                   />
@@ -217,17 +210,10 @@ export default class Trs extends Component {
                     />
                   </div>
                 </div>
-                <div style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>
+                <div>
                   <div>
                     <Chart options={this.state.options1} 
                           series={[((this.props.res[3] + 10)*5).toFixed(2)]} 
-                          type="radialBar"
-                          height="350"
-                    />
-                  </div>
-                  <div>
-                    <Chart options={this.state.options2} 
-                          series={[(this.props.res[7]*100).toFixed(2)]} 
                           type="radialBar"
                           height="350"
                     />

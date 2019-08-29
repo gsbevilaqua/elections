@@ -168,17 +168,10 @@ export default class Svs extends Component {
                     </div> */}
                   </div>
                 </div>
-                <div style={{display: "grid", gridTemplateColumns: "50% 50%"}}>
+                <div>
                   <div>
                     <Chart options={this.state.options1} 
                           series={[((this.props.res[1] + 10)*5).toFixed(2)]} 
-                          type="radialBar"
-                          height="350"
-                    />
-                  </div>
-                  <div>
-                    <Chart options={this.state.options2} 
-                          series={[(this.props.res[3]*100).toFixed(2)]} 
                           type="radialBar"
                           height="350"
                     />

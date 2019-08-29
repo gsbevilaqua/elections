@@ -166,17 +166,10 @@ export default class Fptp extends Component {
                   />
                 </div>
               </div>
-              <div style={{display:"flex", flexWrap: "wrap", justifyContent: "space-evenly"}}>
+              <div>
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
                   <Chart options={this.state.options1} 
                         series={[((this.props.res[1] + 10)*5).toFixed(2)]} 
-                        type="radialBar"
-                        height="350"
-                  />
-                </div>
-                <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                  <Chart options={this.state.options2} 
-                        series={[(this.props.res[3]*100).toFixed(2)]} 
                         type="radialBar"
                         height="350"
                   />
