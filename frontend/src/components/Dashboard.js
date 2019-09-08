@@ -181,44 +181,60 @@ export class Dashboard extends Component {
             xsrfHeaderName: "X-CSRFToken",
         })
         .then(response => {
-            this.setState({ progress_bar_width: "30%", progress_bar_msg: "Creating Voters..." });
-            axios({
-                method: 'post',
-                url: '/api/create_voters',
-                data: {},
-                xsrfHeaderName: "X-CSRFToken",
-            })
-            .then(response => {
-                this.setState({ progress_bar_width: "60%", progress_bar_msg: "Sorting Ranks..." });
+            if(response.data.error){
+                this.setState({error_msg: "Error creating candidates... please try again.", progress_bar: false, progress_bar_width: "0%", progress_bar_msg: ""})
+            }else{
+                this.setState({ progress_bar_width: "30%", progress_bar_msg: "Creating Voters..." });
                 axios({
                     method: 'post',
-                    url: '/api/sort_ranks',
+                    url: '/api/create_voters',
                     data: {},
                     xsrfHeaderName: "X-CSRFToken",
                 })
                 .then(response => {
-                    this.setState({ progress_bar_width: "90%", progress_bar_msg: "Finishing..." });
-                    axios({
-                        method: 'post',
-                        url: '/api/get_results',
-                        data: get_results_payload,
-                        xsrfHeaderName: "X-CSRFToken",
-                    })
-                    .then(response => {
-                        this.setState({ progress_bar_width: "100%" });
-                        this.setState({ redirect: true, go: true, ors: response.data.status, trs: response.data.status1, irv: response.data.status2, avs: response.data.status6, tbc: response.data.status4, svs: response.data.status3, bvs: response.data.status5 })
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    })
+                    if(response.data.error){
+                        this.setState({error_msg: "Error creating voters... please try again.", progress_bar: false, progress_bar_width: "0%", progress_bar_msg: ""})
+                    }else{
+                        this.setState({ progress_bar_width: "60%", progress_bar_msg: "Sorting Ranks..." });
+                        axios({
+                            method: 'post',
+                            url: '/api/sort_ranks',
+                            data: {},
+                            xsrfHeaderName: "X-CSRFToken",
+                        })
+                        .then(response => {
+                            if(response.data.error){
+                                this.setState({error_msg: "Error sorting ranks... please try again.", progress_bar: false, progress_bar_width: "0%", progress_bar_msg: ""})
+                            }else{
+                                this.setState({ progress_bar_width: "90%", progress_bar_msg: "Finishing..." });
+                                axios({
+                                    method: 'post',
+                                    url: '/api/get_results',
+                                    data: get_results_payload,
+                                    xsrfHeaderName: "X-CSRFToken",
+                                })
+                                .then(response => {
+                                    if(response.data.error){
+                                        this.setState({error_msg: "Error getting results... please try again.", progress_bar: false, progress_bar_width: "0%", progress_bar_msg: ""})
+                                    }else{
+                                        this.setState({ progress_bar_width: "100%" });
+                                        this.setState({ redirect: true, go: true, ors: response.data.status, trs: response.data.status1, irv: response.data.status2, avs: response.data.status6, tbc: response.data.status4, svs: response.data.status3, bvs: response.data.status5 })
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                })
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        })
+                    }
                 })
                 .catch(error => {
                     console.error(error);
                 })
-            })
-            .catch(error => {
-                console.error(error);
-            })
+            }
         })
         .catch(error => {
             console.error(error);

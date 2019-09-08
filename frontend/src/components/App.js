@@ -21,6 +21,7 @@ class App extends React.Component {
 						<Switch>
 							<Route exact path="/" component={Dashboard} />
 							<Route exact path="/results" component={Results} />
+							<Route exact path="/direct_res" component={DirectRes} />
 							<Route exact path="/direct_res/:systems/:n_voters/:n_vacancies/:candidates/:names/:tc/:mc/:tv/:mv/:coal/:voters/:seed" component={DirectRes} />
 							<Route exact path="/dists" component={Distributions} />
 						</Switch>
